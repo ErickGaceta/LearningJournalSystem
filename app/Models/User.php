@@ -11,25 +11,25 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
-        'name',
+        'employee_id',
+        'first_name',
+        'middle_name',
+        'last_name',
+        'gender',
+        'id_position',
+        'id_division_unit',
+        'employee_type',
+        'roles',
+        'username',
         'email',
         'password',
+        'last_login',
+        'is_active',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'two_factor_secret',
@@ -38,10 +38,12 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The accessors to append to the model's array form.
      *
-     * @return array<string, string>
+     * @var array
      */
+    protected $appends = ['full_name'];
+
     protected function casts(): array
     {
         return [
@@ -50,12 +52,15 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Get the user's initials
-     */
+    public function getFullNameAttribute(): string
+    {
+        $mi = $this->middle_name ? strtoupper(substr($this->middle_name, 0, 1)) . '.' : '';
+        return trim("{$this->first_name} {$mi} {$this->last_name}");
+    }
+
     public function initials(): string
     {
-        return Str::of($this->name)
+        return Str::of($this->first_name . ' ' . $this->last_name)
             ->explode(' ')
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
