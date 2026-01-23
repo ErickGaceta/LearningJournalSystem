@@ -11,20 +11,20 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('division_unit')->insert([
-            ['division_unit' => 'Null', 'created_at' => now(), 'updated_at' => now()],
-            ['division_unit' => 'Finance', 'created_at' => now(), 'updated_at' => now()],
-            ['division_unit' => 'Human Resources', 'created_at' => now(), 'updated_at' => now()],
-            ['division_unit' => 'Research & Development', 'created_at' => now(), 'updated_at' => now()],
-            ['division_unit' => 'IT Support', 'created_at' => now(), 'updated_at' => now()],
+        DB::table('division_units')->insert([
+            ['division_units' => 'Null', 'created_at' => now(), 'updated_at' => now()],
+            ['division_units' => 'Finance', 'created_at' => now(), 'updated_at' => now()],
+            ['division_units' => 'Human Resources', 'created_at' => now(), 'updated_at' => now()],
+            ['division_units' => 'Research & Development', 'created_at' => now(), 'updated_at' => now()],
+            ['division_units' => 'IT Support', 'created_at' => now(), 'updated_at' => now()],
         ]);
 
-        DB::table('position')->insert([
-            ['position' => 'Null', 'created_at' => now(), 'updated_at' => now()],
-            ['position' => 'Manager', 'created_at' => now(), 'updated_at' => now()],
-            ['position' => 'Team Lead', 'created_at' => now(), 'updated_at' => now()],
-            ['position' => 'Software Engineer', 'created_at' => now(), 'updated_at' => now()],
-            ['position' => 'Intern', 'created_at' => now(), 'updated_at' => now()],
+        DB::table('positions')->insert([
+            ['positions' => 'Null', 'created_at' => now(), 'updated_at' => now()],
+            ['positions' => 'Manager', 'created_at' => now(), 'updated_at' => now()],
+            ['positions' => 'Team Lead', 'created_at' => now(), 'updated_at' => now()],
+            ['positions' => 'Software Engineer', 'created_at' => now(), 'updated_at' => now()],
+            ['positions' => 'Intern', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }

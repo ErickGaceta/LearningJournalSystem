@@ -11,8 +11,20 @@
 
             <flux:navbar class="-mb-px max-lg:hidden">
                 <flux:navbar.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-                    {{ __('My Learning Journal') }}
+                    {{ __('Home') }}
                 </flux:navbar.item>
+
+                <flux:menu>
+                    @forelse($documents as $document)
+                        <flux:menu.item :href="route('documents.show', $document)" wire:navigate>
+                            {{ $document->title }}
+                        </flux:menu.item>
+                    @empty
+                        <flux:menu.item disabled>
+                            {{ __('No Recent Documents') }}
+                        </flux:menu.item>
+                    @endforelse
+                </flux:menu>
             </flux:navbar>
 
             <flux:spacer />

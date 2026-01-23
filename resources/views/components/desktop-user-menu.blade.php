@@ -1,10 +1,5 @@
 @props(['name'])
 
-<!-- Debug at the top -->
-<div style="background: yellow; padding: 5px;">
-    Prop name: {{ $name ?? 'PROP IS NULL' }}
-</div>
-
 <flux:dropdown position="bottom" align="start">
     <flux:sidebar.profile
         name="{{ $name }}"

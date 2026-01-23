@@ -12,16 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         // CREATE POSTIONS TABLE
-        Schema::create('position', function (Blueprint $table) {
+        Schema::create('positions', function (Blueprint $table) {
             $table->id();
-            $table->string('position', 255);
+            $table->string('positions', 255);
             $table->timestamps();
         });
 
         // CREATE DIVISION TABLE
-        Schema::create('division_unit', function (Blueprint $table) {
+        Schema::create('division_units', function (Blueprint $table) {
             $table->id();
-            $table->string('division_unit', 255);
+            $table->string('division_units', 255);
             $table->timestamps();
         });
 
@@ -33,8 +33,8 @@ return new class extends Migration
             $table->string('middle_name', 191)->nullable()->default(null);
             $table->string('last_name', 191)->default('');
             $table->string('gender', 191)->default('Not specified');
-            $table->foreignId('id_position')->nullable()->constrained('position')->onDelete('cascade')->default(1);
-            $table->foreignId('id_division_unit')->nullable()->constrained('division_unit')->onDelete('cascade')->default(1);
+            $table->foreignId('id_positions')->nullable()->constrained('positions')->onDelete('cascade')->default(1);
+            $table->foreignId('id_division_units')->nullable()->constrained('division_units')->onDelete('cascade')->default(1);
             $table->string('employee_type', 191)->default('Regular');
             $table->string('roles', 191)->default('user');
             $table->string('username', 191)->unique()->default('');
@@ -63,23 +63,7 @@ return new class extends Migration
         });
 
         // CREATE DOCUMENT TABLE
-        Schema::create('document', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->text('fullname');
-            $table->text('title');
-            $table->integer('hours');
-            $table->date('date');
-            $table->string('venue');
-            $table->string('registration_fee', 100);
-            $table->string('travel_expenses', 100);
-            $table->text('topics');
-            $table->text('insights');
-            $table->text('application');
-            $table->text('challenges');
-            $table->text('appreciation');
-            $table->timestamps();
-        });
+        
     }
 
     /**
@@ -90,5 +74,7 @@ return new class extends Migration
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('division_units');
+        Schema::dropIfExists('positions');
     }
 };
