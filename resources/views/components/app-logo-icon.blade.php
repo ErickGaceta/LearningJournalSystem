@@ -1,1 +1,1 @@
-<img src="{{ asset('storage/favicon.png') }}" alt="">
+<img src="{{ asset('favicon.png') }}" alt="" class="object-contain">
