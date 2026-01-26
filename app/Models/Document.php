@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 
 class Document extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
+        'user_id',
+        'fullname',
         'title',
         'hours',
         'date',
@@ -23,26 +27,8 @@ class Document extends Model
 
     protected $casts = [
         'date' => 'date',
+        'hours' => 'integer',
     ];
-
-    /**
-     * Boot method to auto-populate user_id and fullname
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($document) {
-            if (!$document->user_id) {
-                $user = Auth::user();
-                $document->user_id = $user ? $user->id : null;
-            }
-            if (!$document->fullname) {
-                $user = Auth::user();
-                $document->fullname = $user ? $user->full_name : null;
-            }
-        });
-    }
 
     public function user()
     {
