@@ -76,7 +76,87 @@
 
         <!-- Main Content Area with Form -->
         <div class="relative h-full flex-1 overflow-hidden rounded-xl border border-neutral-200">
+        <x-placeholder-pattern class="absolute inset-0 size-full stroke-white/20" />
+    
+    <div class="relative z-10 p-8 h-full flex flex-col">
+        <div class="flex-1 space-y-6">
+            <div>
+                <label class="block text-sm font-medium text-white mb-2">
+                    A. I learned the following from the L&D program I attended...(knowledge, skills, attitude, information) Please indicate topic/topics.
+                </label>
+                <textarea 
+                    rows="3"
+                    placeholder="Enter your answer..."
+                    class="w-full px-4 py-3 rounded-lg border border-white bg-black text-white placeholder-gray-400 focus:ring-2 focus:ring-white focus:border-transparent resize-none"
+                ></textarea>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-white mb-2">
+                    B. I gained the following insights and discoveries...(understanding, perception, awareness)
+                </label>
+                <textarea 
+                    rows="3"
+                    placeholder="Enter your answer..."
+                    class="w-full px-4 py-3 rounded-lg border border-white bg-black text-white placeholder-gray-400 focus:ring-2 focus:ring-white focus:border-transparent resize-none"
+                ></textarea>
+            </div>
+
+            <div>
+                 <label class="block text-sm font-medium text-white mb-2">
+                    C. I will apply the new learnings in my current function by doing the following...
+                </label>
+                <textarea 
+                    rows="3"
+                    placeholder="Enter your answer..."
+                    class="w-full px-4 py-3 rounded-lg border border-white bg-black text-white placeholder-gray-400 focus:ring-2 focus:ring-white focus:border-transparent resize-none"
+                ></textarea>
+            </div>
+
+            <div>
+                 <label class="block text-sm font-medium text-white mb-2">
+                    D. I was most challenged on...
+                </label>
+                <textarea 
+                    rows="3"
+                    placeholder="Enter your answer..."
+                    class="w-full px-4 py-3 rounded-lg border border-white bg-black text-white placeholder-gray-400 focus:ring-2 focus:ring-white focus:border-transparent resize-none"
+                ></textarea>
+            </div>
+
+            <div>
+                 <label class="block text-sm font-medium text-white mb-2">
+                    E. I appreciated the...(Feedback: for management and services of HRD)
+                </label>
+                <textarea 
+                    rows="3"
+                    placeholder="Enter your answer..."
+                    class="w-full px-4 py-3 rounded-lg border border-white bg-black text-white placeholder-gray-400 focus:ring-2 focus:ring-white focus:border-transparent resize-none"
+                ></textarea>
+            </div>
+        </div>
+
+        <div class="mt-8 flex justify-end">
+            <div class="w-80">
+                <label class="block text-sm font-medium text-white mb-2">
+                    Signature
+                </label>
+                <div class="border-2 border-dashed border-white rounded-lg p-4 bg-black">
+                    <canvas 
+                        id="signature-pad"
+                        class="w-full h-24 cursor-crosshair"
+                    ></canvas>
+                    <button 
+                        type="button"
+                        class="mt-2 text-sm text-white hover:underline"
+                    >
+                        Clear
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
+</div>
+
 
 </x-layouts::app>
