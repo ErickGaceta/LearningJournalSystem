@@ -17,7 +17,7 @@
                             <p id="name" class="border-none text-heading w-full text-sm mt-1 rounded-xl block px-3 py-2 shadow-lg">
                                 {{ auth()->user()->first_name }}
                                 {{ auth()->user()->middle_name ? auth()->user()->middle_name . ' ' : '' }}
-                                {{ auth()->user()->last_name }}
+                                {{ auth()->user()->last_name }} 
                             </p>
                         </div>
                     </div>
