@@ -42,8 +42,6 @@
                             <input type="date"
                                 id="date"
                                 name="date"
-                                datepicker
-                                datepicker-autohide
                                 class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body"
                                 placeholder="Select date"
                                 required />
@@ -76,6 +74,31 @@
 
         <!-- Main Content Area with Form -->
         <div class="relative h-full flex-1 overflow-hidden rounded-xl border border-neutral-200">
+            <form action="" class="w-min p-4">
+                <div>
+                    <label for="learning" class="block mb-1 text-base font-medium text-heading">A. I learned the following from the L&D program I attended...</label>
+                    <p class="text-xs">(Knowledge, skills, attitude, information.) Please indicate the topic/topics</p>
+                    <textarea required name="learning" id="learning" rows="4" class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body" placeholder="Enter text here"></textarea>
+                </div>
+                <div>
+                    <label for="gained" class="block mb-1 text-base font-medium text-heading">B. I gained the following insights and discoveries...</label>
+                    <p class="text-xs">(Understanding, perception, awareness)</p>
+                    <textarea required name="gained" id="gained" rows="4" class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body" placeholder="Enter text here"></textarea>
+                </div>
+                <div>
+                    <label for="apply" class="block mb-1 text-base font-medium text-heading">C. I will apply the new learnings in my current function by doing the following...</label>
+                    <textarea required name="apply" id="apply" rows="4" class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body" placeholder="Enter text here"></textarea>
+                </div>
+                <div>
+                    <label for="challenge" class="block mb-1 text-base font-medium text-heading">D. I was challenged most on...</label>
+                    <textarea required name="challenge" id="challenge" rows="4" class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body" placeholder="Enter text here"></textarea>
+                </div>
+                <div>
+                    <label for="appreciate" class="block mb-1 text-base font-medium text-heading">E. I appreciated the...</label>
+                    <p class="text-xs">(Feedback: for management and services of HRD.)</p>
+                    <textarea required name="appreciate" id="appreciate" rows="4" class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body" placeholder="Enter text here"></textarea>
+                </div>
+            </form>
         </div>
     </div>
 
