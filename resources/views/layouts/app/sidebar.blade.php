@@ -16,7 +16,7 @@
             <flux:sidebar.group :heading="__('Platform')" class="grid">
                 <!-- Home -->
                 <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-                    {{ __('Home') }}
+                    {{ __('Create Journal') }}
                 </flux:sidebar.item>
 
                 
