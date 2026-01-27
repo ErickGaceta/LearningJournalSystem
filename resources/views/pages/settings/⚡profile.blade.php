@@ -12,16 +12,21 @@ use Livewire\Component;
 new class extends Component {
     use ProfileValidationRules;
 
-    public string $name = '';
-    public string $email = '';
+    public ?string $first_name;
+    public ?string $middle_name;
+    public ?string $last_name;
+    public ?string $email;
 
     /**
-     * Mount the component.
+     * Mount the component and populate the inputs from the database.
      */
     public function mount(): void
     {
-        $this->name = Auth::user()->name;
-        $this->email = Auth::user()->email;
+        $user = Auth::user();
+        $this->first_name = $user->first_name;
+        $this->middle_name = $user->middle_name;
+        $this->last_name = $user->last_name;
+        $this->email = $user->email;
     }
 
     /**
@@ -31,7 +36,12 @@ new class extends Component {
     {
         $user = Auth::user();
 
-        $validated = $this->validate($this->profileRules($user->id));
+        $validated = $this->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'middle_name' => ['nullable', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+        ]);
 
         $user->fill($validated);
 
@@ -41,7 +51,7 @@ new class extends Component {
 
         $user->save();
 
-        $this->dispatch('profile-updated', name: $user->name);
+        $this->dispatch('profile-updated');
     }
 
     /**
@@ -53,12 +63,10 @@ new class extends Component {
 
         if ($user->hasVerifiedEmail()) {
             $this->redirectIntended(default: route('dashboard', absolute: false));
-
             return;
         }
 
         $user->sendEmailVerificationNotification();
-
         Session::flash('status', 'verification-link-sent');
     }
 
@@ -74,7 +82,8 @@ new class extends Component {
         return ! Auth::user() instanceof MustVerifyEmail
             || (Auth::user() instanceof MustVerifyEmail && Auth::user()->hasVerifiedEmail());
     }
-}; ?>
+};
+ ?>
 
 <section class="w-full">
     @include('partials.settings-heading')
@@ -83,27 +92,31 @@ new class extends Component {
 
     <x-pages::settings.layout :heading="__('Profile')" :subheading="__('Update your name and email address')">
         <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
-            <flux:input wire:model="name" :label="__('Name')" type="text" required autofocus autocomplete="name" />
+            <div class="grid grid-cols-3 gap-4">
+                <flux:input wire:model="first_name" :label="__('First Name')" type="text" required autofocus autocomplete="given-name" />
+                <flux:input wire:model="middle_name" :label="__('Middle Name')" type="text" autocomplete="additional-name" />
+                <flux:input wire:model="last_name" :label="__('Last Name')" type="text" required autocomplete="family-name" />
+            </div>
 
             <div>
                 <flux:input wire:model="email" :label="__('Email')" type="email" required autocomplete="email" />
 
                 @if ($this->hasUnverifiedEmail)
-                    <div>
-                        <flux:text class="mt-4">
-                            {{ __('Your email address is unverified.') }}
+                <div>
+                    <flux:text class="mt-4">
+                        {{ __('Your email address is unverified.') }}
 
-                            <flux:link class="text-sm cursor-pointer" wire:click.prevent="resendVerificationNotification">
-                                {{ __('Click here to re-send the verification email.') }}
-                            </flux:link>
-                        </flux:text>
+                        <flux:link class="text-sm cursor-pointer" wire:click.prevent="resendVerificationNotification">
+                            {{ __('Click here to re-send the verification email.') }}
+                        </flux:link>
+                    </flux:text>
 
-                        @if (session('status') === 'verification-link-sent')
-                            <flux:text class="mt-2 font-medium !dark:text-green-400 !text-green-600">
-                                {{ __('A new verification link has been sent to your email address.') }}
-                            </flux:text>
-                        @endif
-                    </div>
+                    @if (session('status') === 'verification-link-sent')
+                    <flux:text class="mt-2 font-medium !dark:text-green-400 !text-green-600">
+                        {{ __('A new verification link has been sent to your email address.') }}
+                    </flux:text>
+                    @endif
+                </div>
                 @endif
             </div>
 
@@ -120,8 +133,9 @@ new class extends Component {
             </div>
         </form>
 
+
         @if ($this->showDeleteUser)
-            <livewire:pages::settings.delete-user-form />
+        <livewire:pages::settings.delete-user-form />
         @endif
     </x-pages::settings.layout>
 </section>

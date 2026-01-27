@@ -18,6 +18,7 @@
                 <p class="text-sm text-neutral-600 dark:text-neutral-400">Created {{ $document->created_at->diffForHumans() }}</p>
             </div>
             <div class="flex gap-3">
+                <a href="" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl transition-colors">Print</a>
                 <a href="{{ route('documents.edit', $document) }}" 
                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl transition-colors">
                     Edit
