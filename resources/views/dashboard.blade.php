@@ -9,7 +9,7 @@
                 <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200">
                     <div class="grid grid-flow-col grid-rows-2 gap-4">
                         <div class="flex flex-col justify-center items-center gap-2">
-                            <p class="text-lg font-medium text-neutral-600 dark:text-neutral-400">Personal Information</p>
+                            <p class="text-base font-medium text-neutral-600 dark:text-neutral-400">Personal Information</p>
                         </div>
                         <div class="grid grid-cols-1 grid-rows-2 justify-items-start items-start p-2 gap-4">
                             <div>
@@ -34,7 +34,7 @@
                 
                 <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200">
                     <div class="flex flex-col justify-center items-center gap-2">
-                        <p class="text-lg font-medium text-neutral-600 dark:text-neutral-400">L&D Program Information</p>
+                        <p class="text-base font-medium text-neutral-600 dark:text-neutral-400">L&D Program Information</p>
                     </div>
                     <div class="w-min p-4">
                         <div class="grid gap-3 mb-3 md:grid-cols-2">
@@ -43,7 +43,7 @@
                                 <input type="text" 
                                     id="title" 
                                     name="title"
-                                    class="bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm mt-1 rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body" 
+                                    class="bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm mt-1 rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body" 
                                     placeholder="L&D Title" 
                                     value="{{ old('title') }}"
                                     required />
@@ -57,7 +57,7 @@
                                     id="hours" 
                                     name="hours"
                                     min="1"
-                                    class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body" 
+                                    class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body" 
                                     placeholder="L&D Hours"
                                     value="{{ old('hours') }}"
                                     required />
@@ -70,7 +70,7 @@
                                 <input type="date"
                                     id="date"
                                     name="date"
-                                    class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body"
+                                    class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
                                     placeholder="Select date"
                                     value="{{ old('date') }}"
                                     required />
@@ -84,7 +84,7 @@
                 
                 <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200">
                     <div class="flex flex-col justify-center items-center gap-2">
-                        <p class="text-lg font-medium text-neutral-600 dark:text-neutral-400">L&D Additional Information</p>
+                        <p class="text-base font-medium text-neutral-600 dark:text-neutral-400">L&D Additional Information</p>
                     </div>
                     <div class="w-min p-4">
                         <div class="grid gap-3 mb-3 md:grid-cols-2">
@@ -93,7 +93,7 @@
                                 <input type="text" 
                                     id="venue" 
                                     name="venue"
-                                    class="bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm mt-1 rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body" 
+                                    class="bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm mt-1 rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body" 
                                     placeholder="Venue"
                                     value="{{ old('venue') }}"
                                     required />
@@ -106,7 +106,7 @@
                                 <input type="text" 
                                     id="registration_fee" 
                                     name="registration_fee"
-                                    class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body" 
+                                    class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body" 
                                     placeholder="Registration Fee"
                                     value="{{ old('registration_fee') }}"
                                     required />
@@ -119,7 +119,7 @@
                                 <input type="text" 
                                     id="travel_expenses" 
                                     name="travel_expenses"
-                                    class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body" 
+                                    class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body" 
                                     placeholder="Travel Expenses"
                                     value="{{ old('travel_expenses') }}"
                                     required />

@@ -7,7 +7,7 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::view('dashboard', 'dashboard')
+Route::view('create-journal', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
