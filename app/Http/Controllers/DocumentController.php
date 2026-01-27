@@ -7,11 +7,23 @@ use Illuminate\Http\Request;
 
 class DocumentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $documents = Document::where('user_id', auth()->id())
-            ->latest()
-            ->paginate(10);
+        $query = Document::where('user_id', auth()->id());
+
+        // Search functionality
+        if ($request->has('search') && $request->search) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('title', 'like', "%{$searchTerm}%")
+                  ->orWhere('venue', 'like', "%{$searchTerm}%")
+                  ->orWhere('topics', 'like', "%{$searchTerm}%")
+                  ->orWhere('insights', 'like', "%{$searchTerm}%")
+                  ->orWhere('application', 'like', "%{$searchTerm}%");
+            });
+        }
+
+        $documents = $query->latest()->paginate(12);
 
         return view('documents.index', compact('documents'));
     }

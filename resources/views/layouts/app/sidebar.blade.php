@@ -14,43 +14,71 @@
 
         <flux:sidebar.nav>
             <flux:sidebar.group :heading="__('Platform')" class="grid">
+                <!-- Home -->
                 <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                     {{ __('Home') }}
                 </flux:sidebar.item>
 
-                <!-- Documents Dropdown -->
-                <flux:sidebar.item icon="document-text" expandable>
+                
+
+                <!-- Documents with Dropdown -->
+                <flux:sidebar icon="document-text">
                     {{ __('Documents') }}
 
+
                     <flux:sidebar.group>
-                        @forelse($documents as $document)
+                        <!-- View All Documents Link -->
                         <flux:sidebar.item
-                            :href="route('documents.show', $document->id)"
-                            :current="request()->routeIs('documents.show') && request()->route('document')->id === $document->id"
-                            wire:navigate>
-                            {{ $document->title }}
+                            icon="folder-open"
+                            :href="route('documents.index')"
+                            :current="request()->routeIs('documents.index')"
+                            wire:navigate
+                            class="font-semibold">
+                            {{ __('View All Documents') }}
                         </flux:sidebar.item>
-                        @empty
-                        <flux:sidebar.item disabled>
-                            {{ __('No documents available') }}
-                        </flux:sidebar.item>
-                        @endforelse
+
+                        
+                    <flux:separator />
+
+                        <!-- Recent Documents (Last 10) -->
+                        @php
+                            $recentDocuments = \App\Models\Document::where('user_id', auth()->id())
+                                ->latest()
+                                ->take(10)
+                                ->get();
+                        @endphp
+
+                        @if($recentDocuments->count() > 0)
+                            <flux:sidebar disabled class="text-xs text-gray-500">
+                                {{ __('Recent Documents') }}
+                            </flux:sidebar>
+
+                            @foreach($recentDocuments as $document)
+                                <flux:sidebar.item
+                                    :href="route('documents.show', $document->id)"
+                                    :current="request()->routeIs('documents.show') && request()->route('document') && request()->route('document')->id === $document->id"
+                                    wire:navigate
+                                    class="truncate">
+                                    {{ Str::limit($document->title, 30) }}
+                                </flux:sidebar.item>
+                            @endforeach
+
+                            @if(\App\Models\Document::where('user_id', auth()->id())->count() > 10)
+                                <flux:sidebar.item disabled class="text-xs text-gray-400 italic">
+                                    {{ __('+ ') . (\App\Models\Document::where('user_id', auth()->id())->count() - 10) . __(' more in All Documents') }}
+                                </flux:sidebar.item>
+                            @endif
+                        @else
+                            <flux:sidebar.item disabled class="text-gray-500 italic">
+                                {{ __('No documents yet') }}
+                            </flux:sidebar.item>
+                        @endif
                     </flux:sidebar.group>
-                </flux:sidebar.item>
+                </flux:sidebar>
             </flux:sidebar.group>
         </flux:sidebar.nav>
 
         <flux:spacer />
-
-        <flux:sidebar.nav>
-            <!--  <flux:sidebar.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
-                    {{ __('Repository') }}
-                </flux:sidebar.item>
-
-                <flux:sidebar.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
-                    {{ __('Documentation') }}
-                </flux:sidebar.item> -->
-        </flux:sidebar.nav>
 
         <x-desktop-user-menu class="hidden lg:block" :name="auth()->user()->full_name" />
     </flux:sidebar>

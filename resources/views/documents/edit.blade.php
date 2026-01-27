@@ -3,24 +3,12 @@
         <div class="p-6">
             <h1 class="text-2xl font-bold mb-6">Edit Training Report</h1>
 
-            <form action="{{ route('documents.update', $document) }}" method="POST" class="bg-white border rounded-xl p-6 space-y-6">
+            <form action="{{ route('documents.update', $document) }}" method="POST" class="border rounded-xl p-6 space-y-6">
                 @csrf
                 @method('PUT')
 
                 {{-- Basic Information --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label for="fullname" class="block mb-2 text-base font-medium text-heading">Full Name</label>
-                        <input type="text"
-                            name="fullname"
-                            id="fullname"
-                            value="{{ old('fullname', $document->fullname) }}"
-                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs"
-                            required>
-                        @error('fullname')
-                        <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
-                        @enderror
-                    </div>
 
                     <div>
                         <label for="title" class="block mb-2 text-base font-medium text-heading">Training Title</label>
