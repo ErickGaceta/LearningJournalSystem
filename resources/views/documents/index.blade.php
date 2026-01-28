@@ -67,56 +67,63 @@
 
         @if($documents->count() > 0)
 
-        <!-- Documents Grid -->
-        <div class="grid auto-rows-min gap-4 md:grid-cols-2 lg:grid-cols-3">
-            @foreach($documents as $document)
-            <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 hover:shadow-lg transition-shadow">
-                <div class="p-6">
-                    <div class="flex grow w-max justify-items-stretch gap-4 items-center">
-                        <!-- Title -->
-                        <div class="w-full">
-                            <a href="{{ route('documents.show', $document) }}" wire:navigate>
-                                <h3 class="text-lg font-semibold text-heading hover:text-blue-500 transition-colors line-clamp-2">
+        <!-- Documents Table -->
+        <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
+                                Title
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
+                                Date
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
+                                Venue
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
+                                Created
+                            </th>
+                            <th class="px-6 py-4 text-center text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
+                        @foreach($documents as $document)
+                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors">
+                            <td class="px-6 py-4">
+                                <a href="{{ route('documents.show', $document) }}" wire:navigate class="font-medium text-heading hover:text-blue-500 transition-colors line-clamp-2">
                                     {{ $document->title }}
-                                </h3>
-                            </a>
-                        </div>
-
-
-                        <div class="w-full">
-                            <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1">Date</label>
-                            <p class="text-sm text-heading">{{ $document->date->format('M d, Y') }}</p>
-                        </div>
-
-                        <div class="col-span-2 w-full">
-                            <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1">Venue</label>
-                            <p class="text-sm text-heading truncate">{{ $document->venue }}</p>
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="flex gap-2 mt-4 w-full">
-                            <a href="{{ route('documents.show', $document) }}"
-                                class="flex-1 text-center bg-blue-500 hover:bg-blue-600 text-sm font-sm px-4 py-2 rounded-xl transition-colors"
-                                wire:navigate>
-                                View
-                            </a>
-                            <a href="{{ route('documents.edit', $document) }}"
-                                class="flex-1 text-center dark:bg-neutral-700 dark:hover:bg-neutral-600 text-sm font-sm px-4 py-2 rounded-xl transition-colors"
-                                wire:navigate>
-                                Edit
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Footer -->
-                <div class="px-6 py-3 bg-neutral-50 dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-700">
-                    <p class="text-xs text-neutral-500 dark:text-neutral-400">
-                        Created {{ $document->created_at->diffForHumans() }}
-                    </p>
-                </div>
+                                </a>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-heading whitespace-nowrap">
+                                {{ $document->date->format('M d, Y') }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-heading">
+                                <div class="max-w-xs truncate" title="{{ $document->venue }}">
+                                    {{ $document->venue }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400 whitespace-nowrap">
+                                {{ $document->created_at->diffForHumans() }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex justify-center">
+                                    <a href="{{ route('documents.show', $document) }}"
+                                        class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium px-4 py-1.5 rounded-lg transition-colors"
+                                        wire:navigate
+                                        title="View">
+                                        View
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-            @endforeach
         </div>
 
         <!-- Pagination -->

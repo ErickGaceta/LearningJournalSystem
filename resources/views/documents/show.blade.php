@@ -23,10 +23,6 @@
                     class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl">
                     Print
                 </button>
-                <a href="{{ route('documents.edit', $document) }}"
-                   class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl transition-colors">
-                    Edit
-                </a>
                 <form action="{{ route('documents.destroy', $document) }}" method="POST"
                     onsubmit="return confirm('Are you sure you want to delete this document?');">
                     @csrf
