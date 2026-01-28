@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DocumentController;
-use App\Http\Controllers\DocumentPrintController;
+use App\Http\Controllers\DocumentPrintController;use App\Http\Controllers\LoginController;
+
+Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 
 
 Route::get('/', function () {
