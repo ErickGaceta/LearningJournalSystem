@@ -52,8 +52,12 @@
                         <p class="text-base text-heading">{{ $document->hours }} hours</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Date</label>
-                        <p class="text-base text-heading">{{ $document->date->format('F d, Y') }}</p>
+                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Date Started</label>
+                        <p class="text-base text-heading">{{ $document->datestart->format('F d, Y') }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Date Ended</label>
+                        <p class="text-base text-heading">{{ $document->dateend->format('F d, Y') }}</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Venue</label>

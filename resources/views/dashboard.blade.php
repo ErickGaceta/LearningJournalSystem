@@ -34,7 +34,7 @@
                                 @enderror
                             </div>
                             <div class="flex w-full">
-                                <div class="grow-1">
+                                <div class="grow-1 w-full">
                                     <label for="division_units" class="block mb-2.5 text-base font-medium text-heading">Department/Unit/Office</label>
                                     <input type="text"
                                         id="division_units"
@@ -47,7 +47,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="grow-1">
+                                <div class="grow-1 w-full">
                                     <label for="positions" class="block mb-2.5 text-base font-medium text-heading">Position</label>
                                     <input type="text"
                                         id="positions"
@@ -149,8 +149,21 @@
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
-                            <div class="flex w-full">
-                                <div class="grow-1">
+                            <div>
+                                <label for="conductedby" class="block mb-1 text-base font-medium text-heading">Conducted/ Sponsored By</label>
+                                <input type="text"
+                                    id="conductedby"
+                                    name="conductedby"
+                                    class="bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm mt-1 rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
+                                    placeholder="Conducted By"
+                                    value="{{ old('conductedby') }}"
+                                    required />
+                                @error('conductedby')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="flex w-full gap-2">
+                                <div class="grow-1 w-full">
                                     <label for="registration_fee" class="block mb-1 text-base font-medium text-heading">Registration Fee</label>
                                     <input type="text"
                                         id="registration_fee"
@@ -163,7 +176,7 @@
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
-                                <div class="grow-1">
+                                <div class="grow-1 w-full">
                                     <label for="travel_expenses" class="block mb-1 text-base font-medium text-heading">Travel Expenses</label>
                                     <input type="text"
                                         id="travel_expenses"
