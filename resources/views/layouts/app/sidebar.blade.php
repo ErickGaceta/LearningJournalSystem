@@ -58,7 +58,7 @@
                                     :href="route('documents.show', $document->id)"
                                     :current="request()->routeIs('documents.show') && request()->route('document') && request()->route('document')->id === $document->id"
                                     wire:navigate
-                                    class="truncate">
+                                    class="truncate text-xs">
                                     {{ Str::limit($document->title, 30) }}
                                 </flux:sidebar.item>
                             @endforeach

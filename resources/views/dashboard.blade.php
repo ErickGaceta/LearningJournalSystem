@@ -14,15 +14,21 @@
                         <div class="grid grid-cols-1 grid-rows-2 justify-items-start items-start p-2 gap-4">
                             <div>
                                 <label for="employee_id" class="block mb-2.5 text-base font-medium text-heading">Employee ID</label>
-                                <p id="employee_id" class="text-heading w-full text-sm mt-1 rounded-xl block px-3 py-2 shadow-lg">{{ auth()->user()->employee_id }}</p>
+                                <input type="number" 
+                                    id="employee_id"
+                                    name="employee_id"
+                                    class="text-heading w-full text-sm mt-1 rounded-xl block px-3 py-2 shadow-lg"
+                                    value="{{ auth()->user()->employee_id }}"
+                                    readonly />
                             </div>
                             <div>
                                 <label for="fullname" class="block mb-2.5 text-base font-medium text-heading">Name</label>
                                 <input type="text" 
                                     id="fullname"
+                                    name="fullname"
                                     class="border-none text-heading w-full text-sm mt-1 rounded-xl block px-3 py-2 shadow-lg bg-transparent"
                                     value="{{ old('fullname', auth()->user()->first_name . ' ' . (auth()->user()->middle_name ? auth()->user()->middle_name . ' ' : '') . auth()->user()->last_name) }}"
-                                    disabled />
+                                    readonly />
                                 @error('fullname')
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
