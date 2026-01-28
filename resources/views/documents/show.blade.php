@@ -14,16 +14,16 @@
         <!-- Header with Actions -->
         <div class="flex justify-between items-start mb-6">
             <div>
-                <h1 class="text-3xl font-bold text-heading mb-2">{{ $document->title }}</h1>
+                <h1 class="text-3xl font-bold text-heading mb-2">Title of L&D program attended: {{ $document->title }}</h1>
                 <p class="text-sm text-neutral-600 dark:text-neutral-400">Created {{ $document->created_at->diffForHumans() }}</p>
             </div>
             <div class="flex gap-3">
                 <a href="" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl transition-colors">Print</a>
-                <a href="{{ route('documents.edit', $document) }}" 
+                <a href="{{ route('documents.edit', $document) }}"
                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl transition-colors">
                     Edit
                 </a>
-                <form action="{{ route('documents.destroy', $document) }}" method="POST" 
+                <form action="{{ route('documents.destroy', $document) }}" method="POST"
                       onsubmit="return confirm('Are you sure you want to delete this document?');">
                     @csrf
                     @method('DELETE')
@@ -38,18 +38,18 @@
         <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
             <div class="p-6 space-y-6">
                 <!-- Training Information Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-6 border-b border-neutral-200 dark:border-neutral-700">
+                <div class="grid grid-cols-1 md:grid-rows-1 gap-6 pb-6 border-b border-neutral-200 dark:border-neutral-700">
                     <div>
                         <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Employee Name</label>
                         <p class="text-base text-heading">{{ $document->fullname }}</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Date</label>
-                        <p class="text-base text-heading">{{ $document->date->format('F d, Y') }}</p>
-                    </div>
-                    <div>
                         <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Hours</label>
                         <p class="text-base text-heading">{{ $document->hours }} hours</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Date</label>
+                        <p class="text-base text-heading">{{ $document->date->format('F d, Y') }}</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Venue</label>
