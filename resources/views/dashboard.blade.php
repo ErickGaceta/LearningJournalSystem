@@ -3,7 +3,7 @@
         <!-- Main Form - wrapping all inputs -->
         <form action="{{ route('documents.store') }}" method="POST">
             @csrf
-            
+
             <!-- Personal Information -->
             <div class="grid auto-rows-min gap-4 md:grid-cols-3 mb-4">
                 <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200">
@@ -23,7 +23,7 @@
                             </div>
                             <div>
                                 <label for="fullname" class="block mb-2.5 text-base font-medium text-heading">Name</label>
-                                <input type="text" 
+                                <input type="text"
                                     id="fullname"
                                     name="fullname"
                                     class="border-none text-heading w-full text-sm mt-1 rounded-xl block px-3 py-2 shadow-lg bg-transparent"
@@ -36,7 +36,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200">
                     <div class="flex flex-col justify-center items-center gap-2">
                         <p class="text-base font-medium text-neutral-600 dark:text-neutral-400">L&D Program Information</p>
@@ -45,11 +45,11 @@
                         <div class="grid gap-3 mb-3 md:grid-cols-2">
                             <div>
                                 <label for="title" class="block mb-1 text-base font-medium text-heading">L&D Title</label>
-                                <input type="text" 
-                                    id="title" 
+                                <input type="text"
+                                    id="title"
                                     name="title"
-                                    class="bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm mt-1 rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body" 
-                                    placeholder="L&D Title" 
+                                    class="bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm mt-1 rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
+                                    placeholder="L&D Title"
                                     value="{{ old('title') }}"
                                     required />
                                 @error('title')
@@ -58,11 +58,11 @@
                             </div>
                             <div>
                                 <label for="hours" class="block mb-1 text-base font-medium text-heading">Number of L&D Hours</label>
-                                <input type="number" 
-                                    id="hours" 
+                                <input type="number"
+                                    id="hours"
                                     name="hours"
                                     min="1"
-                                    class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body" 
+                                    class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
                                     placeholder="L&D Hours"
                                     value="{{ old('hours') }}"
                                     required />
@@ -86,7 +86,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200">
                     <div class="flex flex-col justify-center items-center gap-2">
                         <p class="text-base font-medium text-neutral-600 dark:text-neutral-400">L&D Additional Information</p>
@@ -95,10 +95,10 @@
                         <div class="grid gap-3 mb-3 md:grid-cols-2">
                             <div>
                                 <label for="venue" class="block mb-1 text-base font-medium text-heading">Venue</label>
-                                <input type="text" 
-                                    id="venue" 
+                                <input type="text"
+                                    id="venue"
                                     name="venue"
-                                    class="bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm mt-1 rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body" 
+                                    class="bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm mt-1 rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
                                     placeholder="Venue"
                                     value="{{ old('venue') }}"
                                     required />
@@ -108,10 +108,10 @@
                             </div>
                             <div>
                                 <label for="registration_fee" class="block mb-1 text-base font-medium text-heading">Registration Fee</label>
-                                <input type="text" 
-                                    id="registration_fee" 
+                                <input type="text"
+                                    id="registration_fee"
                                     name="registration_fee"
-                                    class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body" 
+                                    class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
                                     placeholder="Registration Fee"
                                     value="{{ old('registration_fee') }}"
                                     required />
@@ -121,10 +121,10 @@
                             </div>
                             <div>
                                 <label for="travel_expenses" class="block mb-1 text-base font-medium text-heading">Travel Expenses</label>
-                                <input type="text" 
-                                    id="travel_expenses" 
+                                <input type="text"
+                                    id="travel_expenses"
                                     name="travel_expenses"
-                                    class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body" 
+                                    class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
                                     placeholder="Travel Expenses"
                                     value="{{ old('travel_expenses') }}"
                                     required />
@@ -143,65 +143,65 @@
                     <div class="mb-4">
                         <label for="topics" class="block mb-1 text-base font-medium text-heading">A. I learned the following from the L&D program I attended...</label>
                         <p class="text-xs">(Knowledge, skills, attitude, information.) Please indicate the topic/topics</p>
-                        <textarea required 
-                            name="topics" 
-                            id="topics" 
-                            rows="4" 
-                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body" 
+                        <textarea required
+                            name="topics"
+                            id="topics"
+                            rows="4"
+                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body"
                             placeholder="Enter text here">{{ old('topics') }}</textarea>
                         @error('topics')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-                    
+
                     <div class="mb-4">
                         <label for="insights" class="block mb-1 text-base font-medium text-heading">B. I gained the following insights and discoveries...</label>
                         <p class="text-xs">(Understanding, perception, awareness)</p>
-                        <textarea required 
-                            name="insights" 
-                            id="insights" 
-                            rows="4" 
-                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body" 
+                        <textarea required
+                            name="insights"
+                            id="insights"
+                            rows="4"
+                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body"
                             placeholder="Enter text here">{{ old('insights') }}</textarea>
                         @error('insights')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-                    
+
                     <div class="mb-4">
                         <label for="application" class="block mb-1 text-base font-medium text-heading">C. I will apply the new learnings in my current function by doing the following...</label>
-                        <textarea required 
-                            name="application" 
-                            id="application" 
-                            rows="4" 
-                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body" 
+                        <textarea required
+                            name="application"
+                            id="application"
+                            rows="4"
+                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body"
                             placeholder="Enter text here">{{ old('application') }}</textarea>
                         @error('application')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-                    
+
                     <div class="mb-4">
                         <label for="challenges" class="block mb-1 text-base font-medium text-heading">D. I was challenged most on...</label>
-                        <textarea required 
-                            name="challenges" 
-                            id="challenges" 
-                            rows="4" 
-                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body" 
+                        <textarea required
+                            name="challenges"
+                            id="challenges"
+                            rows="4"
+                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body"
                             placeholder="Enter text here">{{ old('challenges') }}</textarea>
                         @error('challenges')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-                    
+
                     <div class="mb-4">
                         <label for="appreciation" class="block mb-1 text-base font-medium text-heading">E. I appreciated the...</label>
                         <p class="text-xs">(Feedback: for management and services of HRD.)</p>
-                        <textarea required 
-                            name="appreciation" 
-                            id="appreciation" 
-                            rows="4" 
-                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body" 
+                        <textarea required
+                            name="appreciation"
+                            id="appreciation"
+                            rows="4"
+                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body"
                             placeholder="Enter text here">{{ old('appreciation') }}</textarea>
                         @error('appreciation')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
