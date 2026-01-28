@@ -48,9 +48,8 @@
                 </td>
                 <td>
                     <div>Republic of the Philippines</div>
-                    <div><strong>DEPARTMENT OF SCIENCE AND TECHNOLOGY</strong></div>
+                    <div class=""><strong>DEPARTMENT OF SCIENCE AND TECHNOLOGY</strong></div>
                     <div>Cordillera Administrative Region</div>
-                    <div>BSU Compound, Km.6, La Trinidad</div>
                 </td>
             </tr>
         </table>
@@ -70,7 +69,7 @@
             <tr>
                 <td style="width: 150px;">Name of Employee</td>
                 <td style="width: 10px;">:</td>
-                <td>{{ $document->fullname }}</td>
+                <td>{{ $document->last_name }}, {{ $document->first_name }} {{ $document->middle_name }}</td>
             </tr>
             <tr>
                 <td style="width: 150px;">Title of L&D Program</td>

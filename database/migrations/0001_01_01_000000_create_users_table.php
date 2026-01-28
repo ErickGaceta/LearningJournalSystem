@@ -45,6 +45,7 @@ return new class extends Migration
             $table->tinyInteger('is_active')->default(1);
             $table->rememberToken();
             $table->timestamps();
+            $table->string('user_type', 20);
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
