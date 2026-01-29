@@ -29,8 +29,13 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
 
-        View::composer('*', function ($view) {
-            $view->with('documents', Document::latest()->take(10)->get());
+        // Share recent documents only with specific views (like dashboard, sidebar, etc.)
+        View::composer(['dashboard', 'layouts.navigation', 'layouts.sidebar'], function ($view) {
+            $view->with('recentDocuments', Document::latest()->take(10)->get());
+        });
+
+        // Share divisions and positions with register view
+        View::composer('pages.auth.register', function ($view) {
             $view->with([
                 'divisions' => DivisionUnit::pluck('division_units', 'id'),
                 'positions' => Position::pluck('positions', 'id'),

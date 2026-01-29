@@ -4,112 +4,124 @@ namespace App\Http\Controllers;
 
 use App\Models\Document;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DocumentController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index(Request $request)
     {
-        $query = Document::where('user_id', auth()->id());
+        $query = Document::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc');
 
         // Search functionality
-        if ($request->has('search') && $request->search) {
-            $searchTerm = $request->search;
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('title', 'like', "%{$searchTerm}%")
-                    ->orWhere('venue', 'like', "%{$searchTerm}%")
-                    ->orWhere('topics', 'like', "%{$searchTerm}%")
-                    ->orWhere('insights', 'like', "%{$searchTerm}%")
-                    ->orWhere('application', 'like', "%{$searchTerm}%");
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('venue', 'like', "%{$search}%")
+                  ->orWhere('topics', 'like', "%{$search}%");
             });
         }
 
-        $documents = $query->latest()->paginate(12);
+        // IMPORTANT: Use paginate() not get()
+        $documents = $query->paginate(15)->withQueryString(); // Maintains search parameters
 
         return view('documents.index', compact('documents'));
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
         return view('documents.create');
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'fullname' => 'required|string|max:500',
-            'title' => 'required|string|max:500',
-            'hours' => 'required|integer|min:1',
+            'title' => 'required|string|max:255',
+            'venue' => 'required|string|max:255',
             'datestart' => 'required|date',
             'dateend' => 'required|date|after_or_equal:datestart',
-            'venue' => 'required|string|max:255',
-            'conductedby' => 'required|string|max:255',
-            'registration_fee' => 'required|string|max:100',
-            'travel_expenses' => 'required|string|max:100',
-            'topics' => 'required|string',
-            'insights' => 'required|string',
-            'application' => 'required|string',
-            'challenges' => 'required|string',
-            'appreciation' => 'required|string',
+            'hours' => 'required|numeric|min:0',
+            'topics' => 'nullable|string',
+            // Add other fields as needed
         ]);
 
-        $validated['user_id'] = auth()->id();
+        $validated['user_id'] = Auth::id();
 
-        $document = Document::create($validated);
+        Document::create($validated);
 
-        return redirect()->route('documents.show', $document)
+        return redirect()->route('documents.index')
             ->with('success', 'Document created successfully!');
     }
 
+    /**
+     * Display the specified resource.
+     */
     public function show(Document $document)
     {
-        if ($document->user_id !== auth()->id()) {
+        // Ensure user can only view their own documents
+        if ($document->user_id !== Auth::id()) {
             abort(403);
         }
 
         return view('documents.show', compact('document'));
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     */
     public function edit(Document $document)
     {
-        if ($document->user_id !== auth()->id()) {
+        // Ensure user can only edit their own documents
+        if ($document->user_id !== Auth::id()) {
             abort(403);
         }
 
         return view('documents.edit', compact('document'));
     }
 
+    /**
+     * Update the specified resource in storage.
+     */
     public function update(Request $request, Document $document)
     {
-        if ($document->user_id !== auth()->id()) {
+        // Ensure user can only update their own documents
+        if ($document->user_id !== Auth::id()) {
             abort(403);
         }
 
         $validated = $request->validate([
-            'fullname' => 'required|string|max:500',
-            'title' => 'required|string|max:500',
-            'hours' => 'required|integer|min:1',
+            'title' => 'required|string|max:255',
+            'venue' => 'required|string|max:255',
             'datestart' => 'required|date',
             'dateend' => 'required|date|after_or_equal:datestart',
-            'venue' => 'required|string|max:255',
-            'conductedby' => 'required|string|max:255',
-            'registration_fee' => 'required|string|max:100',
-            'travel_expenses' => 'required|string|max:100',
-            'topics' => 'required|string',
-            'insights' => 'required|string',
-            'application' => 'required|string',
-            'challenges' => 'required|string',
-            'appreciation' => 'required|string',
+            'hours' => 'required|numeric|min:0',
+            'topics' => 'nullable|string',
+            // Add other fields as needed
         ]);
 
         $document->update($validated);
 
-        return redirect()->route('documents.show', $document)
+        return redirect()->route('documents.index')
             ->with('success', 'Document updated successfully!');
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy(Document $document)
     {
-        if ($document->user_id !== auth()->id()) {
+        // Ensure user can only delete their own documents
+        if ($document->user_id !== Auth::id()) {
             abort(403);
         }
 
