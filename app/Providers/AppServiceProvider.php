@@ -9,6 +9,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\View;
 use App\Models\Document;
+use App\Models\DivisionUnit;
+use App\Models\Position;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +31,10 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('*', function ($view) {
             $view->with('documents', Document::latest()->take(10)->get());
+            $view->with([
+                'divisions' => DivisionUnit::pluck('division_units', 'id'),
+                'positions' => Position::pluck('positions', 'id'),
+            ]);
         });
     }
 

@@ -64,6 +64,10 @@
                         <p class="text-base text-heading">{{ $document->venue }}</p>
                     </div>
                     <div>
+                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Conducted By</label>
+                        <p class="text-base text-heading">{{ $document->conductedby }}</p>
+                    </div>
+                    <div>
                         <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Registration Fee</label>
                         <p class="text-base text-heading">₱{{ $document->registration_fee }}</p>
                     </div>

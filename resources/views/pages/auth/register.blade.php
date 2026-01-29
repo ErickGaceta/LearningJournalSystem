@@ -12,8 +12,7 @@
                 :value="old('employee_id')"
                 type="text"
                 required
-                autofocus
-            />
+                autofocus />
 
             <!-- First Name -->
             <flux:input
@@ -22,8 +21,7 @@
                 :value="old('fname')"
                 type="text"
                 required
-                autocomplete="given-name"
-            />
+                autocomplete="given-name" />
 
             <!-- Middle Name -->
             <flux:input
@@ -31,8 +29,7 @@
                 :label="__('Middle Name (Optional)')"
                 :value="old('mname')"
                 type="text"
-                autocomplete="additional-name"
-            />
+                autocomplete="additional-name" />
 
             <!-- Last Name -->
             <flux:input
@@ -41,20 +38,38 @@
                 :value="old('lname')"
                 type="text"
                 required
-                autocomplete="family-name"
-            />
+                autocomplete="family-name" />
 
             <!-- Gender -->
             <flux:select
                 name="gender"
                 :label="__('Gender')"
-                required
-            >
+                required>
                 <option value="">{{ __('Select Gender') }}</option>
                 <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>{{ __('Male') }}</option>
                 <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>{{ __('Female') }}</option>
                 <option value="Other" {{ old('gender') == 'Other' ? 'selected' : '' }}>{{ __('Other') }}</option>
                 <option value="Not specified" {{ old('gender') == 'Not specified' ? 'selected' : '' }}>{{ __('Prefer not to say') }}</option>
+            </flux:select>
+
+            <!-- Department -->
+            <flux:select name="division" :label="__('Division')" required>
+                <option value="">{{ __('Select Division') }}</option>
+                @foreach($divisions as $id => $name)
+                <option value="{{ $id }}" {{ old('division') == $id ? 'selected' : '' }}>
+                    {{ __($name) }}
+                </option>
+                @endforeach
+            </flux:select>
+
+            <!-- Position -->
+            <flux:select name="position" :label="__('Position')" required>
+                <option value="">{{ __('Select Position') }}</option>
+                @foreach($positions as $id => $name)
+                <option value="{{ $id }}" {{ old('position') == $id ? 'selected' : '' }}>
+                    {{ __($name) }}
+                </option>
+                @endforeach
             </flux:select>
 
             <!-- Username -->
@@ -64,8 +79,7 @@
                 :value="old('username')"
                 type="text"
                 required
-                autocomplete="username"
-            />
+                autocomplete="username" />
 
             <!-- Email Address -->
             <flux:input
@@ -75,8 +89,7 @@
                 type="email"
                 required
                 autocomplete="email"
-                placeholder="email@example.com"
-            />
+                placeholder="email@example.com" />
 
             <!-- Password -->
             <flux:input
@@ -85,8 +98,7 @@
                 type="password"
                 required
                 autocomplete="new-password"
-                viewable
-            />
+                viewable />
 
             <!-- Confirm Password -->
             <flux:input
@@ -95,19 +107,24 @@
                 type="password"
                 required
                 autocomplete="new-password"
-                viewable
-            />
+                viewable />
 
             <flux:button variant="primary" type="submit" class="w-full">
                 {{ __('Create account') }}
             </flux:button>
+
+            <flux:input 
+                name="user_type"
+                type="hidden"
+                value="user"
+            />
         </form>
 
         @if (Route::has('login'))
-            <div class="space-x-1 text-sm text-center rtl:space-x-reverse text-zinc-600 dark:text-zinc-400">
-                <span>{{ __('Already have an account?') }}</span>
-                <flux:link :href="route('login')" wire:navigate>{{ __('Log in') }}</flux:link>
-            </div>
+        <div class="space-x-1 text-sm text-center rtl:space-x-reverse text-zinc-600 dark:text-zinc-400">
+            <span>{{ __('Already have an account?') }}</span>
+            <flux:link :href="route('login')" wire:navigate>{{ __('Log in') }}</flux:link>
+        </div>
         @endif
     </div>
 </x-layouts::auth>

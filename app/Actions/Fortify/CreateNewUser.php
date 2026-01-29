@@ -25,9 +25,12 @@ class CreateNewUser implements CreatesNewUsers
             'mname' => ['nullable', 'string', 'max:191'],
             'lname' => ['required', 'string', 'max:191'],
             'gender' => ['required', 'string', 'in:Male,Female,Other,Not specified'],
+            'division' => ['required', 'exists:division_units,id'],
+            'position' => ['required', 'exists:positions,id'],
             'username' => ['required', 'string', 'max:191', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:191', 'unique:users'],
             'password' => $this->passwordRules(),
+            'user_type' => ['required', 'string'],
         ])->validate();
 
         return User::create([
@@ -36,12 +39,15 @@ class CreateNewUser implements CreatesNewUsers
             'middle_name' => $input['mname'] ?? null,
             'last_name' => $input['lname'],
             'gender' => $input['gender'],
+            'id_division_units' => $input['division'],
+            'id_positions' => $input['position'],
             'username' => $input['username'],
             'email' => $input['email'],
             'password' => bcrypt($input['password']),
-            'employee_type' => 'Regular', // default value
-            'roles' => 'user', // default value
-            'is_active' => 1, // default value
+            'employee_type' => 'Regular',
+            'roles' => 'user',
+            'is_active' => 1,
+            'user_type' => $input['user_type'],
         ]);
     }
 }
