@@ -34,6 +34,32 @@ class Document extends Model
         'hours' => 'integer',
     ];
 
+    // Add this boot method
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($document) {
+            if ($document->user) {
+                $document->fullname = trim(
+                    $document->user->first_name . ' ' . 
+                    $document->user->middle_name . ' ' . 
+                    $document->user->last_name
+                );
+            }
+        });
+
+        static::updating(function ($document) {
+            if ($document->user) {
+                $document->fullname = trim(
+                    $document->user->first_name . ' ' . 
+                    $document->user->middle_name . ' ' . 
+                    $document->user->last_name
+                );
+            }
+        });
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

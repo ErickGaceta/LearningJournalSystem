@@ -19,10 +19,10 @@ class DocumentController extends Controller
         // Search functionality
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('venue', 'like', "%{$search}%")
-                  ->orWhere('topics', 'like', "%{$search}%");
+                    ->orWhere('venue', 'like', "%{$search}%")
+                    ->orWhere('topics', 'like', "%{$search}%");
             });
         }
 
@@ -48,11 +48,17 @@ class DocumentController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'venue' => 'required|string|max:255',
+            'conductedby' => 'required|string|max:255', // Add this
             'datestart' => 'required|date',
             'dateend' => 'required|date|after_or_equal:datestart',
             'hours' => 'required|numeric|min:0',
             'topics' => 'nullable|string',
-            // Add other fields as needed
+            'registration_fee' => 'nullable|numeric|min:0',
+            'travel_expenses' => 'nullable|numeric|min:0',
+            'insights' => 'nullable|string',
+            'application' => 'nullable|string',
+            'challenges' => 'nullable|string',
+            'appreciation' => 'nullable|string',
         ]);
 
         $validated['user_id'] = Auth::id();
@@ -94,7 +100,6 @@ class DocumentController extends Controller
      */
     public function update(Request $request, Document $document)
     {
-        // Ensure user can only update their own documents
         if ($document->user_id !== Auth::id()) {
             abort(403);
         }
@@ -102,11 +107,17 @@ class DocumentController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'venue' => 'required|string|max:255',
+            'conductedby' => 'required|string|max:255', // Add this
             'datestart' => 'required|date',
             'dateend' => 'required|date|after_or_equal:datestart',
             'hours' => 'required|numeric|min:0',
             'topics' => 'nullable|string',
-            // Add other fields as needed
+            'registration_fee' => 'nullable|numeric|min:0',
+            'travel_expenses' => 'nullable|numeric|min:0',
+            'insights' => 'nullable|string',
+            'application' => 'nullable|string',
+            'challenges' => 'nullable|string',
+            'appreciation' => 'nullable|string',
         ]);
 
         $document->update($validated);
@@ -127,7 +138,7 @@ class DocumentController extends Controller
 
         $document->delete();
 
-        return redirect()->route('documents.index')
+        return redirect()->route('views.dashboard')
             ->with('success', 'Document deleted successfully!');
     }
 }
