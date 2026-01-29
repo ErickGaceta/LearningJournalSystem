@@ -61,6 +61,11 @@ class User extends Authenticatable
         return $this->belongsTo(DivisionUnit::class, 'id_division_units');
     }
 
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
+
     // ========== Accessors ==========
 
     public function getFullNameAttribute(): string
