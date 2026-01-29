@@ -11,7 +11,7 @@
         }
 
         body {
-            font-family: Bookman Old Style, serif;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
             font-size: 12px;
             color: #000;
         }
@@ -43,20 +43,21 @@
     <div style="align-items:center; width: 100%; text-align: center; margin-bottom: 20px; font-size: 12px;">
         <table style="margin: 0 auto; border-collapse: collapse; width: auto;">
             <tr>
-                <td style="width: 80px;">
-                    <img width="60" src="{{ public_path('favicon.png') }}" alt="DOST Logo">
+                <td style="width: 60px;">
+                    <img width="40" src="{{ public_path('favicon.png') }}" alt="DOST Logo">
                 </td>
-                <td>
+                <td style="width: 600px;">
                     <div>Republic of the Philippines</div>
-                    <div class=""><strong>DEPARTMENT OF SCIENCE AND TECHNOLOGY</strong></div>
-                    <div>Cordillera Administrative Region</div>
+                    <div style="font-size: 15px;"><strong>DEPARTMENT OF SCIENCE AND TECHNOLOGY</strong></div>
+                    <div style="font-size: 13px;">CORDILLERA ADMINISTRATIVE REGION</div>
                 </td>
             </tr>
         </table>
         <div style="position: absolute; right: 0; top: 0; text-align: left; border:#000 1px solid; padding: 1px;">
             <div><strong>FM-FAS-HR F13</strong></div>
-            <div>Revision 0</div>
-            <div>05-30-20</div>
+            <div>Revision 1</div>
+            <div>02-06-2026</div>
+            <div>Page 2 of 2</div>
         </div>
         <div style="margin-top: 10px; font-size: 14px;">
             My Learning Journal
@@ -67,34 +68,59 @@
     <div class="details-container">
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 6px;">
             <tr>
-                <td style="width: 150px;">Name of Employee</td>
+                <td style="width: 135px;">Name of Employee</td>
                 <td style="width: 10px;">:</td>
-                <td>{{ $document->last_name }}, {{ $document->first_name }} {{ $document->middle_name }}</td>
+                <td>{{ $document->user->last_name }}, {{ $document->user->first_name }} {{ $document->user->middle_name }}</td>
             </tr>
             <tr>
-                <td style="width: 150px;">Title of L&D Program</td>
+                <td style="width: 135px;"><strong><i>Department/ Unit/ Office</i></strong></td>
+                <td style="width: 10px;">:</td>
+                <td>{{ $document->user->divisionUnit->division_units }}</td>
+            </tr>
+            <tr>
+                <td style="width: 135px;"><strong><i>Position</i></strong></td>
+                <td style="width: 10px;">:</td>
+                <td>{{ $document->user->position->positions }}</td>
+            </tr>
+            <tr>
+                <td style="width: 135px;">Title of L&D Program</td>
                 <td style="width: 10px;">:</td>
                 <td>{{ $document->title }}</td>
             </tr>
             <tr>
-                <td style="width: 150px;">No. of L&D Hours</td>
+                <td style="width: 135px;"><strong><i>Date Started</i></strong></td>
+                <td style="width: 10px;">:</td>
+                <td>{{ $document->datestart->format('F d, Y') }}</td>
+            </tr>
+            <tr>
+                <td style="width: 135px;"><strong><i>Date Ended</i></strong></td>
+                <td style="width: 10px;">:</td>
+                <td>{{ $document->dateend->format('F d, Y') }}</td>
+            </tr>
+            <tr>
+                <td style="width: 135px;">Venue</td>
+                <td style="width: 10px;">:</td>
+                <td>{{ $document->venue }}</td>
+            </tr>
+            <tr>
+                <td style="width: 135px;">No. of L&D Hours</td>
                 <td style="width: 10px;">:</td>
                 <td>{{ $document->hours }}</td>
             </tr>
             <tr>
-                <td style="width: 150px;">Date/Venue</td>
+                <td style="width: 135px;"><strong><i>Conducted/ sponsored by</i></strong></td>
                 <td style="width: 10px;">:</td>
-                <td>{{ $document->date->format('F d, Y') }}/ {{ $document->venue }}</td>
+                <td>{{ $document->conductedby }}</td>
             </tr>
             <tr>
-                <td style="width: 150px;">Registration Fee</td>
+                <td style="width: 135px;">Registration Fee</td>
                 <td style="width: 10px;">:</td>
-                <td>{{ $document->registration_fee }}</td>
+                <td>Php {{ $document->registration_fee }}.00</td>
             </tr>
             <tr>
-                <td style="width: 150px;">Travel Expenses</td>
+                <td style="width: 135px;">Travel Expenses</td>
                 <td style="width: 10px;">:</td>
-                <td>{{ $document->travel_expenses }}</td>
+                <td>Php {{ $document->travel_expenses }}.00</td>
             </tr>
         </table>
     </div>
@@ -127,6 +153,25 @@
         <strong>(Feedback: for management and services of HRD.)</strong><br>
         <span style="text-align: justify; display: block;">{{ $document->appreciation }}</span>
     </div>
+
+    <table style="margin-top: 20px; width: 100%;">
+        <tbody>
+            <tr>
+                <td style="width: 480px;"></td>
+                <td>_______________________</td>
+            </tr>
+            <tr>
+                <td style="width: 480px;"></td>
+                <td style="padding-left: 50px; padding-top: 10px;"><strong>Signature</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="margin: 0 auto; margin-top: 30px;">
+        <tr>
+            <td style="font-size: 10px;">All document information printed from the Quality Management Information System(QMIS) is deemed "UNCONTROLLED"</td>
+        </tr>
+    </table>
 
 </body>
 

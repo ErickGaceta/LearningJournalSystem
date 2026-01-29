@@ -1,167 +1,277 @@
 <x-layouts::app.sidebar :title="'Edit: ' . $document->title">
     <flux:main>
         <div class="p-6">
-            <h1 class="text-2xl font-bold mb-6">Edit Training Report</h1>
+            <h1 class="text-2xl font-bold mb-6">Edit Learning Journal</h1>
 
-            <form action="{{ route('documents.update', $document) }}" method="POST" class="border rounded-xl p-6 space-y-6">
+            <form action="{{ route('documents.update', $document) }}" method="POST">
                 @csrf
                 @method('PUT')
 
-                {{-- Basic Information --}}
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Personal Information -->
+                <div class="grid auto-rows-min gap-4 md:grid-cols-3 mb-4">
+                    <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200">
+                        <div class="grid grid-flow-col grid-rows-2 gap-4">
+                            <div class="flex flex-col justify-center items-center gap-2">
+                                <p class="text-base font-medium text-neutral-600 dark:text-neutral-400">Personal Information</p>
+                            </div>
+                            <div class="grid grid-cols-1 grid-rows-2 justify-items-start items-start p-2 gap-4">
+                                <div>
+                                    <label for="employee_id" class="block mb-2.5 text-base font-medium text-heading">Employee ID</label>
+                                    <input type="number"
+                                        id="employee_id"
+                                        name="employee_id"
+                                        class="text-heading w-full text-sm mt-1 rounded-xl block px-3 py-2 shadow-lg"
+                                        value="{{ $document->user->employee_id }}"
+                                        readonly />
+                                </div>
+                                <div>
+                                    <label for="fullname" class="block mb-2.5 text-base font-medium text-heading">Name</label>
+                                    <input type="text"
+                                        id="fullname"
+                                        name="fullname"
+                                        class="border-none text-heading w-full text-sm mt-1 rounded-xl block px-3 py-2 shadow-lg bg-transparent"
+                                        value="{{ old('fullname', $document->fullname) }}"
+                                        readonly />
+                                </div>
+                                <div class="flex w-full">
+                                    <div class="grow-1 w-full">
+                                        <label for="division_units" class="block mb-2.5 text-base font-medium text-heading">Department/Unit/Office</label>
+                                        <input type="text"
+                                            id="division_units"
+                                            name="division_units"
+                                            class="border-none text-heading w-full text-sm mt-1 rounded-xl block px-3 py-2 shadow-lg bg-transparent"
+                                            value="{{ $document->user->divisionUnit->division_units ?? 'Not Assigned' }}"
+                                            readonly />
+                                    </div>
 
-                    <div>
-                        <label for="title" class="block mb-2 text-base font-medium text-heading">Training Title</label>
-                        <input type="text"
-                            name="title"
-                            id="title"
-                            value="{{ old('title', $document->title) }}"
-                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs"
-                            required>
-                        @error('title')
-                        <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
-                        @enderror
+                                    <div class="grow-1 w-full">
+                                        <label for="positions" class="block mb-2.5 text-base font-medium text-heading">Position</label>
+                                        <input type="text"
+                                            id="positions"
+                                            name="positions"
+                                            class="border-none text-heading w-full text-sm mt-1 rounded-xl block px-3 py-2 shadow-lg bg-transparent"
+                                            value="{{ $document->user->position->positions ?? 'Not Assigned' }}"
+                                            readonly />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200">
+                        <div class="flex flex-col justify-center items-center gap-2">
+                            <p class="text-base font-medium text-neutral-600 dark:text-neutral-400">L&D Program Information</p>
+                        </div>
+                        <div class="w-min p-4">
+                            <div class="grid gap-3 mb-3 md:grid-cols-2">
+                                <div>
+                                    <label for="title" class="block mb-1 text-base font-medium text-heading">L&D Title</label>
+                                    <input type="text"
+                                        id="title"
+                                        name="title"
+                                        class="bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm mt-1 rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
+                                        placeholder="L&D Title"
+                                        value="{{ old('title', $document->title) }}"
+                                        required />
+                                    @error('title')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div>
+                                    <label for="hours" class="block mb-1 text-base font-medium text-heading">Number of L&D Hours</label>
+                                    <input type="number"
+                                        id="hours"
+                                        name="hours"
+                                        min="1"
+                                        class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
+                                        placeholder="L&D Hours"
+                                        value="{{ old('hours', $document->hours) }}"
+                                        required />
+                                    @error('hours')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="flex w-full gap-3">
+                                    <div class="grow-1 w-full">
+                                        <label for="datestart" class="block mb-1 text-base font-medium text-heading">Date Started</label>
+                                        <input type="date"
+                                            id="datestart"
+                                            name="datestart"
+                                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
+                                            placeholder="Select date"
+                                            value="{{ old('datestart', $document->datestart->format('Y-m-d')) }}"
+                                            required />
+                                        @error('datestart')
+                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <div class="grow-1 w-full">
+                                        <label for="dateend" class="block mb-1 text-base font-medium text-heading">Date Ended</label>
+                                        <input type="date"
+                                            id="dateend"
+                                            name="dateend"
+                                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
+                                            placeholder="Select date"
+                                            value="{{ old('dateend', $document->dateend->format('Y-m-d')) }}"
+                                            required />
+                                        @error('dateend')
+                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200">
+                        <div class="flex flex-col justify-center items-center gap-2">
+                            <p class="text-base font-medium text-neutral-600 dark:text-neutral-400">L&D Additional Information</p>
+                        </div>
+                        <div class="w-min p-4">
+                            <div class="grid gap-3 mb-3 md:grid-cols-2">
+                                <div>
+                                    <label for="venue" class="block mb-1 text-base font-medium text-heading">Venue</label>
+                                    <input type="text"
+                                        id="venue"
+                                        name="venue"
+                                        class="bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm mt-1 rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
+                                        placeholder="Venue"
+                                        value="{{ old('venue', $document->venue) }}"
+                                        required />
+                                    @error('venue')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div>
+                                    <label for="conductedby" class="block mb-1 text-base font-medium text-heading">Conducted/ Sponsored By</label>
+                                    <input type="text"
+                                        id="conductedby"
+                                        name="conductedby"
+                                        class="bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm mt-1 rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
+                                        placeholder="Conducted By"
+                                        value="{{ old('conductedby', $document->conductedby) }}"
+                                        required />
+                                    @error('conductedby')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="flex w-full gap-2">
+                                    <div class="grow-1 w-full">
+                                        <label for="registration_fee" class="block mb-1 text-base font-medium text-heading">Registration Fee</label>
+                                        <input type="text"
+                                            id="registration_fee"
+                                            name="registration_fee"
+                                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
+                                            placeholder="Registration Fee"
+                                            value="{{ old('registration_fee', $document->registration_fee) }}"
+                                            required />
+                                        @error('registration_fee')
+                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <div class="grow-1 w-full">
+                                        <label for="travel_expenses" class="block mb-1 text-base font-medium text-heading">Travel Expenses</label>
+                                        <input type="text"
+                                            id="travel_expenses"
+                                            name="travel_expenses"
+                                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
+                                            placeholder="Travel Expenses"
+                                            value="{{ old('travel_expenses', $document->travel_expenses) }}"
+                                            required />
+                                        @error('travel_expenses')
+                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label for="date" class="block mb-2 text-base font-medium text-heading">Date</label>
-                        <input type="date"
-                            name="date"
-                            id="date"
-                            value="{{ old('date', $document->date->format('Y-m-d')) }}"
-                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs"
-                            required>
-                        @error('date')
-                        <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
-                        @enderror
+                <!-- Main Content Area with Form -->
+                <div class="relative h-fit flex-1 overflow-hidden rounded-xl border border-neutral-200 mb-4">
+                    <div class="w-full p-4">
+                        <div class="mb-4">
+                            <label for="topics" class="block mb-1 text-base font-medium text-heading">A. I learned the following from the L&D program I attended...</label>
+                            <p class="text-xs">(Knowledge, skills, attitude, information.) Please indicate the topic/topics</p>
+                            <textarea required
+                                name="topics"
+                                id="topics"
+                                rows="4"
+                                class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body"
+                                placeholder="Enter text here">{{ old('topics', $document->topics) }}</textarea>
+                            @error('topics')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="insights" class="block mb-1 text-base font-medium text-heading">B. I gained the following insights and discoveries...</label>
+                            <p class="text-xs">(Understanding, perception, awareness)</p>
+                            <textarea required
+                                name="insights"
+                                id="insights"
+                                rows="4"
+                                class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body"
+                                placeholder="Enter text here">{{ old('insights', $document->insights) }}</textarea>
+                            @error('insights')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="application" class="block mb-1 text-base font-medium text-heading">C. I will apply the new learnings in my current function by doing the following...</label>
+                            <textarea required
+                                name="application"
+                                id="application"
+                                rows="4"
+                                class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body"
+                                placeholder="Enter text here">{{ old('application', $document->application) }}</textarea>
+                            @error('application')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="challenges" class="block mb-1 text-base font-medium text-heading">D. I was challenged most on...</label>
+                            <textarea required
+                                name="challenges"
+                                id="challenges"
+                                rows="4"
+                                class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body"
+                                placeholder="Enter text here">{{ old('challenges', $document->challenges) }}</textarea>
+                            @error('challenges')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="appreciation" class="block mb-1 text-base font-medium text-heading">E. I appreciated the...</label>
+                            <p class="text-xs">(Feedback: for management and services of HRD.)</p>
+                            <textarea required
+                                name="appreciation"
+                                id="appreciation"
+                                rows="4"
+                                class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body"
+                                placeholder="Enter text here">{{ old('appreciation', $document->appreciation) }}</textarea>
+                            @error('appreciation')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
+                </div>
 
-                    <div>
-                        <label for="hours" class="block mb-2 text-base font-medium text-heading">Training Hours</label>
-                        <input type="number"
-                            name="hours"
-                            id="hours"
-                            min="1"
-                            value="{{ old('hours', $document->hours) }}"
-                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs"
-                            required>
-                        @error('hours')
-                        <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
-                        @enderror
+                <!-- Submit Buttons -->
+                <div class="relative h-fit overflow-hidden rounded-xl">
+                    <div class="flex justify-end items-center gap-3 p-4">
+                        <a href="{{ route('documents.show', $document) }}"
+                            class="bg-gray-200 text-gray-700 px-4 py-2 rounded-xl hover:bg-gray-300 transition-colors">
+                            Cancel
+                        </a>
+                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-600 transition-colors">
+                            Update Learning Journal
+                        </button>
                     </div>
-
-                    <div>
-                        <label for="venue" class="block mb-2 text-base font-medium text-heading">Venue</label>
-                        <input type="text"
-                            name="venue"
-                            id="venue"
-                            value="{{ old('venue', $document->venue) }}"
-                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs"
-                            required>
-                        @error('venue')
-                        <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label for="registration_fee" class="block mb-2 text-base font-medium text-heading">Registration Fee (₱)</label>
-                        <input type="text"
-                            name="registration_fee"
-                            id="registration_fee"
-                            value="{{ old('registration_fee', $document->registration_fee) }}"
-                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs"
-                            required>
-                        @error('registration_fee')
-                        <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="travel_expenses" class="block mb-2 text-base font-medium text-heading">Travel Expenses (₱)</label>
-                        <input type="text"
-                            name="travel_expenses"
-                            id="travel_expenses"
-                            value="{{ old('travel_expenses', $document->travel_expenses) }}"
-                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs"
-                            required>
-                        @error('travel_expenses')
-                        <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-                {{-- Long Form Fields --}}
-                <div>
-                    <label for="topics" class="block mb-2 text-base font-medium text-heading">Topics Covered</label>
-                    <textarea name="topics"
-                        id="topics"
-                        rows="5"
-                        class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs"
-                        required>{{ old('topics', $document->topics) }}</textarea>
-                    @error('topics')
-                    <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <div>
-                    <label for="insights" class="block mb-2 text-base font-medium text-heading">Key Insights and Learnings</label>
-                    <textarea name="insights"
-                        id="insights"
-                        rows="5"
-                        class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs"
-                        required>{{ old('insights', $document->insights) }}</textarea>
-                    @error('insights')
-                    <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <div>
-                    <label for="application" class="block mb-2 text-base font-medium text-heading">Practical Application</label>
-                    <textarea name="application"
-                        id="application"
-                        rows="5"
-                        class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs"
-                        required>{{ old('application', $document->application) }}</textarea>
-                    @error('application')
-                    <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <div>
-                    <label for="challenges" class="block mb-2 text-base font-medium text-heading">Challenges Encountered</label>
-                    <textarea name="challenges"
-                        id="challenges"
-                        rows="5"
-                        class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs"
-                        required>{{ old('challenges', $document->challenges) }}</textarea>
-                    @error('challenges')
-                    <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <div>
-                    <label for="appreciation" class="block mb-2 text-base font-medium text-heading">Appreciation and Recommendations</label>
-                    <textarea name="appreciation"
-                        id="appreciation"
-                        rows="5"
-                        class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs"
-                        required>{{ old('appreciation', $document->appreciation) }}</textarea>
-                    @error('appreciation')
-                    <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <div class="flex gap-3">
-                    <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-xl hover:bg-blue-600">
-                        Update Report
-                    </button>
-                    <a href="{{ route('documents.show', $document) }}"
-                        class="bg-gray-200 text-gray-700 px-6 py-2 rounded-xl hover:bg-gray-300">
-                        Cancel
-                    </a>
                 </div>
             </form>
         </div>
