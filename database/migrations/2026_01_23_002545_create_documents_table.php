@@ -17,8 +17,10 @@ return new class extends Migration
             $table->text('fullname');
             $table->text('title');
             $table->integer('hours');
-            $table->date('date');
+            $table->date('datestart');
+            $table->date('dateend');
             $table->string('venue');
+            $table->string('conductedby', 100);
             $table->string('registration_fee', 100);
             $table->string('travel_expenses', 100);
             $table->text('topics');

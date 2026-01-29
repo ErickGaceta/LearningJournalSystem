@@ -13,21 +13,25 @@
         </flux:sidebar.header>
 
         <flux:sidebar.nav>
-            <flux:sidebar.group :heading="__('Platform')" class="grid">
-                <!-- Home -->
-                <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
+            <flux:sidebar.group :heading="__('Learning Journal')" class="grid">
+                {{-- User-only link --}}
+                @if(auth()->user()->user_type === 'user')
+                <flux:sidebar.item
+                    icon="home"
+                    :href="route('dashboard')"
+                    :current="request()->routeIs('dashboard')"
+                    wire:navigate>
                     {{ __('Create Journal') }}
                 </flux:sidebar.item>
+                @endif
 
-                
-
-                <!-- Documents with Dropdown -->
+                {{-- Admin-only Documents Dropdown --}}
+                @if(auth()->user()->user_type === 'admin')
                 <flux:sidebar icon="document-text">
                     {{ __('Documents') }}
 
-
                     <flux:sidebar.group>
-                        <!-- View All Documents Link -->
+                        {{-- View All Documents --}}
                         <flux:sidebar.item
                             icon="folder-open"
                             :href="route('documents.index')"
@@ -37,46 +41,47 @@
                             {{ __('View All Documents') }}
                         </flux:sidebar.item>
 
-                        
-                    <flux:separator />
+                        <flux:separator />
 
-                        <!-- Recent Documents (Last 10) -->
+                        {{-- Recent Documents --}}
                         @php
-                            $recentDocuments = \App\Models\Document::where('user_id', auth()->id())
-                                ->latest()
-                                ->take(10)
-                                ->get();
+                        $recentDocuments = \App\Models\Document::where('user_id', auth()->id())
+                        ->latest()
+                        ->take(10)
+                        ->get();
                         @endphp
 
                         @if($recentDocuments->count() > 0)
-                            <flux:sidebar disabled class="text-xs text-gray-500">
-                                {{ __('Recent Documents') }}
-                            </flux:sidebar>
+                        <flux:sidebar disabled class="text-xs text-gray-500">
+                            {{ __('Recent Documents') }}
+                        </flux:sidebar>
 
-                            @foreach($recentDocuments as $document)
-                                <flux:sidebar.item
-                                    :href="route('documents.show', $document->id)"
-                                    :current="request()->routeIs('documents.show') && request()->route('document') && request()->route('document')->id === $document->id"
-                                    wire:navigate
-                                    class="truncate text-xs">
-                                    {{ Str::limit($document->title, 30) }}
-                                </flux:sidebar.item>
-                            @endforeach
+                        @foreach($recentDocuments as $document)
+                        <flux:sidebar.item
+                            :href="route('documents.show', $document->id)"
+                            :current="request()->routeIs('documents.show') && optional(request()->route('document'))->id === $document->id"
+                            wire:navigate
+                            class="truncate text-xs">
+                            {{ Str::limit($document->title, 30) }}
+                        </flux:sidebar.item>
+                        @endforeach
 
-                            @if(\App\Models\Document::where('user_id', auth()->id())->count() > 10)
-                                <flux:sidebar.item disabled class="text-xs text-gray-400 italic">
-                                    {{ __('+ ') . (\App\Models\Document::where('user_id', auth()->id())->count() - 10) . __(' more in All Documents') }}
-                                </flux:sidebar.item>
-                            @endif
+                        @if(\App\Models\Document::where('user_id', auth()->id())->count() > 10)
+                        <flux:sidebar.item disabled class="text-xs text-gray-400 italic">
+                            {{ __('+ ') . (\App\Models\Document::where('user_id', auth()->id())->count() - 10) . __(' more in All Documents') }}
+                        </flux:sidebar.item>
+                        @endif
                         @else
-                            <flux:sidebar.item disabled class="text-gray-500 italic">
-                                {{ __('No documents yet') }}
-                            </flux:sidebar.item>
+                        <flux:sidebar.item disabled class="text-gray-500 italic">
+                            {{ __('No documents yet') }}
+                        </flux:sidebar.item>
                         @endif
                     </flux:sidebar.group>
                 </flux:sidebar>
+                @endif
             </flux:sidebar.group>
         </flux:sidebar.nav>
+
 
         <flux:spacer />
 

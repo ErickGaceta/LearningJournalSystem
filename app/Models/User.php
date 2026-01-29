@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -19,8 +18,8 @@ class User extends Authenticatable
         'middle_name',
         'last_name',
         'gender',
-        'id_position',
-        'id_division_unit',
+        'id_positions',
+        'id_division_units',
         'employee_type',
         'roles',
         'username',
@@ -28,6 +27,7 @@ class User extends Authenticatable
         'password',
         'last_login',
         'is_active',
+        'user_type',
     ];
 
     protected $hidden = [
@@ -36,12 +36,9 @@ class User extends Authenticatable
         'two_factor_recovery_codes',
         'remember_token',
     ];
+    
+    protected $with = ['position', 'divisionUnit'];
 
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
     protected $appends = ['full_name'];
 
     protected function casts(): array
@@ -51,6 +48,20 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // ========== Relationships ==========
+    
+    public function position()
+    {
+        return $this->belongsTo(Position::class, 'id_positions');
+    }
+
+    public function divisionUnit()
+    {
+        return $this->belongsTo(DivisionUnit::class, 'id_division_units');
+    }
+
+    // ========== Accessors ==========
 
     public function getFullNameAttribute(): string
     {

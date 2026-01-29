@@ -14,12 +14,12 @@ class DocumentController extends Controller
         // Search functionality
         if ($request->has('search') && $request->search) {
             $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
                 $q->where('title', 'like', "%{$searchTerm}%")
-                  ->orWhere('venue', 'like', "%{$searchTerm}%")
-                  ->orWhere('topics', 'like', "%{$searchTerm}%")
-                  ->orWhere('insights', 'like', "%{$searchTerm}%")
-                  ->orWhere('application', 'like', "%{$searchTerm}%");
+                    ->orWhere('venue', 'like', "%{$searchTerm}%")
+                    ->orWhere('topics', 'like', "%{$searchTerm}%")
+                    ->orWhere('insights', 'like', "%{$searchTerm}%")
+                    ->orWhere('application', 'like', "%{$searchTerm}%");
             });
         }
 
@@ -39,8 +39,10 @@ class DocumentController extends Controller
             'fullname' => 'required|string|max:500',
             'title' => 'required|string|max:500',
             'hours' => 'required|integer|min:1',
-            'date' => 'required|date',
+            'datestart' => 'required|date',
+            'dateend' => 'required|date|after_or_equal:datestart',
             'venue' => 'required|string|max:255',
+            'conductedby' => 'required|string|max:255',
             'registration_fee' => 'required|string|max:100',
             'travel_expenses' => 'required|string|max:100',
             'topics' => 'required|string',
@@ -86,8 +88,10 @@ class DocumentController extends Controller
             'fullname' => 'required|string|max:500',
             'title' => 'required|string|max:500',
             'hours' => 'required|integer|min:1',
-            'date' => 'required|date',
+            'datestart' => 'required|date',
+            'dateend' => 'required|date|after_or_equal:datestart',
             'venue' => 'required|string|max:255',
+            'conductedby' => 'required|string|max:255',
             'registration_fee' => 'required|string|max:100',
             'travel_expenses' => 'required|string|max:100',
             'topics' => 'required|string',
