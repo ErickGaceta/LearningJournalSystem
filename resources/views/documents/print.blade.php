@@ -41,6 +41,7 @@
 <body>
 
     <div style="align-items:center; width: 100%; text-align: center; margin-bottom: 20px; font-size: 12px;">
+        <!-- HEADER -->
         <table style="margin: 0 auto; border-collapse: collapse; width: auto;">
             <tr>
                 <td style="width: 60px;">
@@ -59,6 +60,9 @@
             <div>02-06-2026</div>
             <div>Page 2 of 2</div>
         </div>
+        <!-- END HEADER -->
+
+        <!-- BODY -->
         <div style="margin-top: 10px; font-size: 14px;">
             My Learning Journal
         </div>
@@ -167,6 +171,7 @@
         </tbody>
     </table>
 
+    <!-- FOOTER -->
     <table style="margin: 0 auto; margin-top: 30px;">
         <tr>
             <td style="font-size: 10px;">All document information printed from the Quality Management Information System(QMIS) is deemed "UNCONTROLLED"</td>
