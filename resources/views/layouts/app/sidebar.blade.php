@@ -40,42 +40,6 @@
                             class="font-semibold">
                             {{ __('View All Documents') }}
                         </flux:sidebar.item>
-
-                        <flux:separator />
-
-                        {{-- Recent Documents --}}
-                        @php
-                        $recentDocuments = \App\Models\Document::where('user_id', auth()->id())
-                        ->latest()
-                        ->take(10)
-                        ->get();
-                        @endphp
-
-                        @if($recentDocuments->count() > 0)
-                        <flux:sidebar disabled class="text-xs text-gray-500">
-                            {{ __('Recent Documents') }}
-                        </flux:sidebar>
-
-                        @foreach($recentDocuments as $document)
-                        <flux:sidebar.item
-                            :href="route('documents.show', $document->id)"
-                            :current="request()->routeIs('documents.show') && optional(request()->route('document'))->id === $document->id"
-                            wire:navigate
-                            class="truncate text-xs">
-                            {{ Str::limit($document->title, 30) }}
-                        </flux:sidebar.item>
-                        @endforeach
-
-                        @if(\App\Models\Document::where('user_id', auth()->id())->count() > 10)
-                        <flux:sidebar.item disabled class="text-xs text-gray-400 italic">
-                            {{ __('+ ') . (\App\Models\Document::where('user_id', auth()->id())->count() - 10) . __(' more in All Documents') }}
-                        </flux:sidebar.item>
-                        @endif
-                        @else
-                        <flux:sidebar.item disabled class="text-gray-500 italic">
-                            {{ __('No documents yet') }}
-                        </flux:sidebar.item>
-                        @endif
                     </flux:sidebar.group>
                 </flux:sidebar>
                 @endif
