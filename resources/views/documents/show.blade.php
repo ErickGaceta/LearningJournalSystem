@@ -11,6 +11,16 @@
         </div>
         @endif
 
+        <!-- Back Button -->
+        <div class="mb-4">
+            <a href="{{ route('documents.index') }}" class="inline-flex items-center gap-2 text-blue-500 hover:text-blue-600 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to All Documents
+            </a>
+        </div>
+
         <!-- Header with Actions -->
         <div class="flex justify-between items-start mb-6">
             <div>
@@ -122,15 +132,6 @@
             </div>
         </div>
 
-        <!-- Back Button -->
-        <div class="mt-6">
-            <a href="{{ route('documents.index') }}" class="inline-flex items-center gap-2 text-blue-500 hover:text-blue-600 transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                Back to All Documents
-            </a>
-        </div>
         <script>
             function openPrintPreview() {
                 document.getElementById('printModal').classList.remove('hidden');
