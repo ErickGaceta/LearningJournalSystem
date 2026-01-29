@@ -143,7 +143,7 @@
         </script>
 
         <div id="printModal" class="hidden" style="width: 50%; height: 50%; right: 0; top: 0; position: fixed;">
-            <div class="flex w-69 h-full items-center justify-center min-h-screen p-4">
+            <div class="flex w-full h-full items-center justify-center min-h-screen p-4">
                 <div class="bg-white w-full h-full rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
                     <!-- Header -->
                     <div class="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-gray-50 to-white border-b border-gray-200">
