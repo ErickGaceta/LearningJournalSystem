@@ -51,13 +51,11 @@
                 </div>
             </div>
 
-                <div class="relative w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                    <div class="flex flex-col justify-center items-center gap-2 p-6">
-                        <p class="text-sm font-medium text-neutral-600 dark:text-neutral-400">This Year</p>
-                        <p class="text-3xl font-bold text-heading">{{ \App\Models\Document::where('user_id', auth()->id())->whereYear('datestart', date('Y'))->count() }}</p>
-                    </div>
+            <div class="relative w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+                <div class="flex flex-col justify-center items-center gap-2 p-6">
+                    <p class="text-sm font-medium text-neutral-600 dark:text-neutral-400">This Year</p>
+                    <p class="text-3xl font-bold text-heading">{{ \App\Models\Document::where('user_id', auth()->id())->whereYear('datestart', date('Y'))->count() }}</p>
                 </div>
-
             </div>
         </div>
 
@@ -77,7 +75,6 @@
                                 </h3>
                             </a>
                         </div>
-
 
                         <div class="w-full">
                             <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1">Date</label>
@@ -112,6 +109,7 @@
                     </p>
                 </div>
             </div>
+            @endforeach
         </div>
 
         <!-- Pagination -->
