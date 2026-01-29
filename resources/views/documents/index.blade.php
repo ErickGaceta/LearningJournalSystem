@@ -11,49 +11,45 @@
         </div>
         @endif
 
-        <!-- Header Section with Stats and Search -->
-        <div class="grid auto-rows-min gap-4 md:grid-cols-4 mb-4">
-            <!-- Search Bar -->
-            <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 mb-4">
-                <form method="GET" action="{{ route('documents.index') }}" class="p-4">
-                    <div class="flex gap-3">
-                        <div class="flex-1 relative">
-                            <input
-                                type="text"
-                                name="search"
-                                value="{{ request('search') }}"
-                                placeholder="Search by title, venue, or topics..."
-                                class="w-full pl-10 bg-neutral-secondary-medium border border-default-medium text-heading rounded-xl focus:ring-brand focus:border-brand placeholder:text-body">
-                        </div>
-                        <button type="submit" class="px-6 py-2.5 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-xl transition-colors">
-                            Search
-                        </button>
-                        @if(request('search'))
-                        <a href="{{ route('documents.index') }}" class="px-6 py-2.5 bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600 text-heading font-medium rounded-xl transition-colors">
-                            Clear
-                        </a>
-                        @endif
+        <!-- Search Bar -->
+        <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+            <form method="GET" action="{{ route('documents.index') }}" class="p-4">
+                <div class="flex gap-3">
+                    <div class="flex-1 relative">
+                        <input
+                            type="text"
+                            name="search"
+                            value="{{ request('search') }}"
+                            placeholder="Search by title, venue, or topics..."
+                            class="w-full pl-10 bg-neutral-secondary-medium border border-default-medium text-heading rounded-xl focus:ring-brand focus:border-brand placeholder:text-body">
                     </div>
-                </form>
+                    <button type="submit" class="px-6 py-2.5 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-xl transition-colors">
+                        Search
+                    </button>
+                    @if(request('search'))
+                    <a href="{{ route('documents.index') }}" class="px-6 py-2.5 bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600 text-heading font-medium rounded-xl transition-colors">
+                        Clear
+                    </a>
+                    @endif
+                </div>
+            </form>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+                <div class="flex flex-col justify-center items-center gap-2 p-6">
+                    <p class="text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Journals</p>
+                    <p class="text-3xl font-bold text-heading">{{ \App\Models\Document::where('user_id', auth()->id())->count() }}</p>
+                </div>
             </div>
 
-            <div class="flex h-full w-full flex-1 grow gap-4 rounded-xl">
-
-                <!-- Stats Cards -->
-
-                <div class="relative w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                    <div class="flex flex-col justify-center items-center gap-2 p-6">
-                        <p class="text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Journals</p>
-                        <p class="text-3xl font-bold text-heading">{{ \App\Models\Document::where('user_id', auth()->id())->count() }}</p>
-                    </div>
+            <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+                <div class="flex flex-col justify-center items-center gap-2 p-6">
+                    <p class="text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Hours</p>
+                    <p class="text-3xl font-bold text-heading">{{ \App\Models\Document::where('user_id', auth()->id())->sum('hours') }}</p>
                 </div>
-
-                <div class="relative w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                    <div class="flex flex-col justify-center items-center gap-2 p-6">
-                        <p class="text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Hours</p>
-                        <p class="text-3xl font-bold text-heading">{{ \App\Models\Document::where('user_id', auth()->id())->sum('hours') }}</p>
-                    </div>
-                </div>
+            </div>
 
                 <div class="relative w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
                     <div class="flex flex-col justify-center items-center gap-2 p-6">
@@ -116,7 +112,6 @@
                     </p>
                 </div>
             </div>
-            @endforeach
         </div>
 
         <!-- Pagination -->
