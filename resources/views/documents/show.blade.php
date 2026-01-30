@@ -58,12 +58,14 @@
                     </svg>
                     Delete
                 </button>
-                
-                <!-- Delete Form - Hidden -->
-                <form id="deleteForm" action="{{ route('documents.destroy', $document->id) }}" method="POST" style="display: none;">
-                    @csrf
-                    @method('DELETE')
-                </form>
+
+                <form id="deleteForm" action="{{ route('documents.destroy', $document) }}" method="POST" class="hidden">
+
+                    <!-- Delete Form - Hidden -->
+                    <form id="deleteForm" action="{{ route('documents.destroy', $document->id) }}" method="POST" style="display: none;">
+                        @csrf
+                        @method('DELETE')
+                    </form>
             </div>
         </div>
 
@@ -219,11 +221,11 @@
             }
         });
 
-            function confirmDelete() {
-                // Create custom modal
-                const modal = document.createElement('div');
-                modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-                modal.innerHTML = `
+        function confirmDelete() {
+            // Create custom modal
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
                     <div class="bg-white dark:bg-neutral-800 rounded-2xl p-6 max-w-md mx-4 shadow-2xl">
                         <div class="flex items-center gap-3 mb-4">
                             <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
@@ -254,17 +256,16 @@
                         </div>
                     </div>
                 `;
-                document.body.appendChild(modal);
+            document.body.appendChild(modal);
 
-                // Close on backdrop click
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        modal.remove();
-                    }
-                });
-            }
-        </script>
-    </div>
+            // Close on backdrop click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
         function confirmDelete() {
             // Create custom confirmation modal
             const modal = document.createElement('div');
@@ -300,12 +301,12 @@
                     </div>
                 </div>
             `;
-            
+
             document.body.appendChild(modal);
-            
+
             // Store modal reference
             window.deleteModal = modal;
-            
+
             // Close on backdrop click
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
@@ -334,11 +335,11 @@
         function submitDeleteForm() {
             // Get the form
             const form = document.getElementById('deleteForm');
-            
+
             if (form) {
                 // Close the modal
                 closeDeleteModal();
-                
+
                 // Submit the form
                 form.submit();
             } else {
@@ -347,4 +348,5 @@
             }
         }
     </script>
+    </div>
 </x-layouts::app>

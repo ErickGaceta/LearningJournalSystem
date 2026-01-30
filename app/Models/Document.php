@@ -42,9 +42,9 @@ class Document extends Model
         static::creating(function ($document) {
             if ($document->user) {
                 $document->fullname = trim(
-                    $document->user->first_name . ' ' . 
-                    $document->user->middle_name . ' ' . 
-                    $document->user->last_name
+                    $document->user->first_name . ' ' .
+                        $document->user->middle_name . ' ' .
+                        $document->user->last_name
                 );
             }
         });
@@ -52,9 +52,9 @@ class Document extends Model
         static::updating(function ($document) {
             if ($document->user) {
                 $document->fullname = trim(
-                    $document->user->first_name . ' ' . 
-                    $document->user->middle_name . ' ' . 
-                    $document->user->last_name
+                    $document->user->first_name . ' ' .
+                        $document->user->middle_name . ' ' .
+                        $document->user->last_name
                 );
             }
         });

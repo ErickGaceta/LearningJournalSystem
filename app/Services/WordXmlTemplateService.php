@@ -25,10 +25,11 @@ class WordXmlTemplateService
 
         $xml = $zip->getFromName('word/document.xml');
 
-        $user = $doc->user;
+        // CRITICAL FIX: Remove formatting between placeholder characters
+        // This merges {{REGISTRATION_FEE}} even if it's split across multiple runs
+        $xml = $this->cleanPlaceholders($xml);
 
-        $registrationFee = preg_replace('/[^0-9.]/', '', $doc->registration_fee);
-        $travelFee       = preg_replace('/[^0-9.]/', '', $doc->travel_expenses);
+        $user = $doc->user;
 
         $replacements = [
             '{{LAST_NAME}}'       => $user->last_name ?? '',
@@ -42,8 +43,8 @@ class WordXmlTemplateService
             '{{VENUE}}'           => $doc->venue,
             '{{HOURS}}'           => $doc->hours,
             '{{CONDUCTEDBY}}'     => $doc->conductedby,
-            '{{REGISTRATION_FEE}}' => number_format((float)$registrationFee, 2),
-            '{{TRAVEL_FEE}}'      => number_format((float)$travelFee, 2),
+            '{{REGISTRATION_FEE}}' => $doc->registration_fee,
+            '{{TRAVEL_FEE}}'      => $doc->travel_expenses,
             '{{TOPICS}}'          => $doc->topics,
             '{{GAINED}}'          => $doc->insights,
             '{{APPLY}}'           => $doc->application,
@@ -59,10 +60,45 @@ class WordXmlTemplateService
         return $output;
     }
 
+    /**
+     * Clean XML to merge fragmented placeholders
+     * Word often splits {{PLACEHOLDER}} across multiple <w:t> tags
+     */
+    private function cleanPlaceholders(string $xml): string
+    {
+        // Pattern: {{TEXT</w:t></w:r><w:r><w:t>MORE}}
+        // Replace with: {{TEXTMORE}}
+        // This removes any XML tags between {{ and }}
+        
+        // Repeat the process multiple times to catch multi-level splits
+        for ($i = 0; $i < 10; $i++) {
+            $before = $xml;
+            
+            // Remove XML tags between {{ and }}
+            $xml = preg_replace_callback(
+                '/(\{\{[^}]*?)<\/w:t>.*?<w:t[^>]*>([^}]*?\}\})/s',
+                function($matches) {
+                    return $matches[1] . $matches[2];
+                },
+                $xml
+            );
+            
+            // If nothing changed, we're done
+            if ($before === $xml) break;
+        }
+        
+        return $xml;
+    }
+
+    /**
+     * Replace placeholders with values
+     */
     private function replace(string $xml, array $vars): string
     {
         foreach ($vars as $key => $value) {
-            $xml = str_replace($key, htmlspecialchars($value ?? '', ENT_XML1), $xml);
+            // Escape special XML characters
+            $escapedValue = htmlspecialchars($value ?? '', ENT_XML1 | ENT_QUOTES, 'UTF-8');
+            $xml = str_replace($key, $escapedValue, $xml);
         }
         return $xml;
     }
