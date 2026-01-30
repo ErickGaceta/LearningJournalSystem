@@ -118,7 +118,7 @@
                             <td class="px-6 py-4 text-right">
                                 <div class="flex justify-end gap-2">
                                     <a href="{{ route('documents.show', $document) }}"
-                                        class="inline-flex items-center px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium rounded-lg transition-colors text-black"
+                                        class="inline-flex items-center px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-xs font-medium rounded-lg transition-colors text-black"
                                         wire:navigate>
                                         View
                                     </a>

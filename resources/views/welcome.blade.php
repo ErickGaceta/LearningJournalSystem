@@ -55,14 +55,14 @@
 }
        </style>
     </head>
-    <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
+    <body class="bg-[#FDFDFC] dark:bg-zinc-950 text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
         <!-- Optional: Uncomment this div to use animated gradient instead of radial gradients -->
         <!-- <div class="gradient-bg"></div> -->
          <div class="floating-image">
             <!-- Replace the src with your actual image path -->
             <img src="{{ asset('favicon.png') }}" alt="Floating decoration" style="width: 100%; height: 100%; object-fit: contain;">
         </div>
-        <header class="w-full lg:max-w-4xl max-w-[335px] text-sm mb-6 not-has-[nav]:hidden">
+        <header class="w-full lg:max-w-4xl max-w-83.75 text-sm mb-6 not-has-[nav]:hidden">
             @if (Route::has('login'))
                 <nav class="flex items-center justify-end gap-4">
                     @auth
@@ -92,7 +92,7 @@
             @endif
         </header>
         <div class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
-    <main class="flex max-w-[400px] w-full flex-col-reverse lg:max-w-60xl lg:flex-row">
+    <main class="flex max-w-100 w-full flex-col-reverse lg:max-w-60xl lg:flex-row">
         <div class="flex-1 p-6 pb-12 lg:p-20 dark:text-[#EDEDEC] rounded-es-lg rounded-ee-lg lg:rounded-ss-lg lg:rounded-ee-none">
            <h1 class="font-black text-center" style="font-size: 50px; font-weight: 900; font-family: 'Arial Black', sans-serif;">Welcome to the DOST</h1>
 <h1 class="font-black text-center" style="font-size: 50px; font-weight: 900; font-family: 'Arial Black', sans-serif;">Learning Journal System</h1>
