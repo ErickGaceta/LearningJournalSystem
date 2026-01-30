@@ -39,15 +39,16 @@
                 <p class="text-sm text-neutral-600 dark:text-neutral-400">Created {{ $document->created_at->diffForHumans() }}</p>
             </div>
             <div class="flex gap-3">
-                <button
-                    onclick="openPrintPreview()"
-                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl transition-colors flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                <a
+                    href="{{ route('documents.export.word', $document) }}"
+                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl inline-flex items-center gap-2 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
+                        <path d="M4.879 4.515a.5.5 0 0 1 .606.364l1.036 4.144.997-3.655a.5.5 0 0 1 .964 0l.997 3.655 1.036-4.144a.5.5 0 0 1 .97.242l-1.5 6a.5.5 0 0 1-.967.01L8 7.402l-1.018 3.73a.5.5 0 0 1-.967-.01l-1.5-6a.5.5 0 0 1 .364-.606z" />
                     </svg>
-                    Print
-                </button>
-                
+                    Export Word
+                </a>
+
                 <button
                     type="button"
                     onclick="confirmDelete()"
@@ -57,7 +58,7 @@
                     </svg>
                     Delete
                 </button>
-                
+
                 <form id="deleteForm" action="{{ route('documents.destroy', $document) }}" method="POST" class="hidden">
                     @csrf
                     @method('DELETE')
@@ -252,7 +253,7 @@
                     </div>
                 `;
                 document.body.appendChild(modal);
-                
+
                 // Close on backdrop click
                 modal.addEventListener('click', (e) => {
                     if (e.target === modal) {

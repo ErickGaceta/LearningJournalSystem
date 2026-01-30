@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DocumentController;
-use App\Http\Controllers\DocumentPrintController;use App\Http\Controllers\LoginController;
+use App\Http\Controllers\DocumentPrintController;
+use App\Http\Controllers\DebugController;
+use App\Http\Controllers\LoginController;
 
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 
@@ -26,6 +28,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/documents/{document}', [DocumentController::class, 'update'])->name('documents.update');
     Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
     Route::get('/documents/{document}/print-preview', [DocumentController::class, 'printPreview'])->name('documents.print.preview');
+    Route::get('/documents/{document}/export-word', [DocumentPrintController::class, 'exportWord'])->name('documents.export.word');
 });
 
 require __DIR__ . '/settings.php';
