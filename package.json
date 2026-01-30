@@ -23,5 +23,23 @@
         "autoprefixer": "^10.4.23",
         "postcss": "^8.5.6",
         "tailwindcss": "^4.1.18"
-    }
+    },
+    "name": "learningjournalsystem",
+    "version": "1.0.0",
+    "description": "",
+    "main": "vite.config.js",
+    "directories": {
+        "test": "tests"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ErickGaceta/LearningJournalSystem.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ErickGaceta/LearningJournalSystem/issues"
+    },
+    "homepage": "https://github.com/ErickGaceta/LearningJournalSystem#readme"
 }

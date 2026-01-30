@@ -153,10 +153,19 @@
             </div>
         </div>
 
-        <!-- Print Preview Modal -->
-        <div id="printModal" class="hidden fixed inset-0 z-50" style="width: 100%; height: 100%;">
-            <div class="flex w-full h-full items-center justify-center p-4" style="background-color: rgba(0, 0, 0, 0.5);">
-                <div class="bg-white w-full h-full max-w-6xl rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
+        <script>
+            function openPrintPreview() {
+                document.getElementById('printModal').classList.remove('hidden');
+            }
+
+            function closePrintPreview() {
+                document.getElementById('printModal').classList.add('hidden');
+            }
+        </script>
+
+        <div id="printModal" class="hidden" style="width: 50%; height: 50%; right: 0; top: 0; position: fixed;">
+            <div class="flex w-full h-full items-center justify-center min-h-screen p-4">
+                <div class="bg-white w-full h-full rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
                     <!-- Header -->
                     <div class="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-gray-50 to-white border-b border-gray-200">
                         <div class="flex items-center gap-3">
