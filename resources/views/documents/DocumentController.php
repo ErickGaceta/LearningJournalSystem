@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Document;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class DocumentController extends Controller
 {
@@ -12,7 +14,10 @@ class DocumentController extends Controller
      */
     public function index()
     {
-        $documents = Document::latest()->paginate(10);
+        $documents = Document::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+            
         return view('documents.index', compact('documents'));
     }
 
@@ -30,15 +35,17 @@ class DocumentController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
             'fullname' => 'required|string|max:255',
-            'hours' => 'required|numeric|min:0',
+            'division_units' => 'nullable|string|max:255',
+            'positions' => 'nullable|string|max:255',
+            'title' => 'required|string|max:255',
+            'hours' => 'required|integer|min:1',
             'datestart' => 'required|date',
             'dateend' => 'required|date|after_or_equal:datestart',
             'venue' => 'required|string|max:255',
             'conductedby' => 'required|string|max:255',
-            'registration_fee' => 'required|numeric|min:0',
-            'travel_expenses' => 'required|numeric|min:0',
+            'registration_fee' => 'required|string|max:50',
+            'travel_expenses' => 'required|string|max:50',
             'topics' => 'required|string',
             'insights' => 'required|string',
             'application' => 'required|string',
@@ -46,11 +53,13 @@ class DocumentController extends Controller
             'appreciation' => 'required|string',
         ]);
 
-        Document::create($validated);
+        $validated['user_id'] = Auth::id();
+        $validated['employee_id'] = Auth::user()->employee_id;
 
-        return redirect()
-            ->route('documents.index')
-            ->with('success', 'Document created successfully.');
+        $document = Document::create($validated);
+
+        return redirect()->route('documents.show', $document)
+            ->with('success', 'Learning journal submitted successfully!');
     }
 
     /**
@@ -58,6 +67,11 @@ class DocumentController extends Controller
      */
     public function show(Document $document)
     {
+        // Check if user owns this document
+        if ($document->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized access');
+        }
+
         return view('documents.show', compact('document'));
     }
 
@@ -66,6 +80,11 @@ class DocumentController extends Controller
      */
     public function edit(Document $document)
     {
+        // Check if user owns this document
+        if ($document->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized access');
+        }
+
         return view('documents.edit', compact('document'));
     }
 
@@ -74,16 +93,20 @@ class DocumentController extends Controller
      */
     public function update(Request $request, Document $document)
     {
+        // Check if user owns this document
+        if ($document->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized access');
+        }
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'fullname' => 'required|string|max:255',
-            'hours' => 'required|numeric|min:0',
+            'hours' => 'required|integer|min:1',
             'datestart' => 'required|date',
             'dateend' => 'required|date|after_or_equal:datestart',
             'venue' => 'required|string|max:255',
             'conductedby' => 'required|string|max:255',
-            'registration_fee' => 'required|numeric|min:0',
-            'travel_expenses' => 'required|numeric|min:0',
+            'registration_fee' => 'required|string|max:50',
+            'travel_expenses' => 'required|string|max:50',
             'topics' => 'required|string',
             'insights' => 'required|string',
             'application' => 'required|string',
@@ -93,40 +116,59 @@ class DocumentController extends Controller
 
         $document->update($validated);
 
-        return redirect()
-            ->route('documents.show', $document)
-            ->with('success', 'Document updated successfully.');
+        return redirect()->route('documents.show', $document)
+            ->with('success', 'Document updated successfully!');
     }
 
     /**
      * Remove the specified resource from storage.
+     * 
+     * THIS IS THE FIXED DESTROY METHOD
      */
     public function destroy(Document $document)
     {
+        // Check if user owns this document
+        if ($document->user_id !== Auth::id()) {
+            return redirect()->route('documents.index')
+                ->with('error', 'Unauthorized: You cannot delete this document.');
+
+        }
+
         try {
-            // Optional: Check if user has permission to delete
-            // Uncomment if you have authorization policies
-            // $this->authorize('delete', $document);
-            
+            // Store document title before deletion
             $documentTitle = $document->title;
+            
+            // Delete the document
             $document->delete();
             
-            return redirect()
-                ->route('documents.index')
+            // Redirect to documents index with success message
+           return redirect()->route('views.dashboard');
                 ->with('success', "Document '{$documentTitle}' has been successfully deleted.");
                 
         } catch (\Exception $e) {
-            return redirect()
-                ->back()
-                ->with('error', 'An error occurred while deleting the document. Please try again.');
+            // Log the error for debugging
+            Log::error('Document deletion failed', [
+                'document_id' => $document->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            // Redirect back with error message
+            return redirect()->route('dashboard');
+                ->with('error', 'Failed to delete document. Please try again.');
         }
     }
 
     /**
-     * Show print preview for the specified document.
+     * Show print preview for the document.
      */
     public function printPreview(Document $document)
     {
+        // Check if user owns this document
+        if ($document->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized access');
+        }
+
         return view('documents.print-preview', compact('document'));
     }
 }

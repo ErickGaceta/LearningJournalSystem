@@ -58,7 +58,8 @@
                     Delete
                 </button>
                 
-                <form id="deleteForm" action="{{ route('documents.destroy', $document) }}" method="POST" class="hidden">
+                <!-- Delete Form - Hidden -->
+                <form id="deleteForm" action="{{ route('documents.destroy', $document->id) }}" method="POST" style="display: none;">
                     @csrf
                     @method('DELETE')
                 </form>
@@ -69,7 +70,7 @@
         <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
             <div class="p-6 space-y-6">
                 <!-- Training Information Grid -->
-                <div class="grid grid-cols-1 md:grid-rows-1 gap-6 pb-6 border-b border-neutral-200 dark:border-neutral-700">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pb-6 border-b border-neutral-200 dark:border-neutral-700">
                     <div>
                         <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Employee Name</label>
                         <p class="text-base text-heading">{{ $document->fullname }}</p>
@@ -153,19 +154,10 @@
             </div>
         </div>
 
-        <script>
-            function openPrintPreview() {
-                document.getElementById('printModal').classList.remove('hidden');
-            }
-
-            function closePrintPreview() {
-                document.getElementById('printModal').classList.add('hidden');
-            }
-        </script>
-
-        <div id="printModal" class="hidden" style="width: 50%; height: 50%; right: 0; top: 0; position: fixed;">
-            <div class="flex w-full h-full items-center justify-center min-h-screen p-4">
-                <div class="bg-white w-full h-full rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
+        <!-- Print Preview Modal -->
+        <div id="printModal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-50">
+            <div class="flex w-full h-full items-center justify-center p-4">
+                <div class="bg-white w-full max-w-4xl h-[90vh] rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
                     <!-- Header -->
                     <div class="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-gray-50 to-white border-b border-gray-200">
                         <div class="flex items-center gap-3">
@@ -177,10 +169,9 @@
                         </div>
 
                         <button
-                            class="flex items-center justify-center w-9 h-9 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95"
+                            class="flex items-center justify-center w-9 h-9 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
                             onclick="closePrintPreview()"
-                            title="Close"
-                            aria-label="Close preview">
+                            title="Close">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
                             </svg>
@@ -194,72 +185,119 @@
                             class="w-full h-full border-0"
                             title="Document preview">
                         </iframe>
-
-                        <!-- Loading indicator -->
-                        <div class="absolute inset-0 flex items-center justify-center bg-white pointer-events-none opacity-0 transition-opacity duration-300" id="loading-indicator">
-                            <div class="flex flex-col items-center gap-3">
-                                <div class="w-10 h-10 border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
-                                <p class="text-sm text-gray-600">Loading preview...</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <script>
-            function openPrintPreview() {
-                document.getElementById('printModal').classList.remove('hidden');
+    <script>
+        function openPrintPreview() {
+            const modal = document.getElementById('printModal');
+            if (modal) {
+                modal.classList.remove('hidden');
             }
+        }
 
-            function closePrintPreview() {
-                document.getElementById('printModal').classList.add('hidden');
+        function closePrintPreview() {
+            const modal = document.getElementById('printModal');
+            if (modal) {
+                modal.classList.add('hidden');
             }
+        }
 
-            function confirmDelete() {
-                // Create custom modal
-                const modal = document.createElement('div');
-                modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-                modal.innerHTML = `
-                    <div class="bg-white dark:bg-neutral-800 rounded-2xl p-6 max-w-md mx-4 shadow-2xl">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-                                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Delete Document</h3>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">This action cannot be undone</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 dark:text-gray-300 mb-6">
-                            Are you sure you want to delete <strong>"{{ $document->title }}"</strong>? 
-                            All data associated with this document will be permanently removed.
-                        </p>
-                        <div class="flex gap-3 justify-end">
-                            <button 
-                                onclick="this.closest('.fixed').remove()"
-                                class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                Cancel
-                            </button>
-                            <button 
-                                onclick="document.getElementById('deleteForm').submit()"
-                                class="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white transition-colors">
-                                Delete Document
-                            </button>
-                        </div>
-                    </div>
-                `;
-                document.body.appendChild(modal);
-                
-                // Close on backdrop click
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        modal.remove();
+        // Close print modal on backdrop click
+        document.addEventListener('DOMContentLoaded', function() {
+            const printModal = document.getElementById('printModal');
+            if (printModal) {
+                printModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closePrintPreview();
                     }
                 });
             }
-        </script>
-    </div>
+        });
+
+        function confirmDelete() {
+            // Create custom confirmation modal
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]';
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-neutral-800 rounded-2xl p-6 max-w-md mx-4 shadow-2xl">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Delete Document</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">This action cannot be undone</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">
+                        Are you sure you want to delete <strong>"{{ $document->title }}"</strong>? 
+                        All data associated with this document will be permanently removed.
+                    </p>
+                    <div class="flex gap-3 justify-end">
+                        <button 
+                            onclick="closeDeleteModal()"
+                            class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            Cancel
+                        </button>
+                        <button 
+                            onclick="submitDeleteForm()"
+                            class="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white transition-colors">
+                            Delete Document
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Store modal reference
+            window.deleteModal = modal;
+            
+            // Close on backdrop click
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeDeleteModal();
+                }
+            });
+
+            // Close on Escape key
+            document.addEventListener('keydown', handleEscapeKey);
+        }
+
+        function handleEscapeKey(e) {
+            if (e.key === 'Escape' && window.deleteModal) {
+                closeDeleteModal();
+            }
+        }
+
+        function closeDeleteModal() {
+            if (window.deleteModal) {
+                window.deleteModal.remove();
+                window.deleteModal = null;
+                document.removeEventListener('keydown', handleEscapeKey);
+            }
+        }
+
+        function submitDeleteForm() {
+            // Get the form
+            const form = document.getElementById('deleteForm');
+            
+            if (form) {
+                // Close the modal
+                closeDeleteModal();
+                
+                // Submit the form
+                form.submit();
+            } else {
+                console.error('Delete form not found');
+                alert('Error: Could not find delete form. Please refresh and try again.');
+            }
+        }
+    </script>
 </x-layouts::app>

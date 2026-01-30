@@ -138,7 +138,7 @@ class DocumentController extends Controller
 
         $document->delete();
 
-        return redirect()->route('views.dashboard')
+        return redirect()->route('documents.index')
             ->with('success', 'Document deleted successfully!');
     }
 }
