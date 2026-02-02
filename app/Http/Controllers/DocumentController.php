@@ -63,7 +63,7 @@ class DocumentController extends Controller
 
         $validated['user_id'] = Auth::id();
 
-        $document = Document::create($validated);
+        Document::create($validated);
 
         return redirect()->route('documents.index')
             ->with('success', 'Document created successfully!');
@@ -131,14 +131,30 @@ class DocumentController extends Controller
      */
     public function destroy(Document $document)
     {
-        // Ensure user can only delete their own documents
-        if ($document->user_id !== Auth::id()) {
-            abort(403);
+        try {
+            // Optional: Check if user has permission to delete
+            // Uncomment if you have authorization policies
+            // $this->authorize('delete', $document);
+
+            $documentTitle = $document->title;
+            $document->delete();
+
+            return redirect()
+                ->route('documents.index')
+                ->with('success', "Document '{$documentTitle}' has been successfully deleted.");
+
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'An error occurred while deleting the document. Please try again.');
         }
+    }
 
-        $document->delete();
-
-        return redirect()->route('documents.index')
-            ->with('success', 'Document deleted successfully!');
+    /**
+     * Show print preview for the specified document.
+     */
+    public function printPreview(Document $document)
+    {
+        return view('documents.print-preview', compact('document'));
     }
 }
