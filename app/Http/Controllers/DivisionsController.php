@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 
 class DivisionsController extends Controller
 {
-    public function divisions()
+    public function index()
     {
         // Logic to retrieve and display divisions
-        return view('pages.divisions');
+        return view('pages.divisions.index');
     }
 }
