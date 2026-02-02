@@ -10,7 +10,7 @@
                 <div class="rounded-xl border border-neutral-200 p-4">
                     <div class="flex flex-col gap-4">
                         <p class="text-base font-medium text-neutral-600 dark:text-neutral-400 text-center">Personal Information</p>
-                        
+
                         <div class="space-y-4">
                             <div>
                                 <label for="employee_id" class="block mb-2.5 text-base font-medium text-heading">Employee ID</label>
@@ -21,7 +21,7 @@
                                     value="{{ auth()->user()->employee_id }}"
                                     readonly />
                             </div>
-                            
+
                             <div>
                                 <label for="fullname" class="block mb-2.5 text-base font-medium text-heading">Name</label>
                                 <input type="text"
@@ -34,32 +34,34 @@
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
-                            
-                            <div>
-                                <label for="division_units" class="block mb-2.5 text-base font-medium text-heading">Department/Unit/Office</label>
-                                <input type="text"
-                                    id="division_units"
-                                    name="division_units"
-                                    class="border-none text-heading w-full text-sm mt-1 rounded-xl block px-3 py-2 shadow-lg bg-transparent"
-                                    value="{{ old('division_units', auth()->user()->divisionUnit->division_units ?? 'Not Assigned') }}"
-                                    readonly />
-                                @error('division_units')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
 
-                            <div>
-                                <label for="positions" class="block mb-2.5 text-base font-medium text-heading">Position</label>
-                                <input type="text"
-                                    id="positions"
-                                    name="positions"
-                                    class="border-none text-heading w-full text-sm mt-1 rounded-xl block px-3 py-2 shadow-lg bg-transparent"
-                                    value="{{ old('positions', auth()->user()->position->positions ?? 'Not Assigned') }}"
-                                    readonly />
-                                @error('positions')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+        <label for="division_units" class="block mb-2.5 text-base font-medium text-heading">Department/Unit/Office</label>
+        <input type="text"
+            id="division_units"
+            name="division_units"
+            class="border-none text-heading w-full text-sm mt-1 rounded-xl block px-3 py-2 shadow-lg bg-transparent"
+            value="{{ old('division_units', auth()->user()->divisionUnit->division_units ?? 'Not Assigned') }}"
+            readonly />
+        @error('division_units')
+        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div>
+        <label for="positions" class="block mb-2.5 text-base font-medium text-heading">Position</label>
+        <input type="text"
+            id="positions"
+            name="positions"
+            class="border-none text-heading w-full text-sm mt-1 rounded-xl block px-3 py-2 shadow-lg bg-transparent"
+            value="{{ old('positions', auth()->user()->position->positions ?? 'Not Assigned') }}"
+            readonly />
+        @error('positions')
+        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+        @enderror
+    </div>
+</div>
                         </div>
                     </div>
                 </div>
@@ -68,7 +70,7 @@
                 <div class="rounded-xl border border-neutral-200 p-4">
                     <div class="flex flex-col gap-4">
                         <p class="text-base font-medium text-neutral-600 dark:text-neutral-400 text-center">L&D Program Information</p>
-                        
+
                         <div class="space-y-3">
                             <div>
                                 <label for="title" class="block mb-1 text-base font-medium text-heading">L&D Title</label>
@@ -83,7 +85,7 @@
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
-                            
+
                             <div>
                                 <label for="hours" class="block mb-1 text-base font-medium text-heading">Number of L&D Hours</label>
                                 <input type="number"
@@ -98,34 +100,36 @@
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
-                            
-                            <div>
-                                <label for="datestart" class="block mb-1 text-base font-medium text-heading">Date Started</label>
-                                <input type="date"
-                                    id="datestart"
-                                    name="datestart"
-                                    class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
-                                    placeholder="Select date"
-                                    value="{{ old('datestart') }}"
-                                    required />
-                                @error('datestart')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            
-                            <div>
-                                <label for="dateend" class="block mb-1 text-base font-medium text-heading">Date Ended</label>
-                                <input type="date"
-                                    id="dateend"
-                                    name="dateend"
-                                    class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
-                                    placeholder="Select date"
-                                    value="{{ old('dateend') }}"
-                                    required />
-                                @error('dateend')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+        <label for="datestart" class="block mb-1 text-base font-medium text-heading">Date Started</label>
+        <input type="date"
+            id="datestart"
+            name="datestart"
+            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
+            placeholder="Select date"
+            value="{{ old('datestart') }}"
+            required />
+        @error('datestart')
+        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div>
+        <label for="dateend" class="block mb-1 text-base font-medium text-heading">Date Ended</label>
+        <input type="date"
+            id="dateend"
+            name="dateend"
+            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
+            placeholder="Select date"
+            value="{{ old('dateend') }}"
+            required />
+        @error('dateend')
+        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+        @enderror
+    </div>
+</div>
                         </div>
                     </div>
                 </div>
@@ -134,7 +138,7 @@
                 <div class="rounded-xl border border-neutral-200 p-4">
                     <div class="flex flex-col gap-4">
                         <p class="text-base font-medium text-neutral-600 dark:text-neutral-400 text-center">L&D Additional Information</p>
-                        
+
                         <div class="space-y-3">
                             <div>
                                 <label for="venue" class="block mb-1 text-base font-medium text-heading">Venue</label>
@@ -149,7 +153,7 @@
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
-                            
+
                             <div>
                                 <label for="conductedby" class="block mb-1 text-base font-medium text-heading">Conducted/ Sponsored By</label>
                                 <input type="text"
@@ -163,34 +167,36 @@
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
-                            
-                            <div>
-                                <label for="registration_fee" class="block mb-1 text-base font-medium text-heading">Registration Fee</label>
-                                <input type="text"
-                                    id="registration_fee"
-                                    name="registration_fee"
-                                    class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
-                                    placeholder="Registration Fee"
-                                    value="{{ old('registration_fee') }}"
-                                    required />
-                                @error('registration_fee')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            
-                            <div>
-                                <label for="travel_expenses" class="block mb-1 text-base font-medium text-heading">Travel Expenses</label>
-                                <input type="text"
-                                    id="travel_expenses"
-                                    name="travel_expenses"
-                                    class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
-                                    placeholder="Travel Expenses"
-                                    value="{{ old('travel_expenses') }}"
-                                    required />
-                                @error('travel_expenses')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+        <label for="registration_fee" class="block mb-1 text-base font-medium text-heading">Registration Fee</label>
+        <input type="text"
+            id="registration_fee"
+            name="registration_fee"
+            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
+            placeholder="Registration Fee"
+            value="{{ old('registration_fee') }}"
+            required />
+        @error('registration_fee')
+        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div>
+        <label for="travel_expenses" class="block mb-1 text-base font-medium text-heading">Travel Expenses</label>
+        <input type="text"
+            id="travel_expenses"
+            name="travel_expenses"
+            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
+            placeholder="Travel Expenses"
+            value="{{ old('travel_expenses') }}"
+            required />
+        @error('travel_expenses')
+        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+        @enderror
+    </div>
+</div>
                         </div>
                     </div>
                 </div>
