@@ -4,15 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Models\Document;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DocumentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $documents = Document::latest()->paginate(10);
+        $query = Document::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc');
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('venue', 'like', "%{$search}%")
+                    ->orWhere('topics', 'like', "%{$search}%");
+            });
+        }
+
+        // IMPORTANT: Use paginate() not get()
+        $documents = $query->paginate(15)->withQueryString(); // Maintains search parameters
+
         return view('documents.index', compact('documents'));
     }
 
@@ -31,26 +47,26 @@ class DocumentController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'fullname' => 'required|string|max:255',
-            'hours' => 'required|numeric|min:0',
+            'venue' => 'required|string|max:255',
+            'conductedby' => 'required|string|max:255', // Add this
             'datestart' => 'required|date',
             'dateend' => 'required|date|after_or_equal:datestart',
-            'venue' => 'required|string|max:255',
-            'conductedby' => 'required|string|max:255',
-            'registration_fee' => 'required|numeric|min:0',
-            'travel_expenses' => 'required|numeric|min:0',
-            'topics' => 'required|string',
-            'insights' => 'required|string',
-            'application' => 'required|string',
-            'challenges' => 'required|string',
-            'appreciation' => 'required|string',
+            'hours' => 'required|numeric|min:0',
+            'topics' => 'nullable|string',
+            'registration_fee' => 'nullable|numeric|min:0',
+            'travel_expenses' => 'nullable|numeric|min:0',
+            'insights' => 'nullable|string',
+            'application' => 'nullable|string',
+            'challenges' => 'nullable|string',
+            'appreciation' => 'nullable|string',
         ]);
 
-        Document::create($validated);
+        $validated['user_id'] = Auth::id();
 
-        return redirect()
-            ->route('documents.index')
-            ->with('success', 'Document created successfully.');
+        $document = Document::create($validated);
+
+        return redirect()->route('documents.index')
+            ->with('success', 'Document created successfully!');
     }
 
     /**
@@ -58,6 +74,11 @@ class DocumentController extends Controller
      */
     public function show(Document $document)
     {
+        // Ensure user can only view their own documents
+        if ($document->user_id !== Auth::id()) {
+            abort(403);
+        }
+
         return view('documents.show', compact('document'));
     }
 
@@ -66,6 +87,11 @@ class DocumentController extends Controller
      */
     public function edit(Document $document)
     {
+        // Ensure user can only edit their own documents
+        if ($document->user_id !== Auth::id()) {
+            abort(403);
+        }
+
         return view('documents.edit', compact('document'));
     }
 
@@ -74,28 +100,30 @@ class DocumentController extends Controller
      */
     public function update(Request $request, Document $document)
     {
+        if ($document->user_id !== Auth::id()) {
+            abort(403);
+        }
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'fullname' => 'required|string|max:255',
-            'hours' => 'required|numeric|min:0',
+            'venue' => 'required|string|max:255',
+            'conductedby' => 'required|string|max:255', // Add this
             'datestart' => 'required|date',
             'dateend' => 'required|date|after_or_equal:datestart',
-            'venue' => 'required|string|max:255',
-            'conductedby' => 'required|string|max:255',
-            'registration_fee' => 'required|numeric|min:0',
-            'travel_expenses' => 'required|numeric|min:0',
-            'topics' => 'required|string',
-            'insights' => 'required|string',
-            'application' => 'required|string',
-            'challenges' => 'required|string',
-            'appreciation' => 'required|string',
+            'hours' => 'required|numeric|min:0',
+            'topics' => 'nullable|string',
+            'registration_fee' => 'nullable|numeric|min:0',
+            'travel_expenses' => 'nullable|numeric|min:0',
+            'insights' => 'nullable|string',
+            'application' => 'nullable|string',
+            'challenges' => 'nullable|string',
+            'appreciation' => 'nullable|string',
         ]);
 
         $document->update($validated);
 
-        return redirect()
-            ->route('documents.show', $document)
-            ->with('success', 'Document updated successfully.');
+        return redirect()->route('documents.index')
+            ->with('success', 'Document updated successfully!');
     }
 
     /**
@@ -103,30 +131,14 @@ class DocumentController extends Controller
      */
     public function destroy(Document $document)
     {
-        try {
-            // Optional: Check if user has permission to delete
-            // Uncomment if you have authorization policies
-            // $this->authorize('delete', $document);
-            
-            $documentTitle = $document->title;
-            $document->delete();
-            
-            return redirect()
-                ->route('documents.index')
-                ->with('success', "Document '{$documentTitle}' has been successfully deleted.");
-                
-        } catch (\Exception $e) {
-            return redirect()
-                ->back()
-                ->with('error', 'An error occurred while deleting the document. Please try again.');
+        // Ensure user can only delete their own documents
+        if ($document->user_id !== Auth::id()) {
+            abort(403);
         }
-    }
 
-    /**
-     * Show print preview for the specified document.
-     */
-    public function printPreview(Document $document)
-    {
-        return view('documents.print-preview', compact('document'));
+        $document->delete();
+
+        return redirect()->route('documents.index')
+            ->with('success', 'Document deleted successfully!');
     }
 }
