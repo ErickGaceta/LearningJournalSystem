@@ -41,11 +41,11 @@
                             {{ __('View All Documents') }}
                         </flux:sidebar.item>
 
-                        <flux:sidebar.item icon="user-circle" :href="route('positions')" :current="request()->routeIs('positions')" wire:navigate class="font-semibold">
+                        <flux:sidebar.item icon="user-circle" :href="route('positions.index')" :current="request()->routeIs('positions.index')" wire:navigate class="font-semibold">
                             {{ __('Positions') }}
                         </flux:sidebar>
 
-                        <flux:sidebar.item icon="building-office" :href="route('divisions')" :current="request()->routeIs('divisions')" wire:navigate class="font-semibold">
+                        <flux:sidebar.item icon="building-office" :href="route('divisions.index')" :current="request()->routeIs('divisions.index')" wire:navigate class="font-semibold">
                             {{ __('Divisions') }}
                         </flux:sidebar>
                     </flux:sidebar.group>

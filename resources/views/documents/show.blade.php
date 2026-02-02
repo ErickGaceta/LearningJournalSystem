@@ -73,40 +73,40 @@
         <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
             <div class="p-6 space-y-6">
                 <!-- Training Information Grid -->
-               <div class="pb-6 border-b border-neutral-200 dark:border-neutral-700 space-y-4">
-    <div>
-        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Employee Name</label>
-        <p class="text-base text-heading">{{ $document->fullname }}</p>
-    </div>
-    <div>
-        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Hours</label>
-        <p class="text-base text-heading">{{ $document->hours }} hours</p>
-    </div>
-    <div>
-        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Date Started</label>
-        <p class="text-base text-heading">{{ $document->datestart->format('F d, Y') }}</p>
-    </div>
-    <div>
-        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Date Ended</label>
-        <p class="text-base text-heading">{{ $document->dateend->format('F d, Y') }}</p>
-    </div>
-    <div>
-        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Venue</label>
-        <p class="text-base text-heading">{{ $document->venue }}</p>
-    </div>
-    <div>
-        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Conducted By</label>
-        <p class="text-base text-heading">{{ $document->conductedby }}</p>
-    </div>
-    <div>
-        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Registration Fee</label>
-        <p class="text-base text-heading">₱{{ $document->registration_fee }}</p>
-    </div>
-    <div>
-        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Travel Expenses</label>
-        <p class="text-base text-heading">₱{{ $document->travel_expenses }}</p>
-    </div>
-</div>
+                <div class="pb-6 border-b border-neutral-200 dark:border-neutral-700 space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Employee Name</label>
+                        <p class="text-base text-heading">{{ $document->fullname }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Hours</label>
+                        <p class="text-base text-heading">{{ $document->hours }} hours</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Date Started</label>
+                        <p class="text-base text-heading">{{ $document->datestart->format('F d, Y') }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Date Ended</label>
+                        <p class="text-base text-heading">{{ $document->dateend->format('F d, Y') }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Venue</label>
+                        <p class="text-base text-heading">{{ $document->venue }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Conducted By</label>
+                        <p class="text-base text-heading">{{ $document->conductedby }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Registration Fee</label>
+                        <p class="text-base text-heading">₱{{ $document->registration_fee }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Travel Expenses</label>
+                        <p class="text-base text-heading">₱{{ $document->travel_expenses }}</p>
+                    </div>
+                </div>
 
                 <!-- Learning Sections -->
                 <div class="space-y-6">

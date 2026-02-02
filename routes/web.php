@@ -11,7 +11,6 @@ use App\Http\Controllers\DivisionsController;
 
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 
-
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
@@ -28,19 +27,16 @@ Route::get('dashboard', function () {
 
 // Document routes (Training Reports)
 Route::middleware(['auth', 'verified'])->group(function () {
-    // List all documents
-    Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
-    Route::get('/documents/create', [DocumentController::class, 'create'])->name('documents.create');
-    Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');
-    Route::get('/documents/{document}', [DocumentController::class, 'show'])->name('documents.show');
-    Route::get('/documents/{document}/edit', [DocumentController::class, 'edit'])->name('documents.edit');
-    Route::put('/documents/{document}', [DocumentController::class, 'update'])->name('documents.update');
-    Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
+    // Documents
+    Route::resource('documents', DocumentController::class);
     Route::get('/documents/{document}/print-preview', [DocumentController::class, 'printPreview'])->name('documents.print.preview');
     Route::get('/documents/{document}/export-word', [DocumentPrintController::class, 'exportWord'])->name('documents.export.word');
 
-    Route::get('/positions', [PositionsController::class, 'positions'])->name('positions');
-    Route::get('/divisions', [DivisionsController::class, 'divisions'])->name('divisions');
+    // Positions - use resource route
+    Route::resource('positions', PositionsController::class);
+    
+    // Divisions - use resource route
+    Route::resource('divisions', DivisionsController::class);
 });
 
 require __DIR__ . '/settings.php';
