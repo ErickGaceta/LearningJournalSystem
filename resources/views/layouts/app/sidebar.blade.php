@@ -7,9 +7,9 @@
 
 <body class="min-h-screen bg-white dark:bg-zinc-800">
     <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
-        <flux:sidebar.header>
-            <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
-            <flux:sidebar.collapse class="lg:hidden" />
+        <flux:sidebar.header class="cursor-default">
+            <x-app-logo class="cursor-default" :sidebar="true" wire:navigate />
+            <flux:sidebar.collapse class="lg:hidden cursor-default" />
         </flux:sidebar.header>
 
         <flux:sidebar.nav>
@@ -40,6 +40,14 @@
                             class="font-semibold">
                             {{ __('View All Documents') }}
                         </flux:sidebar.item>
+
+                        <flux:sidebar.item icon="user-circle" :href="route('positions')" :current="request()->routeIs('positions')" wire:navigate class="font-semibold">
+                            {{ __('Positions') }}
+                        </flux:sidebar>
+
+                        <flux:sidebar.item icon="building-office" :href="route('divisions')" :current="request()->routeIs('divisions')" wire:navigate class="font-semibold">
+                            {{ __('Divisions') }}
+                        </flux:sidebar>
                     </flux:sidebar.group>
                 </flux:sidebar>
                 @endif

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Document;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DocumentController extends Controller
 {
@@ -45,6 +46,8 @@ class DocumentController extends Controller
             'challenges' => 'required|string',
             'appreciation' => 'required|string',
         ]);
+
+        $validated['user_id'] = Auth::id();
 
         Document::create($validated);
 
