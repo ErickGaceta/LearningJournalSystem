@@ -14,17 +14,20 @@
         <!-- Search Bar -->
         <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
             <form method="GET" action="{{ route('documents.index') }}" class="p-4">
-                <div class="flex gap-3">
+                <div class="flex gap-3 justify-center items-center">
                     <div class="flex-1 relative">
                         <input
                             type="text"
                             name="search"
                             value="{{ request('search') }}"
                             placeholder="Search by title, venue, or topics..."
-                            class="w-full pl-10 bg-neutral-secondary-medium border border-default-medium text-heading rounded-xl focus:ring-brand focus:border-brand placeholder:text-body">
+                            class="w-full px-10 py-1  bg-neutral-secondary-medium border border-default-medium text-heading rounded-2xl focus:ring-brand focus:border-brand placeholder:text-body">
                     </div>
-                    <button type="submit" class="px-6 py-2.5 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-xl transition-colors">
-                        Search
+                    <button type="submit" class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white font-medium text-sm rounded-2xl transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                        </svg>
+
                     </button>
                     @if(request('search'))
                     <a href="{{ route('documents.index') }}" class="px-6 py-2.5 bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600 text-heading font-medium rounded-xl transition-colors">
@@ -63,6 +66,15 @@
 
         <!-- Documents Table -->
         <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+            <div class="flex flex-col items-end justify-end gap-4 mt-2 me-2">
+                <a href="{{ route('documents.create') }}"
+                    class="bg-blue-500 text-white px-3 py-2 rounded-xl hover:bg-blue-600 transition-colors inline-flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                    </svg>
+                    Create New Learning Journal
+                </a>
+            </div>
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead class="bg-neutral-50 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700">
@@ -118,7 +130,7 @@
                             <td class="px-6 py-4 text-right">
                                 <div class="flex justify-end gap-2">
                                     <a href="{{ route('documents.show', $document) }}"
-                                        class="inline-flex items-center px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium rounded-lg transition-colors text-black"
+                                        class="inline-flex items-center px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-xs font-medium rounded-lg transition-colors text-black"
                                         wire:navigate>
                                         View
                                     </a>
