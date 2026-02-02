@@ -73,40 +73,40 @@
         <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
             <div class="p-6 space-y-6">
                 <!-- Training Information Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pb-6 border-b border-neutral-200 dark:border-neutral-700">
-                    <div>
-                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Employee Name</label>
-                        <p class="text-base text-heading">{{ $document->fullname }}</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Hours</label>
-                        <p class="text-base text-heading">{{ $document->hours }} hours</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Date Started</label>
-                        <p class="text-base text-heading">{{ $document->datestart->format('F d, Y') }}</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Date Ended</label>
-                        <p class="text-base text-heading">{{ $document->dateend->format('F d, Y') }}</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Venue</label>
-                        <p class="text-base text-heading">{{ $document->venue }}</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Conducted By</label>
-                        <p class="text-base text-heading">{{ $document->conductedby }}</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Registration Fee</label>
-                        <p class="text-base text-heading">₱{{ $document->registration_fee }}</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Travel Expenses</label>
-                        <p class="text-base text-heading">₱{{ $document->travel_expenses }}</p>
-                    </div>
-                </div>
+               <div class="pb-6 border-b border-neutral-200 dark:border-neutral-700 space-y-4">
+    <div>
+        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Employee Name</label>
+        <p class="text-base text-heading">{{ $document->fullname }}</p>
+    </div>
+    <div>
+        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Hours</label>
+        <p class="text-base text-heading">{{ $document->hours }} hours</p>
+    </div>
+    <div>
+        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Date Started</label>
+        <p class="text-base text-heading">{{ $document->datestart->format('F d, Y') }}</p>
+    </div>
+    <div>
+        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Date Ended</label>
+        <p class="text-base text-heading">{{ $document->dateend->format('F d, Y') }}</p>
+    </div>
+    <div>
+        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Venue</label>
+        <p class="text-base text-heading">{{ $document->venue }}</p>
+    </div>
+    <div>
+        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Conducted By</label>
+        <p class="text-base text-heading">{{ $document->conductedby }}</p>
+    </div>
+    <div>
+        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Registration Fee</label>
+        <p class="text-base text-heading">₱{{ $document->registration_fee }}</p>
+    </div>
+    <div>
+        <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Travel Expenses</label>
+        <p class="text-base text-heading">₱{{ $document->travel_expenses }}</p>
+    </div>
+</div>
 
                 <!-- Learning Sections -->
                 <div class="space-y-6">
@@ -239,16 +239,16 @@
                             </div>
                         </div>
                         <p class="text-gray-600 dark:text-gray-300 mb-6">
-                            Are you sure you want to delete <strong>"{{ $document->title }}"</strong>? 
+                            Are you sure you want to delete <strong>"{{ $document->title }}"</strong>?
                             All data associated with this document will be permanently removed.
                         </p>
                         <div class="flex gap-3 justify-end">
-                            <button 
+                            <button
                                 onclick="this.closest('.fixed').remove()"
                                 class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                 Cancel
                             </button>
-                            <button 
+                            <button
                                 onclick="document.getElementById('deleteForm').submit()"
                                 class="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white transition-colors">
                                 Delete Document
@@ -284,16 +284,16 @@
                         </div>
                     </div>
                     <p class="text-gray-600 dark:text-gray-300 mb-6">
-                        Are you sure you want to delete <strong>"{{ $document->title }}"</strong>? 
+                        Are you sure you want to delete <strong>"{{ $document->title }}"</strong>?
                         All data associated with this document will be permanently removed.
                     </p>
                     <div class="flex gap-3 justify-end">
-                        <button 
+                        <button
                             onclick="closeDeleteModal()"
                             class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             Cancel
                         </button>
-                        <button 
+                        <button
                             onclick="submitDeleteForm()"
                             class="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white transition-colors">
                             Delete Document

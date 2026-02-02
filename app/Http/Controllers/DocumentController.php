@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Document;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DocumentController extends Controller
 {
@@ -45,6 +46,8 @@ class DocumentController extends Controller
             'challenges' => 'required|string',
             'appreciation' => 'required|string',
         ]);
+
+        $validated['user_id'] = Auth::id();
 
         Document::create($validated);
 
@@ -107,14 +110,14 @@ class DocumentController extends Controller
             // Optional: Check if user has permission to delete
             // Uncomment if you have authorization policies
             // $this->authorize('delete', $document);
-            
+
             $documentTitle = $document->title;
             $document->delete();
-            
+
             return redirect()
                 ->route('documents.index')
                 ->with('success', "Document '{$documentTitle}' has been successfully deleted.");
-                
+
         } catch (\Exception $e) {
             return redirect()
                 ->back()
