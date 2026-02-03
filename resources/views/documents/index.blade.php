@@ -94,6 +94,9 @@
                             <th class="px-6 py-4 text-left text-xs font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
                                 Created
                             </th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
+                                Printed / Date
+                            </th>
                             <th class="px-6 py-4 text-right text-xs font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
                                 Actions
                             </th>
@@ -125,6 +128,16 @@
                             <td class="px-6 py-4">
                                 <p class="text-sm text-neutral-600 dark:text-neutral-400">
                                     {{ $document->created_at->diffForHumans() }}
+                                </p>
+                            </td>
+                            <td class="px-6 py-4">
+                                <p class="text-sm text-neutral-600 dark:text-neutral-400 flex items-center gap-1">
+                                    @if($document->isPrinted === 1)
+                                    <flux:icon.check class="text-green-600" />
+                                    @else
+                                    <flux:icon.x-mark class="text-red-500" />
+                                    @endif
+                                    {{ $document->printedAt ? $document->printedAt->format('M d, Y') : 'Not Yet Printed' }}
                                 </p>
                             </td>
                             <td class="px-6 py-4 text-right">

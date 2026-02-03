@@ -28,6 +28,11 @@ class DocumentPrintController extends Controller
                 abort(403, 'Unauthorized');
             }
 
+            $document->update([
+                'isPrinted' => 1,
+                'printedAt' => now(),
+            ]);
+
             $filePath = $this->wordService->generate($document);
 
             return response()->download(

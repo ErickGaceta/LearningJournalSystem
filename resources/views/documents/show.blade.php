@@ -38,6 +38,16 @@
                 <h1 class="text-3xl font-bold text-heading mb-2">Title of L&D program attended: {{ $document->title }}</h1>
                 <p class="text-sm text-neutral-600 dark:text-neutral-400">Created {{ $document->created_at->diffForHumans() }}</p>
             </div>
+
+            <p class="text-sm text-neutral-600 dark:text-neutral-400 flex items-center gap-1">
+                Print Status:
+                @if($document->isPrinted === 1)
+                <flux:icon.check class="text-green-600" />
+                @else
+                <flux:icon.x-mark class="text-red-500" />
+                @endif
+                {{ $document->printedAt ? $document->printedAt->format('M d, Y') : 'Not Yet Printed' }}
+            </p>
             <div class="flex gap-3">
                 <a
                     href="{{ route('documents.export.word', $document) }}"
