@@ -9,7 +9,7 @@ class PositionsController extends Controller
 {
     public function index()
     {
-        $positions = Position::latest()->get();
+        $positions = Position::latest()->paginate(15);
         return view('pages.positions.index', compact('positions'));
     }
 

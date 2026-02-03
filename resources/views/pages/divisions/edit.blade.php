@@ -25,13 +25,8 @@
                 </div>
 
                 <div class="flex justify-end gap-3">
-                    <a href="{{ route('divisions.show', $division) }}"
-                        class="bg-gray-200 text-gray-700 px-4 py-2 rounded-xl hover:bg-gray-300 transition-colors">
-                        Cancel
-                    </a>
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-600 transition-colors">
-                        Update Division/Unit
-                    </button>
+                    <flux:button :href="route('divisions.index')" variant="filled">Cancel</flux:button>
+                    <flux:button type="submit" variant="primary" color="sky" icon="arrow-up-on-square">Update</flux:button>
                 </div>
             </form>
         </div>

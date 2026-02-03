@@ -24,13 +24,10 @@
                 </div>
 
                 <div class="flex justify-end gap-3">
-                    <a href="{{ route('positions.index') }}"
-                        class="bg-gray-200 text-gray-700 px-4 py-2 rounded-xl hover:bg-gray-300 transition-colors">
+                    <flux:button :href="route('positions.index')" variant="ghost">
                         Cancel
-                    </a>
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-600 transition-colors">
-                        Create Position
-                    </button>
+                    </flux:button>
+                    <flux:button type="submit" variant="primary" icon="folder-arrow-down" color="green" />
                 </div>
             </form>
         </div>

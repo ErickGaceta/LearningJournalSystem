@@ -11,6 +11,18 @@
 
         <x-app-logo href="{{ route('dashboard') }}" wire:navigate />
 
+        <div class="hidden lg:flex items-center gap-1 ml-4">
+            <flux:button x-data @click="$flux.appearance = 'light'" 
+                :variant="$flux.appearance === 'light' ? 'primary' : 'ghost'" 
+                size="sm" icon="sun" square />
+            <flux:button x-data @click="$flux.appearance = 'dark'" 
+                :variant="$flux.appearance === 'dark' ? 'primary' : 'ghost'" 
+                size="sm" icon="moon" square />
+            <flux:button x-data @click="$flux.appearance = 'system'" 
+                :variant="$flux.appearance === 'system' ? 'primary' : 'ghost'" 
+                size="sm" icon="computer-desktop" square />
+        </div>
+
         <flux:navbar class="-mb-px max-lg:hidden">
             <flux:navbar.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                 {{ __('Home') }}

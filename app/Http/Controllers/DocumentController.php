@@ -27,7 +27,7 @@ class DocumentController extends Controller
         }
 
         // IMPORTANT: Use paginate() not get()
-        $documents = $query->paginate(15)->withQueryString(); // Maintains search parameters
+        $documents = $query->latest()->paginate(15)->withQueryString(); // Maintains search parameters
 
         return view('documents.index', compact('documents'));
     }

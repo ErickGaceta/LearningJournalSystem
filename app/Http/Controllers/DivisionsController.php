@@ -9,7 +9,7 @@ class DivisionsController extends Controller
 {
     public function index()
     {
-        $divisions = DivisionUnit::latest()->get();
+        $divisions = DivisionUnit::latest()->paginate(15);
         return view('pages.divisions.index', compact('divisions'));
     }
 

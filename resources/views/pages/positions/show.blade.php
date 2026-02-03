@@ -6,14 +6,10 @@
                 <p class="text-sm text-neutral-600">Position Details</p>
             </div>
             <div class="flex gap-2">
-                <a href="{{ route('positions.edit', $position) }}"
-                    class="bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-600 transition-colors">
-                    Edit Position
-                </a>
-                <a href="{{ route('positions.index') }}"
-                    class="bg-gray-200 text-gray-700 px-4 py-2 rounded-xl hover:bg-gray-300 transition-colors">
+                <flux:button :href="route('positions.edit', $position)" variant="primary" color="sky" icon="pencil" />
+                <flux:button :href="route('positions.index')" variant="ghost" icon="arrow-uturn-left">
                     Back to List
-                </a>
+                </flux:button>
             </div>
         </div>
 
