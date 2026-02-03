@@ -49,27 +49,20 @@
                 {{ $document->printedAt ? $document->printedAt->format('M d, Y') : 'Not Yet Printed' }}
             </p>
             <div class="flex gap-3">
-                <a
-                    href="{{ route('documents.export.word', $document) }}"
-                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl inline-flex items-center gap-2 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
-                        <path d="M4.879 4.515a.5.5 0 0 1 .606.364l1.036 4.144.997-3.655a.5.5 0 0 1 .964 0l.997 3.655 1.036-4.144a.5.5 0 0 1 .97.242l-1.5 6a.5.5 0 0 1-.967.01L8 7.402l-1.018 3.73a.5.5 0 0 1-.967-.01l-1.5-6a.5.5 0 0 1 .364-.606z" />
-                    </svg>
-                    Export Word
-                </a>
 
-                <button
+                <flux:button
+                    icon:trailing="document-text"
+                    :href="route('documents.export.word', $document)"
+                    variant="primary"
+                    color="sky">Export Word
+                </flux:button>
+
+                <flux:button
+                    icon="trash"
+                    variant="primary"
+                    color="red"
                     type="button"
-                    onclick="confirmDelete()"
-                    class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl transition-colors flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                    Delete
-                </button>
-
-                <form id="deleteForm" action="{{ route('documents.destroy', $document) }}" method="POST" class="hidden">
+                    onclick="confirmDelete()" />
 
                     <!-- Delete Form - Hidden -->
                     <form id="deleteForm" action="{{ route('documents.destroy', $document->id) }}" method="POST" style="display: none;">
@@ -80,10 +73,11 @@
         </div>
 
         <!-- Document Content -->
-        <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+        <div class="relative overflow-hidden">
             <div class="p-6 space-y-6">
                 <!-- Training Information Grid -->
-                <div class="pb-6 border-b border-neutral-200 dark:border-neutral-700 space-y-4">
+                 <flux:separator text="Personal Information Section" />
+                <div class="pb-6 space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Employee Name</label>
                         <p class="text-base text-heading">{{ $document->fullname }}</p>
@@ -118,6 +112,7 @@
                     </div>
                 </div>
 
+                <flux:separator text="Learning Section" />
                 <!-- Learning Sections -->
                 <div class="space-y-6">
                     <!-- Topics -->

@@ -12,7 +12,7 @@
         @endif
 
         <!-- Search Bar -->
-        <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+        <div class="relative overflow-hidden">
             <form method="GET" action="{{ route('documents.index') }}" class="p-4">
                 <div class="flex gap-3 justify-center items-center">
                     <div class="flex-1 relative">
@@ -20,10 +20,10 @@
                             name="search"
                             value="{{ request('search') }}"
                             placeholder="Search by title, venue, or topics..."
-                            icon="magnifying-glass"
+                            icon:trailing="magnifying-glass"
                             class="w-full rounded-3xl" />
                     </div>
-                    <flux:button type="submit" variant="primary" icon="magnifying-glass" square />
+                    <flux:button type="submit" variant="primary" icon="magnifying-glass" color="lime" square />
                     @if(request('search'))
                     <flux:button
                         :href="route('documents.index')"
@@ -37,26 +37,24 @@
 
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <div class="flex flex-col justify-center items-center gap-2 p-6">
-                    <p class="text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Journals</p>
-                    <p class="text-3xl font-bold text-heading">{{ \App\Models\Document::where('user_id', auth()->id())->count() }}</p>
-                </div>
-            </div>
-
-            <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <div class="flex flex-col justify-center items-center gap-2 p-6">
-                    <p class="text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Hours</p>
-                    <p class="text-3xl font-bold text-heading">{{ \App\Models\Document::where('user_id', auth()->id())->sum('hours') }}</p>
-                </div>
-            </div>
-
-            <div class="relative w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <div class="flex flex-col justify-center items-center gap-2 p-6">
-                    <p class="text-sm font-medium text-neutral-600 dark:text-neutral-400">This Year</p>
-                    <p class="text-3xl font-bold text-heading">{{ \App\Models\Document::where('user_id', auth()->id())->whereYear('datestart', date('Y'))->count() }}</p>
-                </div>
-            </div>
+            <flux:card>
+                <flux:heading size="lg">Total Journals</flux:heading>
+                <flux:text class="mt-2 mb-4">
+                    {{ \App\Models\Document::where('user_id', auth()->id())->count() }}
+                </flux:text>
+            </flux:card>
+            <flux:card>
+                <flux:heading size="lg">Total Hours</flux:heading>
+                <flux:text class="mt-2 mb-4">
+                    {{ \App\Models\Document::where('user_id', auth()->id())->sum('hours') }}
+                </flux:text>
+            </flux:card>
+            <flux:card>
+                <flux:heading size="lg">Total Journals This Year</flux:heading>
+                <flux:text class="mt-2 mb-4">
+                    {{ \App\Models\Document::where('user_id', auth()->id())->whereYear('datestart', date('Y'))->count() }}
+                </flux:text>
+            </flux:card>
         </div>
 
         @if($documents->count() > 0)
@@ -67,6 +65,7 @@
                 <flux:button
                     :href="route('documents.create')"
                     icon="plus"
+                    variant="ghost"
                     wire:navigate>
                     Create New Learning Journal
                 </flux:button>
@@ -80,7 +79,7 @@
                         <flux:table.column>Hours</flux:table.column>
                         <flux:table.column>Created</flux:table.column>
                         <flux:table.column>Printed / Date</flux:table.column>
-                        <flux:table.column class="text-right">Actions</flux:table.column>
+                        <flux:table.column>Actions</flux:table.column>
                     </flux:table.columns>
 
                     <flux:table.rows>
