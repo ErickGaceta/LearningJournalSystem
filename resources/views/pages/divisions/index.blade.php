@@ -101,16 +101,71 @@
                                 variant="primary"
                                 icon="pencil"
                                 square />
-                            <form action="{{ route('divisions.destroy', $division) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this division?');">
-                                @csrf
-                                @method('DELETE')
+                            
+                            <!-- Delete Button with Modal -->
+                            <flux:modal.trigger name="delete-division-{{ $division->id }}">
                                 <flux:button
                                     variant="danger"
-                                    type="submit"
                                     size="sm"
                                     icon="trash"
                                     square />
-                            </form>
+                            </flux:modal.trigger>
+
+                            <!-- Delete Confirmation Modal using Flux -->
+                            <flux:modal name="delete-division-{{ $division->id }}" class="max-w-md">
+                                <!-- Modal Header with Icon -->
+                                <div class="bg-white dark:bg-neutral-800 p-6">
+                                    <div class="flex items-center justify-center w-16 h-16 mx-auto bg-red-500 rounded-full shadow-lg">
+                                        <flux:icon.exclamation-triangle class="w-8 h-8 text-white" />
+                                    </div>
+                                </div>
+
+                                <!-- Modal Body -->
+                                <div class="p-6 space-y-4 bg-white dark:bg-neutral-800">
+                                    <flux:heading size="lg" class="text-center text-white">
+                                        Delete Division/Unit?
+                                    </flux:heading>
+                                    
+                                    <div class="bg-neutral-100 dark:bg-neutral-700 rounded-lg p-4">
+                                        <flux:text size="sm" class="text-white text-center">
+                                            You are about to delete:
+                                        </flux:text>
+                                        <flux:text size="lg" class="font-semibold text-white text-center mt-2">
+                                            {{ $division->division_units }}
+                                        </flux:text>
+                                    </div>
+
+                                    <div class="bg-neutral-100 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg p-4">
+                                        <div class="flex flex-col items-center gap-2">
+                                            <flux:icon.information-circle class="w-5 h-5 text-red-500" />
+                                            <flux:text size="sm" class="text-white text-center">
+                                                <strong class="font-semibold text-red-500">Warning:</strong> This action cannot be undone. All associated data will be permanently deleted.
+                                            </flux:text>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Modal Footer -->
+                                <div class="bg-white dark:bg-neutral-800 px-6 py-3 flex gap-2">
+                                    <flux:modal.close>
+                                        <flux:button variant="ghost" size="sm" class="flex-1">
+                                            Cancel
+                                        </flux:button>
+                                    </flux:modal.close>
+                                    
+                                    <form action="{{ route('divisions.destroy', $division) }}" method="POST" class="flex-1">
+                                        @csrf
+                                        @method('DELETE')
+                                        <flux:button 
+                                            type="submit" 
+                                            variant="danger" 
+                                            size="sm" 
+                                            class="w-full">
+                                            Delete Permanently
+                                        </flux:button>
+                                    </form>
+                                </div>
+                            </flux:modal>
                         </flux:table.cell>
                     </flux:table.row>
                     @endforeach
