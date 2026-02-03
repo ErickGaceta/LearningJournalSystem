@@ -26,12 +26,16 @@ class Document extends Model
         'application',
         'challenges',
         'appreciation',
+        'isPrinted',
+        'printedAt'
     ];
 
     protected $casts = [
         'datestart' => 'date',
         'dateend' => 'date',
         'hours' => 'integer',
+        'printedAt' => 'date',
+        'isPrinted' => 'integer',
     ];
 
     // Add this boot method

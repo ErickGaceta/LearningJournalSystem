@@ -28,6 +28,8 @@ return new class extends Migration
             $table->text('application');
             $table->text('challenges');
             $table->text('appreciation');
+            $table->integer('isPrinted');
+            $table->date('printedAt')->nullable();
             $table->timestamps();
         });
     }
