@@ -3,16 +3,16 @@
 
         <!-- Success/Error Messages with Animation -->
         @if(session('success'))
-        <div x-data="{ show: true }" 
-             x-show="show" 
-             x-init="setTimeout(() => show = false, 5000)"
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 transform translate-y-2"
-             x-transition:enter-end="opacity-100 transform translate-y-0"
-             x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100 transform translate-y-0"
-             x-transition:leave-end="opacity-0 transform translate-y-2"
-             class="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-4 rounded-xl shadow-lg max-w-md">
+        <div x-data="{ show: true }"
+            x-show="show"
+            x-init="setTimeout(() => show = false, 5000)"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 transform translate-y-2"
+            x-transition:enter-end="opacity-100 transform translate-y-0"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 transform translate-y-0"
+            x-transition:leave-end="opacity-0 transform translate-y-2"
+            class="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-4 rounded-xl shadow-lg max-w-md">
             <div class="flex items-center gap-3">
                 <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -28,16 +28,16 @@
         @endif
 
         @if(session('error'))
-        <div x-data="{ show: true }" 
-             x-show="show" 
-             x-init="setTimeout(() => show = false, 5000)"
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 transform translate-y-2"
-             x-transition:enter-end="opacity-100 transform translate-y-0"
-             x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100 transform translate-y-0"
-             x-transition:leave-end="opacity-0 transform translate-y-2"
-             class="fixed top-4 right-4 z-50 bg-red-500 text-white px-6 py-4 rounded-xl shadow-lg max-w-md">
+        <div x-data="{ show: true }"
+            x-show="show"
+            x-init="setTimeout(() => show = false, 5000)"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 transform translate-y-2"
+            x-transition:enter-end="opacity-100 transform translate-y-0"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 transform translate-y-0"
+            x-transition:leave-end="opacity-0 transform translate-y-2"
+            class="fixed top-4 right-4 z-50 bg-red-500 text-white px-6 py-4 rounded-xl shadow-lg max-w-md">
             <div class="flex items-center gap-3">
                 <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -101,7 +101,7 @@
                                 variant="ghost"
                                 icon="pencil"
                                 square />
-                            
+
                             <!-- Delete Button with Modal -->
                             <flux:modal.trigger name="delete-division-{{ $division->id }}">
                                 <flux:button
@@ -162,8 +162,8 @@
                                             class="w-full">
                                             Delete Permanently
                                         </flux:button>
-                                    </form>
-                                </div>
+                                    </div>
+                                </form>
                             </flux:modal>
                         </flux:table.cell>
                     </flux:table.row>
