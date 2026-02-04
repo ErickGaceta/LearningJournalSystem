@@ -19,8 +19,8 @@ Route::get('dashboard', function () {
     $user = Auth::user();
 
     return match($user->user_type) {
-        'admin' => view('pages.admin'),
-        'user' => view('pages.user'),
+        'admin' => view('pages.admin.index'),
+        'user' => view('pages.users.index'),
         default => abort(403, 'Unauthorized'),
     };
 })->middleware(['auth', 'verified'])->name('dashboard');

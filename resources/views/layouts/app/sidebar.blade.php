@@ -23,24 +23,33 @@
                     wire:navigate>
                     {{ __('Dashboard') }}
                 </flux:sidebar.item>
+                <flux:sidebar.item
+                    icon="home"
+                    :href="route('dashboard')"
+                    :current="request()->routeIs('dashboard')"
+                    wire:navigate>
+                    {{ __('Journals') }}
+                </flux:sidebar.item>
                 @endif
 
                 {{-- Admin-only Documents Dropdown --}}
                 @if(auth()->user()->user_type === 'admin')
-                <flux:sidebar icon="document-text">
-                    {{ __('Documents') }}
-
+                <flux:sidebar>
                     <flux:sidebar.group>
-                        {{-- View All Documents --}}
+                        {{-- Dashboard --}}
                         <flux:sidebar.item
                             icon="folder-open"
                             :href="route('documents.index')"
                             :current="request()->routeIs('documents.index')"
                             wire:navigate
                             class="font-semibold">
-                            {{ __('View All Documents') }}
+                            {{ __('Dashboard') }}
                         </flux:sidebar.item>
 
+                        <flux:sidebar.item icon="user-circle" :href="route('positions.index')" :current="request()->routeIs('positions.index')" wire:navigate class="font-semibold">
+                            {{ __('Training Modules') }}
+                        </flux:sidebar>
+                        
                         <flux:sidebar.item icon="user-circle" :href="route('positions.index')" :current="request()->routeIs('positions.index')" wire:navigate class="font-semibold">
                             {{ __('Positions') }}
                         </flux:sidebar>

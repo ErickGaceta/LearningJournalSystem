@@ -19,13 +19,7 @@ class LoginController extends Controller
             $user = Auth::user();
 
             // Redirect based on user_type
-            return match($user->user_type) {
-                'admin' => redirect()->route('documents.index'),
-                'user'  => redirect()->route('dashboard'),
-                default => redirect()->route('login')->withErrors([
-                    'email' => 'Unauthorized user type.'
-                ]),
-            };
+            return redirect()->route('dashboard');
         }
 
         return back()->withErrors([
