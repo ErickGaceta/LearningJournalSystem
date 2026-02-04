@@ -88,97 +88,61 @@
                             </span>
                         </flux:table.cell>
 
-                        <flux:table.cell class="text-right">
-                            <div class="flex justify-end gap-2">
+                        <flux:table.cell align="end">
+                            <flux:button
+                                variant="ghost"
+                                color="emerald"
+                                :href="route('positions.show', $position)"
+                                size="sm"
+                                icon="eye"
+                                square />
+                            <flux:button
+                                :href="route('positions.edit', $position)"
+                                size="sm"
+                                color="sky"
+                                variant="ghost"
+                                icon="pencil"
+                                square />
 
-                                <flux:tooltip content="View" position="top">
-                                    <flux:button
-                                        variant="ghost"
-                                        color="emerald"
-                                        :href="route('positions.show', $position)"
-                                        size="sm"
-                                        icon="eye"
-                                        square />
-                                </flux:tooltip>
+                            <!-- Delete Button with Modal -->
+                            <flux:modal.trigger name="delete-position-{{ $position->id }}">
+                                <flux:button
+                                    variant="ghost"
+                                    size="sm"
+                                    icon="trash"
+                                    square />
+                            </flux:modal.trigger>
 
-                                <flux:tooltip content="Edit" position="top">
-                                    <flux:button
-                                        :href="route('positions.edit', $position)"
-                                        size="sm"
-                                        color="sky"
-                                        variant="ghost"
-                                        icon="pencil"
-                                        square />
-                                </flux:tooltip>
+                            <!-- Delete Confirmation Modal using Flux -->
+                            <flux:modal name="delete-position-{{ $position->id }}" class="">
+                                <form action="{{ route('positions.destroy', $position) }}" method="POST" class="flex flex-col items-center max-w-md">
+                                    @csrf
+                                    @method('DELETE')
 
-                                <!-- Delete Button with Modal -->
-                                <flux:tooltip content="Delete" position="top">
-                                    <flux:modal.trigger name="delete-position-{{ $position->id }}">
-                                        <flux:button
-                                            variant="ghost"
-                                            size="sm"
-                                            icon="trash"
-                                            square />
-                                    </flux:modal.trigger>
-                                </flux:tooltip>
-
-                                <!-- Delete Confirmation Modal using Flux -->
-                                <flux:modal name="delete-position-{{ $position->id }}" class="max-w-md">
-                                    <!-- Modal Header with Icon -->
-                                    <div class="bg-white dark:bg-neutral-800 p-6">
-                                        <div class="flex items-center justify-center w-16 h-16 mx-auto bg-red-500 rounded-full shadow-lg">
-                                            <flux:icon.exclamation-triangle class="w-8 h-8 text-white" />
+                                    <div>
+                                        <div class="flex flex-col items-center gap-3 mb-4">
+                                            <flux:heading size="lg">Delete Division</flux:heading>
+                                            <flux:icon.exclamation-triangle class="text-red-600" />
+                                            <flux:subheading icon="exclamation-triangle">This action cannot be undone</flux:subheading>
                                         </div>
                                     </div>
 
-                                    <!-- Modal Body -->
-                                    <div class="p-6 space-y-4 bg-white dark:bg-neutral-800">
-                                        <flux:heading size="lg" class="text-center text-white">
-                                            Delete Position?
-                                        </flux:heading>
-                                        
-                                        <div class="bg-neutral-100 dark:bg-neutral-700 rounded-lg p-4">
-                                            <flux:text size="sm" class="text-white text-center">
-                                                You are about to delete:
-                                            </flux:text>
-                                            <flux:text size="lg" class="font-semibold text-white text-center mt-2">
-                                                {{ $position->positions }}
-                                            </flux:text>
-                                        </div>
+                                    <flux:text class="mb-6">
+                                        Are you sure you want to delete <strong>"{{ $position->positions }}"</strong>?
+                                        All data associated with this position will be permanently removed.
+                                    </flux:text>
 
-                                        <div class="bg-neutral-100 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg p-4">
-                                            <div class="flex flex-col items-center gap-2">
-                                                <flux:icon.information-circle class="w-5 h-5 text-red-500" />
-                                                <flux:text size="sm" class="text-white text-center">
-                                                    <strong class="font-semibold text-red-500">Warning:</strong> This action cannot be undone. All associated data will be permanently deleted.
-                                                </flux:text>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Modal Footer -->
-                                    <div class="bg-white dark:bg-neutral-800 px-6 py-3 flex gap-2">
+                                    <div class="flex gap-3 justify-end">
                                         <flux:modal.close>
-                                            <flux:button variant="ghost" size="sm" class="flex-1">
-                                                Cancel
-                                            </flux:button>
+                                            <flux:button variant="ghost">Cancel</flux:button>
                                         </flux:modal.close>
-                                        
-                                        <form action="{{ route('positions.destroy', $position) }}" method="POST" class="flex-1">
-                                            @csrf
-                                            @method('DELETE')
-                                            <flux:button 
-                                                type="submit" 
-                                                variant="danger" 
-                                                size="sm" 
-                                                class="w-full">
-                                                Delete Permanently
-                                            </flux:button>
-                                        </form>
-                                    </div>
-                                </flux:modal>
 
-                            </div>
+                                        <flux:button type="submit" variant="primary" color="red">
+                                            Delete Division
+                                        </flux:button>
+                                    </div>
+                                </form>
+                            </flux:modal>
                         </flux:table.cell>
 
                     </flux:table.row>
