@@ -335,7 +335,7 @@
     </head>
     <body class="flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
         <!-- Theme Switcher -->
-        <div class="theme-switcher" x-data="themeSelector">
+        <div style="display:none;" class="theme-switcher" x-data="themeSelector">
             <div class="flex gap-2">
                 <button 
                     @click="currentTheme = 'light'" 
