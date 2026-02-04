@@ -39,8 +39,8 @@
                         {{-- Dashboard --}}
                         <flux:sidebar.item
                             icon="folder-open"
-                            :href="route('documents.index')"
-                            :current="request()->routeIs('documents.index')"
+                            :href="route('dashboard')"
+                            :current="request()->routeIs('dashboard')"
                             wire:navigate
                             class="font-semibold">
                             {{ __('Dashboard') }}
