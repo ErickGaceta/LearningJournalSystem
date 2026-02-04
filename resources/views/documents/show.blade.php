@@ -57,18 +57,15 @@
                     color="sky">Export Word
                 </flux:button>
 
-                <flux:button
-                    icon="trash"
-                    variant="primary"
-                    color="red"
-                    type="button"
-                    onclick="confirmDelete()" />
-
-                    <!-- Delete Form - Hidden -->
-                    <form id="deleteForm" action="{{ route('documents.destroy', $document->id) }}" method="POST" style="display: none;">
-                        @csrf
-                        @method('DELETE')
-                    </form>
+                <flux:modal.trigger name="delete-document">
+                    <flux:button
+                        icon="trash"
+                        variant="primary"
+                        color="red"
+                        type="button">
+                        Delete
+                    </flux:button>
+                </flux:modal.trigger>
             </div>
         </div>
 
@@ -199,6 +196,41 @@
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal using Flux -->
+    <flux:modal name="delete-document" class="max-w-md">
+        <form id="deleteForm" action="{{ route('documents.destroy', $document->id) }}" method="POST">
+            @csrf
+            @method('DELETE')
+
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <div>
+                    <flux:heading size="lg">Delete Document</flux:heading>
+                    <flux:subheading>This action cannot be undone</flux:subheading>
+                </div>
+            </div>
+
+            <flux:text class="mb-6">
+                Are you sure you want to delete <strong>"{{ $document->title }}"</strong>?
+                All data associated with this document will be permanently removed.
+            </flux:text>
+
+            <div class="flex gap-3 justify-end">
+                <flux:modal.close>
+                    <flux:button variant="ghost">Cancel</flux:button>
+                </flux:modal.close>
+
+                <flux:button type="submit" variant="primary" color="red">
+                    Delete Document
+                </flux:button>
+            </div>
+        </form>
+    </flux:modal>
+
     <script>
         function openPrintPreview() {
             const modal = document.getElementById('printModal');
@@ -225,133 +257,5 @@
                 });
             }
         });
-
-        function confirmDelete() {
-            // Create custom modal
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-            modal.innerHTML = `
-                    <div class="bg-white dark:bg-neutral-800 rounded-2xl p-6 max-w-md mx-4 shadow-2xl">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-                                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Delete Document</h3>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">This action cannot be undone</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 dark:text-gray-300 mb-6">
-                            Are you sure you want to delete <strong>"{{ $document->title }}"</strong>?
-                            All data associated with this document will be permanently removed.
-                        </p>
-                        <div class="flex gap-3 justify-end">
-                            <button
-                                onclick="this.closest('.fixed').remove()"
-                                class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                Cancel
-                            </button>
-                            <button
-                                onclick="document.getElementById('deleteForm').submit()"
-                                class="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white transition-colors">
-                                Delete Document
-                            </button>
-                        </div>
-                    </div>
-                `;
-            document.body.appendChild(modal);
-
-            // Close on backdrop click
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.remove();
-                }
-            });
-        }
-
-        function confirmDelete() {
-            // Create custom confirmation modal
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]';
-            modal.innerHTML = `
-                <div class="bg-white dark:bg-neutral-800 rounded-2xl p-6 max-w-md mx-4 shadow-2xl">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center flex-shrink-0">
-                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Delete Document</h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">This action cannot be undone</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-300 mb-6">
-                        Are you sure you want to delete <strong>"{{ $document->title }}"</strong>?
-                        All data associated with this document will be permanently removed.
-                    </p>
-                    <div class="flex gap-3 justify-end">
-                        <button
-                            onclick="closeDeleteModal()"
-                            class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                            Cancel
-                        </button>
-                        <button
-                            onclick="submitDeleteForm()"
-                            class="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white transition-colors">
-                            Delete Document
-                        </button>
-                    </div>
-                </div>
-            `;
-
-            document.body.appendChild(modal);
-
-            // Store modal reference
-            window.deleteModal = modal;
-
-            // Close on backdrop click
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    closeDeleteModal();
-                }
-            });
-
-            // Close on Escape key
-            document.addEventListener('keydown', handleEscapeKey);
-        }
-
-        function handleEscapeKey(e) {
-            if (e.key === 'Escape' && window.deleteModal) {
-                closeDeleteModal();
-            }
-        }
-
-        function closeDeleteModal() {
-            if (window.deleteModal) {
-                window.deleteModal.remove();
-                window.deleteModal = null;
-                document.removeEventListener('keydown', handleEscapeKey);
-            }
-        }
-
-        function submitDeleteForm() {
-            // Get the form
-            const form = document.getElementById('deleteForm');
-
-            if (form) {
-                // Close the modal
-                closeDeleteModal();
-
-                // Submit the form
-                form.submit();
-            } else {
-                console.error('Delete form not found');
-                alert('Error: Could not find delete form. Please refresh and try again.');
-            }
-        }
     </script>
-    </div>
 </x-layouts::app>

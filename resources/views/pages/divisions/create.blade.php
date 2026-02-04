@@ -1,22 +1,22 @@
 <x-layouts::app :title="__('Create Division/Unit')">
-    <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl p-6">
+    <div class="flex h-full w-full flex-1 flex-col gap-4 p-6">
         <div class="mb-4">
             <h1 class="text-2xl font-bold text-heading">Create New Division/Unit</h1>
             <p class="text-sm text-neutral-600">Add a new division or unit to the system</p>
         </div>
 
-        <div class="rounded-xl border border-neutral-200 p-6 max-w-2xl">
+        <flux:card class="size-max hover:bg-zinc-50 dark:hover:bg-zinc-700">
             <form action="{{ route('divisions.store') }}" method="POST">
                 @csrf
 
-                <div class="mb-4">
-                    <label for="division_units" class="block mb-2 text-base font-medium text-heading">Division/Unit Name</label>
-                    <input type="text"
+                <div class="mb-6">
+                    <flux:label class="py-4">Division/Unit Name</flux:label>
+                    <flux:input type="text"
                         id="division_units"
+                        size="sm"
                         name="division_units"
-                        class="bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body"
-                        placeholder="Enter division/unit name"
                         value="{{ old('division_units') }}"
+                        placeholder="Division Name"
                         required />
                     @error('division_units')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -29,7 +29,7 @@
                     </flux:button>
                     <flux:button type="submit" variant="primary" icon="folder-arrow-down" color="green" />
                 </div>
-            </form>
+            </flux:card>
         </div>
     </div>
 </x-layouts::app>

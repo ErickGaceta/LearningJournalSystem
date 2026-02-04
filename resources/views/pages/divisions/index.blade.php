@@ -68,7 +68,7 @@
                 <flux:table.columns>
                     <flux:table.column>Name</flux:table.column>
                     <flux:table.column>Users Count</flux:table.column>
-                    <flux:table.column>Actions</flux:table.column>
+                    <flux:table.column align="end">Actions</flux:table.column>
                 </flux:table.columns>
 
                 <flux:table.rows>
@@ -86,9 +86,9 @@
                             {{ $division->users->count() }}
                         </flux:table.cell>
 
-                        <flux:table.cell>
+                        <flux:table.cell align="end">
                             <flux:button
-                                variant="primary"
+                                variant="ghost"
                                 color="emerald"
                                 :href="route('divisions.show', $division)"
                                 size="sm"
@@ -98,14 +98,14 @@
                                 :href="route('divisions.edit', $division)"
                                 size="sm"
                                 color="sky"
-                                variant="primary"
+                                variant="ghost"
                                 icon="pencil"
                                 square />
                             
                             <!-- Delete Button with Modal -->
                             <flux:modal.trigger name="delete-division-{{ $division->id }}">
                                 <flux:button
-                                    variant="danger"
+                                    variant="ghost"
                                     size="sm"
                                     icon="trash"
                                     square />
@@ -145,7 +145,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Modal Footer -->
                                 <div class="bg-white dark:bg-neutral-800 px-6 py-3 flex gap-2">
                                     <flux:modal.close>
                                         <flux:button variant="ghost" size="sm" class="flex-1">

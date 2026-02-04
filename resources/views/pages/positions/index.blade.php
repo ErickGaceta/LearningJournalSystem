@@ -68,7 +68,7 @@
                 <flux:table.columns>
                     <flux:table.column>Name</flux:table.column>
                     <flux:table.column>Users Count</flux:table.column>
-                    <flux:table.column class="text-right">Actions</flux:table.column>
+                    <flux:table.column align="end">Actions</flux:table.column>
                 </flux:table.columns>
 
                 <flux:table.rows>
@@ -93,7 +93,7 @@
 
                                 <flux:tooltip content="View" position="top">
                                     <flux:button
-                                        variant="primary"
+                                        variant="ghost"
                                         color="emerald"
                                         :href="route('positions.show', $position)"
                                         size="sm"
@@ -106,7 +106,7 @@
                                         :href="route('positions.edit', $position)"
                                         size="sm"
                                         color="sky"
-                                        variant="primary"
+                                        variant="ghost"
                                         icon="pencil"
                                         square />
                                 </flux:tooltip>
@@ -115,7 +115,7 @@
                                 <flux:tooltip content="Delete" position="top">
                                     <flux:modal.trigger name="delete-position-{{ $position->id }}">
                                         <flux:button
-                                            variant="danger"
+                                            variant="ghost"
                                             size="sm"
                                             icon="trash"
                                             square />
