@@ -57,7 +57,7 @@
 
             <flux:table>
                 <flux:table.columns>
-                    <flux:table.column>Document</flux:column>
+                    <flux:table.column>Name</flux:column>
                         <flux:table.column>Status</flux:column>
                 </flux:table.columns>
 
