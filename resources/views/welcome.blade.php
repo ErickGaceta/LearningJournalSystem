@@ -272,13 +272,18 @@
             function initTheme() {
                 const savedTheme = localStorage.getItem('bgTheme') || 'system';
                 applyTheme(savedTheme);
-                updateActiveButton(savedTheme);
+                
+                // Set Alpine.js data if available
+                if (window.Alpine) {
+                    document.addEventListener('alpine:init', () => {
+                        Alpine.store('theme', savedTheme);
+                    });
+                }
             }
 
             function setTheme(theme) {
                 localStorage.setItem('bgTheme', theme);
                 applyTheme(theme);
-                updateActiveButton(theme);
             }
 
             function applyTheme(theme) {
@@ -289,16 +294,6 @@
                 
                 // Add the selected theme class
                 body.classList.add('bg-' + theme);
-            }
-
-            function updateActiveButton(theme) {
-                document.querySelectorAll('.theme-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                const activeBtn = document.querySelector(`[data-theme="${theme}"]`);
-                if (activeBtn) {
-                    activeBtn.classList.add('active');
-                }
             }
 
             // Listen for system theme changes
@@ -320,19 +315,59 @@
                 initTheme();
             }
         </script>
+        
+        <!-- Alpine.js -->
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+        
+        <!-- Flux UI (if not already included in your project) -->
+        <script>
+            document.addEventListener('alpine:init', () => {
+                Alpine.data('themeSelector', () => ({
+                    currentTheme: localStorage.getItem('bgTheme') || 'system',
+                    init() {
+                        this.$watch('currentTheme', value => {
+                            setTheme(value);
+                        });
+                    }
+                }));
+            });
+        </script>
     </head>
     <body class="flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
         <!-- Theme Switcher -->
-        <div class="theme-switcher">
-            <button class="theme-btn" data-theme="light" onclick="setTheme('light')" title="Light mode">
-                ☀️
-            </button>
-            <button class="theme-btn" data-theme="system" onclick="setTheme('system')" title="System default">
-                💻
-            </button>
-            <button class="theme-btn" data-theme="dark" onclick="setTheme('dark')" title="Dark mode">
-                🌙
-            </button>
+        <div class="theme-switcher" x-data="themeSelector">
+            <div class="flex gap-2">
+                <button 
+                    @click="currentTheme = 'light'" 
+                    :class="{'active': currentTheme === 'light'}"
+                    class="theme-btn" 
+                    title="Light mode">
+                    <svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    <span class="ml-1">Light</span>
+                </button>
+                <button 
+                    @click="currentTheme = 'system'" 
+                    :class="{'active': currentTheme === 'system'}"
+                    class="theme-btn" 
+                    title="System default">
+                    <svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    <span class="ml-1">System</span>
+                </button>
+                <button 
+                    @click="currentTheme = 'dark'" 
+                    :class="{'active': currentTheme === 'dark'}"
+                    class="theme-btn" 
+                    title="Dark mode">
+                    <svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                    <span class="ml-1">Dark</span>
+                </button>
+            </div>
         </div>
 
         <div class="floating-image">
