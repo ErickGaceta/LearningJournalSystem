@@ -45,6 +45,8 @@ class DocumentController extends Controller
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'venue' => 'required|string|max:255',
@@ -65,8 +67,13 @@ class DocumentController extends Controller
 
         Document::create($validated);
 
-        return redirect()->route('documents.index')
-            ->with('success', 'Document created successfully!');
+        return match($user->user_type) {
+        'user' => redirect()->route('dashboard')
+                          ->with('success', 'Learning journal submitted successfully!'),
+        'admin' => redirect()->route('dashboard')
+                            ->with('success', 'Learning journal submitted successfully!'),
+        default => abort(403, 'Unauthorized'),
+    };
     }
 
     /**

@@ -27,7 +27,7 @@ class Document extends Model
         'challenges',
         'appreciation',
         'isPrinted',
-        'printedAt'
+        'printedAt',
     ];
 
     protected $casts = [
@@ -50,6 +50,9 @@ class Document extends Model
                         $document->user->middle_name . ' ' .
                         $document->user->last_name
                 );
+            }
+            if (!isset($document->isPrinted)) {
+                $document->isPrinted = 0;
             }
         });
 

@@ -73,7 +73,7 @@
         <div class="relative overflow-hidden">
             <div class="p-6 space-y-6">
                 <!-- Training Information Grid -->
-                 <flux:separator text="Personal Information Section" />
+                <flux:separator text="Personal Information Section" />
                 <div class="pb-6 space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Employee Name</label>
@@ -198,64 +198,59 @@
 
     <!-- Delete Confirmation Modal using Flux -->
     <flux:modal name="delete-document" class="max-w-md">
-        <form id="deleteForm" action="{{ route('documents.destroy', $document->id) }}" method="POST">
+        <form action="{{ route('documents.destroy', $document->id) }}" method="POST">
             @csrf
             @method('DELETE')
 
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center flex-shrink-0">
-                    <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
-                </div>
-                <div>
-                    <flux:heading size="lg">Delete Document</flux:heading>
-                    <flux:subheading>This action cannot be undone</flux:subheading>
+            <!-- Modal Header with Icon -->
+            <div class="p-6 bg-white dark:bg-neutral-800">
+                <div class="flex items-center justify-center w-16 h-16 mx-auto rounded-full shadow-lg">
+                    <flux:icon.exclamation-triangle class="w-8 h-8 text-red-500" />
                 </div>
             </div>
 
-            <flux:text class="mb-6">
-                Are you sure you want to delete <strong>"{{ $document->title }}"</strong>?
-                All data associated with this document will be permanently removed.
-            </flux:text>
+            <!-- Modal Body -->
+            <div class="p-6 space-y-4 bg-white dark:bg-neutral-800">
+                <flux:heading size="lg" class="text-center text-zinc-900 dark:text-white">
+                    Delete Document?
+                </flux:heading>
 
-            <div class="flex gap-3 justify-end">
+                <div class="rounded-lg p-4 shadow-sm">
+                    <flux:text size="sm" class="text-zinc-900 dark:text-white text-center">
+                        You are about to delete:
+                    </flux:text>
+                    <flux:text size="lg" class="font-semibold text-zinc-900 dark:text-white text-center mt-2">
+                        {{ $document->title }}
+                    </flux:text>
+                </div>
+
+                <div class="bg-red-50 dark:bg-red-950/30 rounded-lg p-4 shadow-sm">
+                    <div class="flex flex-col items-center gap-2">
+                        <flux:icon.information-circle class="w-5 h-5 text-red-500 dark:text-red-400" />
+                        <flux:text size="sm" class="text-zinc-900 dark:text-white text-center">
+                            <strong class="font-semibold text-red-500">Warning:</strong> This action cannot be undone. All associated data will be permanently deleted.
+                        </flux:text>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="bg-white dark:bg-neutral-800 px-6 py-3 flex gap-2">
                 <flux:modal.close>
-                    <flux:button variant="ghost">Cancel</flux:button>
+                    <flux:button variant="ghost" size="sm" class="flex-1">
+                        Cancel
+                    </flux:button>
                 </flux:modal.close>
 
-                <flux:button type="submit" variant="primary" color="red">
-                    Delete Document
+                <flux:button
+                    type="submit"
+                    variant="primary"
+                    color="red"
+                    size="sm"
+                    class="flex-1">
+                    Delete Permanently
                 </flux:button>
             </div>
         </form>
     </flux:modal>
-
-    <script>
-        function openPrintPreview() {
-            const modal = document.getElementById('printModal');
-            if (modal) {
-                modal.classList.remove('hidden');
-            }
-        }
-
-        function closePrintPreview() {
-            const modal = document.getElementById('printModal');
-            if (modal) {
-                modal.classList.add('hidden');
-            }
-        }
-
-        // Close print modal on backdrop click
-        document.addEventListener('DOMContentLoaded', function() {
-            const printModal = document.getElementById('printModal');
-            if (printModal) {
-                printModal.addEventListener('click', function(e) {
-                    if (e.target === this) {
-                        closePrintPreview();
-                    }
-                });
-            }
-        });
-    </script>
 </x-layouts::app>

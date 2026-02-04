@@ -1,289 +1,234 @@
 <x-layouts::app.sidebar :title="__('DOST CAR Learning Journal System - Create Document')">
     <flux:main>
-        <div>
-            <form action="{{ route('documents.store') }}" method="POST">
+        <form action="{{ route('documents.store') }}" method="POST" class="space-y-6">
             @csrf
 
             <!-- Personal Information -->
-            <div class="grid auto-rows-min gap-4 md:grid-cols-3 mb-4">
+            <div class="grid auto-rows-min gap-4 md:grid-cols-3">
                 <!-- Personal Information Card -->
-                <div class="rounded-xl border border-neutral-200 p-4">
-                    <div class="flex flex-col gap-4">
-                        <p class="text-base font-medium text-neutral-600 dark:text-neutral-400 text-center">Personal Information</p>
+                <flux:card>
+                    <div class="flex items-center justify-center">
+                        <flux:heading>Personal Information</flux:heading>
+                    </div>
 
-                        <div class="space-y-4">
-                            <div>
-                                <label for="employee_id" class="block mb-2.5 text-base font-medium text-heading">Employee ID</label>
-                                <input type="number"
-                                    id="employee_id"
-                                    name="employee_id"
-                                    class="text-heading w-full text-sm mt-1 rounded-xl block px-3 py-2 shadow-lg"
-                                    value="{{ auth()->user()->employee_id }}"
+                    <div class="space-y-4">
+                        <flux:field>
+                            <flux:label>Employee ID</flux:label>
+                            <flux:input
+                                type="number"
+                                name="employee_id"
+                                value="{{ auth()->user()->employee_id }}"
+                                readonly />
+                        </flux:field>
+
+                        <flux:field>
+                            <flux:label>Name</flux:label>
+                            <flux:input
+                                type="text"
+                                name="fullname"
+                                value="{{ old('fullname', auth()->user()->first_name . ' ' . (auth()->user()->middle_name ? auth()->user()->middle_name . ' ' : '') . auth()->user()->last_name) }}"
+                                readonly />
+                            <flux:error name="fullname" />
+                        </flux:field>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <flux:field>
+                                <flux:label>Department/Unit/Office</flux:label>
+                                <flux:input
+                                    type="text"
+                                    name="division_units"
+                                    value="{{ old('division_units', auth()->user()->divisionUnit->division_units ?? 'Not Assigned') }}"
                                     readonly />
-                            </div>
+                                <flux:error name="division_units" />
+                            </flux:field>
 
-                            <div>
-                                <label for="fullname" class="block mb-2.5 text-base font-medium text-heading">Name</label>
-                                <input type="text"
-                                    id="fullname"
-                                    name="fullname"
-                                    class="border-none text-heading w-full text-sm mt-1 rounded-xl block px-3 py-2 shadow-lg bg-transparent"
-                                    value="{{ old('fullname', auth()->user()->first_name . ' ' . (auth()->user()->middle_name ? auth()->user()->middle_name . ' ' : '') . auth()->user()->last_name) }}"
+                            <flux:field>
+                                <flux:label>Position</flux:label>
+                                <flux:input
+                                    type="text"
+                                    name="positions"
+                                    value="{{ old('positions', auth()->user()->position->positions ?? 'Not Assigned') }}"
                                     readonly />
-                                @error('fullname')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
+                                <flux:error name="positions" />
+                            </flux:field>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div>
-        <label for="division_units" class="block mb-2.5 text-base font-medium text-heading">Department/Unit/Office</label>
-        <input type="text"
-            id="division_units"
-            name="division_units"
-            class="border-none text-heading w-full text-sm mt-1 rounded-xl block px-3 py-2 shadow-lg bg-transparent"
-            value="{{ old('division_units', auth()->user()->divisionUnit->division_units ?? 'Not Assigned') }}"
-            readonly />
-        @error('division_units')
-        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-        @enderror
-    </div>
-
-    <div>
-        <label for="positions" class="block mb-2.5 text-base font-medium text-heading">Position</label>
-        <input type="text"
-            id="positions"
-            name="positions"
-            class="border-none text-heading w-full text-sm mt-1 rounded-xl block px-3 py-2 shadow-lg bg-transparent"
-            value="{{ old('positions', auth()->user()->position->positions ?? 'Not Assigned') }}"
-            readonly />
-        @error('positions')
-        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-        @enderror
-    </div>
-</div>
                         </div>
                     </div>
-                </div>
+                </flux:card>
 
                 <!-- L&D Program Information Card -->
-                <div class="rounded-xl border border-neutral-200 p-4">
-                    <div class="flex flex-col gap-4">
-                        <p class="text-base font-medium text-neutral-600 dark:text-neutral-400 text-center">L&D Program Information</p>
+                <flux:card>
+                    <div class="flex items-center justify-center">
+                        <flux:heading>L&D Program Information</flux:heading>
+                    </div>
 
-                        <div class="space-y-3">
-                            <div>
-                                <label for="title" class="block mb-1 text-base font-medium text-heading">L&D Title</label>
-                                <input type="text"
-                                    id="title"
-                                    name="title"
-                                    class="bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm mt-1 rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
-                                    placeholder="L&D Title"
-                                    value="{{ old('title') }}"
+                    <div class="space-y-4">
+                        <flux:field>
+                            <flux:label>L&D Title</flux:label>
+                            <flux:input
+                                type="text"
+                                name="title"
+                                placeholder="L&D Title"
+                                value="{{ old('title') }}"
+                                required />
+                            <flux:error name="title" />
+                        </flux:field>
+
+                        <flux:field>
+                            <flux:label>Number of L&D Hours</flux:label>
+                            <flux:input
+                                type="number"
+                                name="hours"
+                                min="1"
+                                placeholder="L&D Hours"
+                                value="{{ old('hours') }}"
+                                required />
+                            <flux:error name="hours" />
+                        </flux:field>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <flux:field>
+                                <flux:label>Date Started</flux:label>
+                                <flux:input
+                                    type="date"
+                                    name="datestart"
+                                    value="{{ old('datestart') }}"
                                     required />
-                                @error('title')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
+                                <flux:error name="datestart" />
+                            </flux:field>
 
-                            <div>
-                                <label for="hours" class="block mb-1 text-base font-medium text-heading">Number of L&D Hours</label>
-                                <input type="number"
-                                    id="hours"
-                                    name="hours"
-                                    min="1"
-                                    class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
-                                    placeholder="L&D Hours"
-                                    value="{{ old('hours') }}"
+                            <flux:field>
+                                <flux:label>Date Ended</flux:label>
+                                <flux:input
+                                    type="date"
+                                    name="dateend"
+                                    value="{{ old('dateend') }}"
                                     required />
-                                @error('hours')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div>
-        <label for="datestart" class="block mb-1 text-base font-medium text-heading">Date Started</label>
-        <input type="date"
-            id="datestart"
-            name="datestart"
-            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
-            placeholder="Select date"
-            value="{{ old('datestart') }}"
-            required />
-        @error('datestart')
-        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-        @enderror
-    </div>
-
-    <div>
-        <label for="dateend" class="block mb-1 text-base font-medium text-heading">Date Ended</label>
-        <input type="date"
-            id="dateend"
-            name="dateend"
-            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
-            placeholder="Select date"
-            value="{{ old('dateend') }}"
-            required />
-        @error('dateend')
-        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-        @enderror
-    </div>
-</div>
+                                <flux:error name="dateend" />
+                            </flux:field>
                         </div>
                     </div>
-                </div>
+                </flux:card>
 
                 <!-- L&D Additional Information Card -->
-                <div class="rounded-xl border border-neutral-200 p-4">
-                    <div class="flex flex-col gap-4">
-                        <p class="text-base font-medium text-neutral-600 dark:text-neutral-400 text-center">L&D Additional Information</p>
+                <flux:card>
+                    <div class="flex items-center justify-center">
+                        <flux:heading>L&D Additional Information</flux:heading>
+                    </div>
 
-                        <div class="space-y-3">
-                            <div>
-                                <label for="venue" class="block mb-1 text-base font-medium text-heading">Venue</label>
-                                <input type="text"
-                                    id="venue"
-                                    name="venue"
-                                    class="bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm mt-1 rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
-                                    placeholder="Venue"
-                                    value="{{ old('venue') }}"
+                    <div class="space-y-4">
+                        <flux:field>
+                            <flux:label>Venue</flux:label>
+                            <flux:input
+                                type="text"
+                                name="venue"
+                                placeholder="Venue"
+                                value="{{ old('venue') }}"
+                                required />
+                            <flux:error name="venue" />
+                        </flux:field>
+
+                        <flux:field>
+                            <flux:label>Conducted/Sponsored By</flux:label>
+                            <flux:input
+                                type="text"
+                                name="conductedby"
+                                placeholder="Conducted By"
+                                value="{{ old('conductedby') }}"
+                                required />
+                            <flux:error name="conductedby" />
+                        </flux:field>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <flux:field>
+                                <flux:label>Registration Fee</flux:label>
+                                <flux:input
+                                    type="text"
+                                    name="registration_fee"
+                                    placeholder="Registration Fee"
+                                    value="{{ old('registration_fee') }}"
                                     required />
-                                @error('venue')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
+                                <flux:error name="registration_fee" />
+                            </flux:field>
 
-                            <div>
-                                <label for="conductedby" class="block mb-1 text-base font-medium text-heading">Conducted/ Sponsored By</label>
-                                <input type="text"
-                                    id="conductedby"
-                                    name="conductedby"
-                                    class="bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm mt-1 rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
-                                    placeholder="Conducted By"
-                                    value="{{ old('conductedby') }}"
+                            <flux:field>
+                                <flux:label>Travel Expenses</flux:label>
+                                <flux:input
+                                    type="text"
+                                    name="travel_expenses"
+                                    placeholder="Travel Expenses"
+                                    value="{{ old('travel_expenses') }}"
                                     required />
-                                @error('conductedby')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div>
-        <label for="registration_fee" class="block mb-1 text-base font-medium text-heading">Registration Fee</label>
-        <input type="text"
-            id="registration_fee"
-            name="registration_fee"
-            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
-            placeholder="Registration Fee"
-            value="{{ old('registration_fee') }}"
-            required />
-        @error('registration_fee')
-        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-        @enderror
-    </div>
-
-    <div>
-        <label for="travel_expenses" class="block mb-1 text-base font-medium text-heading">Travel Expenses</label>
-        <input type="text"
-            id="travel_expenses"
-            name="travel_expenses"
-            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-1 shadow-xs placeholder:text-body"
-            placeholder="Travel Expenses"
-            value="{{ old('travel_expenses') }}"
-            required />
-        @error('travel_expenses')
-        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-        @enderror
-    </div>
-</div>
+                                <flux:error name="travel_expenses" />
+                            </flux:field>
                         </div>
                     </div>
-                </div>
+                </flux:card>
             </div>
 
             <!-- Main Content Area with Form -->
-            <div class="rounded-xl border border-neutral-200 mb-4">
-                <div class="w-full p-4">
-                    <div class="mb-4">
-                        <label for="topics" class="block mb-1 text-base font-medium text-heading">A. I learned the following from the L&D program I attended...</label>
-                        <p class="text-xs">(Knowledge, skills, attitude, information.) Please indicate the topic/topics</p>
-                        <textarea required
+            <flux:card>
+                <div class="space-y-6">
+                    <flux:field>
+                        <flux:label>A. I learned the following from the L&D program I attended...</flux:label>
+                        <flux:description>Knowledge, skills, attitude, information. Please indicate the topic/topics</flux:description>
+                        <flux:textarea
                             name="topics"
-                            id="topics"
                             rows="4"
-                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body"
-                            placeholder="Enter text here">{{ old('topics') }}</textarea>
-                        @error('topics')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+                            placeholder="Enter text here"
+                            required>{{ old('topics') }}</flux:textarea>
+                        <flux:error name="topics" />
+                    </flux:field>
 
-                    <div class="mb-4">
-                        <label for="insights" class="block mb-1 text-base font-medium text-heading">B. I gained the following insights and discoveries...</label>
-                        <p class="text-xs">(Understanding, perception, awareness)</p>
-                        <textarea required
+                    <flux:field>
+                        <flux:label>B. I gained the following insights and discoveries...</flux:label>
+                        <flux:description>Understanding, perception, awareness</flux:description>
+                        <flux:textarea
                             name="insights"
-                            id="insights"
                             rows="4"
-                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body"
-                            placeholder="Enter text here">{{ old('insights') }}</textarea>
-                        @error('insights')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+                            placeholder="Enter text here"
+                            required>{{ old('insights') }}</flux:textarea>
+                        <flux:error name="insights" />
+                    </flux:field>
 
-                    <div class="mb-4">
-                        <label for="application" class="block mb-1 text-base font-medium text-heading">C. I will apply the new learnings in my current function by doing the following...</label>
-                        <textarea required
+                    <flux:field>
+                        <flux:label>C. I will apply the new learnings in my current function by doing the following...</flux:label>
+                        <flux:textarea
                             name="application"
-                            id="application"
                             rows="4"
-                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body"
-                            placeholder="Enter text here">{{ old('application') }}</textarea>
-                        @error('application')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+                            placeholder="Enter text here"
+                            required>{{ old('application') }}</flux:textarea>
+                        <flux:error name="application" />
+                    </flux:field>
 
-                    <div class="mb-4">
-                        <label for="challenges" class="block mb-1 text-base font-medium text-heading">D. I was challenged most on...</label>
-                        <textarea required
+                    <flux:field>
+                        <flux:label>D. I was challenged most on...</flux:label>
+                        <flux:textarea
                             name="challenges"
-                            id="challenges"
                             rows="4"
-                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body"
-                            placeholder="Enter text here">{{ old('challenges') }}</textarea>
-                        @error('challenges')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+                            placeholder="Enter text here"
+                            required>{{ old('challenges') }}</flux:textarea>
+                        <flux:error name="challenges" />
+                    </flux:field>
 
-                    <div class="mb-4">
-                        <label for="appreciation" class="block mb-1 text-base font-medium text-heading">E. I appreciated the...</label>
-                        <p class="text-xs">(Feedback: for management and services of HRD.)</p>
-                        <textarea required
+                    <flux:field>
+                        <flux:label>E. I appreciated the...</flux:label>
+                        <flux:description>Feedback: for management and services of HRD.</flux:description>
+                        <flux:textarea
                             name="appreciation"
-                            id="appreciation"
                             rows="4"
-                            class="mt-1 bg-neutral-secondary-medium border border-default-medium text-heading w-full text-sm rounded-xl focus:ring-brand focus:border-brand block px-3 py-2 shadow-xs placeholder:text-body"
-                            placeholder="Enter text here">{{ old('appreciation') }}</textarea>
-                        @error('appreciation')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+                            placeholder="Enter text here"
+                            required>{{ old('appreciation') }}</flux:textarea>
+                        <flux:error name="appreciation" />
+                    </flux:field>
                 </div>
-            </div>
+            </flux:card>
 
             <!-- Submit Button -->
-            <div class="rounded-xl">
-                <div class="flex justify-end items-center p-4">
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-600 transition-colors">
-                        Submit Learning Journal
-                    </button>
-                </div>
+            <div class="flex justify-end">
+                <flux:button icon="arrow-up-on-square" type="submit" variant="primary" color="sky">
+                    Submit Learning Journal
+                </flux:button>
             </div>
         </form>
-        </div>
     </flux:main>
 </x-layouts::app.sidebar>
