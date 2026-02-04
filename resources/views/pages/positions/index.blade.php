@@ -123,33 +123,33 @@
                                 </flux:tooltip>
 
                                 <!-- Delete Confirmation Modal using Flux -->
-                                <flux:modal name="delete-position-{{ $position->id }}" class="max-w-md">
+                                <flux:modal name="delete-position-{{ $position->id }}" class="max-w-md adaptive-modal">
                                     <!-- Modal Header with Icon -->
-                                    <div class="bg-white dark:bg-neutral-800 p-6">
+                                    <div class="adaptive-modal-header p-6">
                                         <div class="flex items-center justify-center w-16 h-16 mx-auto bg-red-500 rounded-full shadow-lg">
                                             <flux:icon.exclamation-triangle class="w-8 h-8 text-white" />
                                         </div>
                                     </div>
 
                                     <!-- Modal Body -->
-                                    <div class="p-6 space-y-4 bg-white dark:bg-neutral-800">
-                                        <flux:heading size="lg" class="text-center text-white">
+                                    <div class="p-6 space-y-4 adaptive-modal-body">
+                                        <flux:heading size="lg" class="text-center adaptive-modal-text">
                                             Delete Position?
                                         </flux:heading>
                                         
-                                        <div class="bg-neutral-100 dark:bg-neutral-700 rounded-lg p-4">
-                                            <flux:text size="sm" class="text-white text-center">
+                                        <div class="adaptive-modal-highlight rounded-lg p-4">
+                                            <flux:text size="sm" class="adaptive-modal-text text-center">
                                                 You are about to delete:
                                             </flux:text>
-                                            <flux:text size="lg" class="font-semibold text-white text-center mt-2">
+                                            <flux:text size="lg" class="font-semibold adaptive-modal-text text-center mt-2">
                                                 {{ $position->positions }}
                                             </flux:text>
                                         </div>
 
-                                        <div class="bg-neutral-100 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg p-4">
+                                        <div class="adaptive-modal-warning border rounded-lg p-4">
                                             <div class="flex flex-col items-center gap-2">
                                                 <flux:icon.information-circle class="w-5 h-5 text-red-500" />
-                                                <flux:text size="sm" class="text-white text-center">
+                                                <flux:text size="sm" class="adaptive-modal-text text-center">
                                                     <strong class="font-semibold text-red-500">Warning:</strong> This action cannot be undone. All associated data will be permanently deleted.
                                                 </flux:text>
                                             </div>
@@ -157,7 +157,7 @@
                                     </div>
                                     
                                     <!-- Modal Footer -->
-                                    <div class="bg-white dark:bg-neutral-800 px-6 py-3 flex gap-2">
+                                    <div class="adaptive-modal-footer px-6 py-3 flex gap-2">
                                         <flux:modal.close>
                                             <flux:button variant="ghost" size="sm" class="flex-1">
                                                 Cancel
@@ -202,5 +202,102 @@
 
     <style>
         [x-cloak] { display: none !important; }
+
+        /* Adaptive Modal Styles - Light Background */
+        body.bg-light .adaptive-modal-header,
+        body.bg-light .adaptive-modal-body,
+        body.bg-light .adaptive-modal-footer {
+            background-color: #ffffff !important;
+        }
+
+        body.bg-light .adaptive-modal-text {
+            color: #18181b !important;
+        }
+
+        body.bg-light .adaptive-modal-highlight {
+            background-color: #f4f4f5 !important;
+        }
+
+        body.bg-light .adaptive-modal-warning {
+            background-color: #fef2f2 !important;
+            border-color: #fecaca !important;
+        }
+
+        /* Adaptive Modal Styles - Dark Background */
+        body.bg-dark .adaptive-modal-header,
+        body.bg-dark .adaptive-modal-body,
+        body.bg-dark .adaptive-modal-footer {
+            background-color: #27272a !important;
+        }
+
+        body.bg-dark .adaptive-modal-text {
+            color: #ffffff !important;
+        }
+
+        body.bg-dark .adaptive-modal-highlight {
+            background-color: #3f3f46 !important;
+        }
+
+        body.bg-dark .adaptive-modal-warning {
+            background-color: #3f1a1a !important;
+            border-color: #5c2626 !important;
+        }
+
+        /* Adaptive Modal Styles - System Default (Light) */
+        @media (prefers-color-scheme: light) {
+            body.bg-system .adaptive-modal-header,
+            body.bg-system .adaptive-modal-body,
+            body.bg-system .adaptive-modal-footer {
+                background-color: #ffffff !important;
+            }
+
+            body.bg-system .adaptive-modal-text {
+                color: #18181b !important;
+            }
+
+            body.bg-system .adaptive-modal-highlight {
+                background-color: #f4f4f5 !important;
+            }
+
+            body.bg-system .adaptive-modal-warning {
+                background-color: #fef2f2 !important;
+                border-color: #fecaca !important;
+            }
+        }
+
+        /* Adaptive Modal Styles - System Default (Dark) */
+        @media (prefers-color-scheme: dark) {
+            body.bg-system .adaptive-modal-header,
+            body.bg-system .adaptive-modal-body,
+            body.bg-system .adaptive-modal-footer {
+                background-color: #27272a !important;
+            }
+
+            body.bg-system .adaptive-modal-text {
+                color: #ffffff !important;
+            }
+
+            body.bg-system .adaptive-modal-highlight {
+                background-color: #3f3f46 !important;
+            }
+
+            body.bg-system .adaptive-modal-warning {
+                background-color: #3f1a1a !important;
+                border-color: #5c2626 !important;
+            }
+        }
+
+        /* Smooth transitions */
+        .adaptive-modal-header,
+        .adaptive-modal-body,
+        .adaptive-modal-footer,
+        .adaptive-modal-highlight,
+        .adaptive-modal-warning {
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .adaptive-modal-text {
+            transition: color 0.3s ease;
+        }
     </style>
 </x-layouts::app>
