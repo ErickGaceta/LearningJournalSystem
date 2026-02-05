@@ -19,13 +19,13 @@
                 </flux:text>
             </flux:card>
             <flux:card>
-                <flux:heading size="lg">Total Hours</flux:heading>
+                <flux:heading size="lg">Training Modules</flux:heading>
                 <flux:text class="mt-2 mb-4">
                     {{ \App\Models\Document::where('user_id', auth()->id())->sum('hours') }}
                 </flux:text>
             </flux:card>
             <flux:card>
-                <flux:heading size="lg">Total Journals This Year</flux:heading>
+                <flux:heading size="lg">Ongoing Trainings</flux:heading>
                 <flux:text class="mt-2 mb-4">
                     {{ \App\Models\Document::where('user_id', auth()->id())->whereYear('datestart', date('Y'))->count() }}
                 </flux:text>
