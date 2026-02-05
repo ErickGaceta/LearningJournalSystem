@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\TrainingModuleController;
 use App\Http\Controllers\PositionsController;
 use App\Http\Controllers\DivisionsController;
+use App\Http\Controllers\DashboardController;
 
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 
@@ -16,15 +17,9 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::get('dashboard', function () {
-    $user = Auth::user();
-
-    return match($user->user_type) {
-        'admin' => view('pages.admin.index'),
-        'user' => view('pages.users.index'),
-        default => abort(403, 'Unauthorized'),
-    };
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 // Document routes (Training Reports)
 Route::middleware(['auth', 'verified'])->group(function () {

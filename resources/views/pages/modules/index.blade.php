@@ -10,26 +10,28 @@
             </div>
         </div>
         @endif
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <flux:card>
-                <flux:heading size="lg">Total Journals</flux:heading>
-                <flux:text class="mt-2 mb-4">
-                    {{ \App\Models\Document::where('user_id', auth()->id())->count() }}
-                </flux:text>
-            </flux:card>
-            <flux:card>
-                <flux:heading size="lg">Total Hours</flux:heading>
-                <flux:text class="mt-2 mb-4">
-                    {{ \App\Models\Document::where('user_id', auth()->id())->sum('hours') }}
-                </flux:text>
-            </flux:card>
-            <flux:card>
-                <flux:heading size="lg">Total Journals This Year</flux:heading>
-                <flux:text class="mt-2 mb-4">
-                    {{ \App\Models\Document::where('user_id', auth()->id())->whereYear('datestart', date('Y'))->count() }}
-                </flux:text>
-            </flux:card>
+
+        <div>
+            <flux:table>
+                <flux:table.columns>
+                    <flux:table.column></flux:table.column>
+                </flux:table.columns>
+
+                <flux:table.rows>
+                    <flux:table.row>
+                        <flux:table.cell></flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell></flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell></flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell></flux:table.cell>
+                    </flux:table.row>
+                </flux:table.rows>
+            </flux:table>
         </div>
     </div>
 </x-layouts::app>
