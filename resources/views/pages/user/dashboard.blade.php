@@ -1,4 +1,4 @@
-<x-layouts::app :title="__('DOST CAR Learning Journal System - User')">
+<x-layouts::app :title="__('DOST CAR Learning Journal System - User Dashboard')">
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
 
         <!-- Welcome Section -->
@@ -37,7 +37,7 @@
                 </div>
 
                 <flux:button
-                    :href="route('documents.create')"
+                    :href="route('user.documents.create')"
                     variant="primary"
                     icon="plus">
                     Create New Learning Journal

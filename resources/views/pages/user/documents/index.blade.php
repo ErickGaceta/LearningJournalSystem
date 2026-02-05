@@ -13,7 +13,7 @@
 
         <!-- Search Bar -->
         <div class="relative overflow-hidden">
-            <form method="GET" action="{{ route('documents.index') }}" class="p-4">
+            <form method="GET" action="{{ route('user.documents.index') }}" class="p-4">
                 <div class="flex gap-3 justify-center items-center">
                     <div class="flex-1 relative">
                         <flux:input
@@ -26,7 +26,7 @@
                     <flux:button type="submit" variant="primary" icon="magnifying-glass" color="lime" square />
                     @if(request('search'))
                     <flux:button
-                        :href="route('documents.index')"
+                        :href="route('user.documents.index')"
                         variant="ghost">
                         Clear
                     </flux:button>
@@ -63,7 +63,7 @@
         <div class="relative overflow-hidden">
             <div class="flex flex-col items-end justify-end gap-4 mt-2 me-2">
                 <flux:button
-                    :href="route('documents.create')"
+                    :href="route('user.documents.create')"
                     icon="plus"
                     variant="ghost"
                     wire:navigate>
@@ -87,7 +87,7 @@
                         <flux:table.row :key="$document->id">
 
                             <flux:table.cell>
-                                <a href="{{ route('documents.show', $document) }}"
+                                <a href="{{ route('user.documents.show', $document) }}"
                                     wire:navigate
                                     class="text-sm font-medium hover:underline">
                                     {{ $document->title }}
@@ -137,14 +137,14 @@
                             <flux:table.cell class="text-right">
                                 <div class="flex justify-end gap-2">
                                     <flux:button
-                                        :href="route('documents.show', $document)"
+                                        :href="route('user.documents.show', $document)"
                                         variant="ghost"
                                         size="sm"
                                         icon="eye"
                                         wire:navigate />
 
                                     <flux:button
-                                        :href="route('documents.edit', $document)"
+                                        :href="route('user.documents.edit', $document)"
                                         variant="ghost"
                                         size="sm"
                                         icon="pencil"
