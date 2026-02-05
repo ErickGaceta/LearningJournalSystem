@@ -252,14 +252,14 @@
                     width: 100px;
                     height: 100px;
                 }
-                
+
                 .theme-switcher {
                     top: 10px;
                     right: 10px;
                     padding: 6px;
                     gap: 6px;
                 }
-                
+
                 .theme-btn {
                     padding: 6px 10px;
                     font-size: 12px;
@@ -272,7 +272,7 @@
             function initTheme() {
                 const savedTheme = localStorage.getItem('bgTheme') || 'system';
                 applyTheme(savedTheme);
-                
+
                 // Set Alpine.js data if available
                 if (window.Alpine) {
                     document.addEventListener('alpine:init', () => {
@@ -288,10 +288,10 @@
 
             function applyTheme(theme) {
                 const body = document.body;
-                
+
                 // Remove all theme classes
                 body.classList.remove('bg-light', 'bg-dark', 'bg-system');
-                
+
                 // Add the selected theme class
                 body.classList.add('bg-' + theme);
             }
@@ -315,10 +315,10 @@
                 initTheme();
             }
         </script>
-        
+
         <!-- Alpine.js -->
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-        
+
         <!-- Flux UI (if not already included in your project) -->
         <script>
             document.addEventListener('alpine:init', () => {
@@ -337,30 +337,30 @@
         <!-- Theme Switcher -->
         <div style="display:none;" class="theme-switcher" x-data="themeSelector">
             <div class="flex gap-2">
-                <button 
-                    @click="currentTheme = 'light'" 
+                <button
+                    @click="currentTheme = 'light'"
                     :class="{'active': currentTheme === 'light'}"
-                    class="theme-btn" 
+                    class="theme-btn"
                     title="Light mode">
                     <svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
                     </svg>
                     <span class="ml-1">Light</span>
                 </button>
-                <button 
-                    @click="currentTheme = 'system'" 
+                <button
+                    @click="currentTheme = 'system'"
                     :class="{'active': currentTheme === 'system'}"
-                    class="theme-btn" 
+                    class="theme-btn"
                     title="System default">
                     <svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                     </svg>
                     <span class="ml-1">System</span>
                 </button>
-                <button 
-                    @click="currentTheme = 'dark'" 
+                <button
+                    @click="currentTheme = 'dark'"
                     :class="{'active': currentTheme === 'dark'}"
-                    class="theme-btn" 
+                    class="theme-btn"
                     title="Dark mode">
                     <svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
@@ -404,18 +404,14 @@
             @endif
         </header>
 
-        <div class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
-            <main class="flex max-w-100 w-full flex-col-reverse lg:max-w-60xl lg:flex-row">
-                <div class="flex-1 p-6 pb-12 lg:p-20 rounded-es-lg rounded-ee-lg lg:rounded-ss-lg lg:rounded-ee-none">
-                    <h1 class="font-black text-center text-xl adaptive-text" style="font-family: 'Arial Black', sans-serif;">
-                        Welcome to the DOST
-                    </h1>
-                    <h1 class="font-black text-center text-2xl adaptive-text" style="font-family: 'Arial Black', sans-serif;">
-                        Learning Journal System
-                    </h1>
-                </div>
-            </main>
-        </div>
+     <div class="flex-1 p-6 pb-12 lg:p-20 rounded-es-lg rounded-ee-lg lg:rounded-ss-lg lg:rounded-ee-none flex flex-col justify-end items-center" style="padding-bottom: 10rem;">
+    <h1 class="font-black text-center adaptive-text" style="font-family: 'Arial Black', sans-serif; font-size: 6rem;">
+        Welcome to the DOST
+    </h1>
+    <h1 class="font-black text-center adaptive-text" style="font-family: 'Arial Black', sans-serif; font-size: 7rem;">
+        Learning Journal System
+    </h1>
+</div>
 
         @if (Route::has('login'))
             <div class="h-14.5 hidden lg:block"></div>

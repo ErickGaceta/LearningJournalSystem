@@ -14,10 +14,6 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::get('/login', function () {
-    return view('login');
-})->name('login');
-
 // ========== Login Route ==========
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 

@@ -44,7 +44,7 @@ class Assignment extends Model
         return $this->belongsTo(User::class);
     }
     
-    public function trainingModule(): BelongsTo
+    public function module(): BelongsTo
     {
         return $this->belongsTo(TrainingModule::class, 'module_id');
     }
