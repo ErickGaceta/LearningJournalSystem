@@ -6,7 +6,6 @@ use App\Models\Document;
 use App\Services\WordXmlTemplateService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
 
 class DocumentPrintController extends Controller
 {
@@ -17,13 +16,9 @@ class DocumentPrintController extends Controller
         $this->wordService = $wordService;
     }
 
-    /**
-     * Export a document to Word (.docx) using XML template replacement.
-     */
     public function exportWord(Document $document)
     {
         try {
-            // Security: only owner can export
             if ($document->user_id !== Auth::id()) {
                 abort(403, 'Unauthorized');
             }
@@ -56,16 +51,12 @@ class DocumentPrintController extends Controller
         }
     }
 
-    /**
-     * Show print preview in browser (PDF or HTML view)
-     */
     public function preview(Document $document)
     {
-        // Security: only owner can preview
         if ($document->user_id !== Auth::id()) {
             abort(403, 'Unauthorized');
         }
 
-        return view('pages.documents.print-preview', compact('document'));
+        return view('pages.user.documents.print-preview', compact('document'));
     }
 }

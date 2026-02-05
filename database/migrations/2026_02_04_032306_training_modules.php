@@ -16,8 +16,8 @@ return new class extends Migration
             $table->date('dateend');
             $table->string('venue');
             $table->string('conductedby', 100);
-            $table->string('registration_fee', 100);
-            $table->string('travel_expenses', 100);
+            $table->string('registration_fee', 100)->default('N/A')->nullable();
+            $table->string('travel_expenses', 100)->default('N/A')->nullable();
             $table->timestamps();
         });
     }

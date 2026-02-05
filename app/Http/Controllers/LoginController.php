@@ -19,7 +19,12 @@ class LoginController extends Controller
             $user = Auth::user();
 
             // Redirect based on user_type
-            return redirect()->route('dashboard');
+            return match($user->user_type) {
+                'admin' => redirect()->route('admin.dashboard'),
+                'hr' => redirect()->route('hr.dashboard'),
+                'user' => redirect()->route('user.dashboard'),
+                default => redirect()->route('user.dashboard'),
+            };
         }
 
         return back()->withErrors([
@@ -27,4 +32,3 @@ class LoginController extends Controller
         ])->onlyInput('email');
     }
 }
-?>

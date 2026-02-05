@@ -8,15 +8,11 @@ use Illuminate\Support\Facades\Auth;
 
 class DocumentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $query = Document::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc');
 
-        // Search functionality
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -26,31 +22,22 @@ class DocumentController extends Controller
             });
         }
 
-        // IMPORTANT: Use paginate() not get()
-        $documents = $query->latest()->paginate(15)->withQueryString(); // Maintains search parameters
+        $documents = $query->latest()->paginate(15)->withQueryString();
 
-        return view('pages.documents.index', compact('documents'));
+        return view('pages.user.documents.index', compact('documents'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return view('pages.documents.create');
+        return view('pages.user.documents.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $user = Auth::user();
-
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'venue' => 'required|string|max:255',
-            'conductedby' => 'required|string|max:255', // Add this
+            'conductedby' => 'required|string|max:255',
             'datestart' => 'required|date',
             'dateend' => 'required|date|after_or_equal:datestart',
             'hours' => 'required|numeric|min:0',
@@ -67,44 +54,28 @@ class DocumentController extends Controller
 
         Document::create($validated);
 
-        return match($user->user_type) {
-        'user' => redirect()->route('dashboard')
-                          ->with('success', 'Learning journal submitted successfully!'),
-        'admin' => redirect()->route('dashboard')
-                            ->with('success', 'Learning journal submitted successfully!'),
-        default => abort(403, 'Unauthorized'),
-    };
+        return redirect()->route('user.documents.index')
+            ->with('success', 'Learning journal submitted successfully!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Document $document)
     {
-        // Ensure user can only view their own documents
         if ($document->user_id !== Auth::id()) {
             abort(403);
         }
 
-        return view('pages.documents.show', compact('document'));
+        return view('pages.user.documents.show', compact('document'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Document $document)
     {
-        // Ensure user can only edit their own documents
         if ($document->user_id !== Auth::id()) {
             abort(403);
         }
 
-        return view('pages.documents.edit', compact('document'));
+        return view('pages.user.documents.edit', compact('document'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Document $document)
     {
         if ($document->user_id !== Auth::id()) {
@@ -114,7 +85,7 @@ class DocumentController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'venue' => 'required|string|max:255',
-            'conductedby' => 'required|string|max:255', // Add this
+            'conductedby' => 'required|string|max:255',
             'datestart' => 'required|date',
             'dateend' => 'required|date|after_or_equal:datestart',
             'hours' => 'required|numeric|min:0',
@@ -129,25 +100,22 @@ class DocumentController extends Controller
 
         $document->update($validated);
 
-        return redirect()->route('pages.documents.index')
+        return redirect()->route('user.documents.index')
             ->with('success', 'Document updated successfully!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Document $document)
     {
         try {
-            // Optional: Check if user has permission to delete
-            // Uncomment if you have authorization policies
-            // $this->authorize('delete', $document);
+            if ($document->user_id !== Auth::id()) {
+                abort(403);
+            }
 
             $documentTitle = $document->title;
             $document->delete();
 
             return redirect()
-                ->route('pages.documents.index')
+                ->route('user.documents.index')
                 ->with('success', "Document '{$documentTitle}' has been successfully deleted.");
 
         } catch (\Exception $e) {
@@ -155,13 +123,5 @@ class DocumentController extends Controller
                 ->back()
                 ->with('error', 'An error occurred while deleting the document. Please try again.');
         }
-    }
-
-    /**
-     * Show print preview for the specified document.
-     */
-    public function printPreview(Document $document)
-    {
-        return view('pages.documents.print-preview', compact('document'));
     }
 }

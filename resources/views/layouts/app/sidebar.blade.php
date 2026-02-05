@@ -14,58 +14,114 @@
 
         <flux:sidebar.nav>
             <flux:separator class="my-4" />
-            <flux:sidebar.group class="grid">
 
-                {{-- User-only link --}}
-                @if(auth()->user()->user_type === 'user')
-                <flux:sidebar.item
-                    icon="home"
-                    :href="route('dashboard')"
-                    :current="request()->routeIs('dashboard')"
-                    wire:navigate>
-                    {{ __('Dashboard') }}
-                </flux:sidebar.item>
-
-                <flux:sidebar.item
-                    icon="home"
-                    :href="route('dashboard')"
-                    :current="request()->routeIs('dashboard')"
-                    wire:navigate>
-                    {{ __('Journals') }}
-                </flux:sidebar.item>
-                @endif
-
-            </flux:sidebar.group>
-
-            {{-- Admin-only Documents Dropdown --}}
+            {{-- ========== ADMIN SIDEBAR ========== --}}
             @if(auth()->user()->user_type === 'admin')
             <flux:sidebar.group>
-                {{-- Dashboard --}}
                 <flux:sidebar.item
-                    icon="folder-open"
-                    :href="route('dashboard')"
-                    :current="request()->routeIs('dashboard')"
+                    icon="home"
+                    :href="route('admin.dashboard')"
+                    :current="request()->routeIs('admin.dashboard')"
                     wire:navigate
                     class="font-semibold">
                     {{ __('Dashboard') }}
                 </flux:sidebar.item>
 
-                <flux:sidebar.item icon="user-circle" :href="route('modules.index')" :current="request()->routeIs('modules.index')" wire:navigate class="font-semibold">
-                    {{ __('Training Modules') }}
+                <flux:separator class="my-4" />
+
+                <flux:sidebar.item 
+                    icon="users"
+                    :href="route('admin.users.index')" 
+                    :current="request()->routeIs('admin.users.*')" 
+                    wire:navigate 
+                    class="font-semibold">
+                    {{ __('Users') }}
+                </flux:sidebar.item>
+
+                <flux:sidebar.item 
+                    icon="briefcase"
+                    :href="route('admin.positions.index')" 
+                    :current="request()->routeIs('admin.positions.*')" 
+                    wire:navigate 
+                    class="font-semibold">
+                    {{ __('Positions') }}
+                </flux:sidebar.item>
+
+                <flux:sidebar.item 
+                    icon="building-office"
+                    :href="route('admin.divisions.index')" 
+                    :current="request()->routeIs('admin.divisions.*')" 
+                    wire:navigate 
+                    class="font-semibold">
+                    {{ __('Divisions') }}
+                </flux:sidebar.item>
+            </flux:sidebar.group>
+            @endif
+
+            {{-- ========== HR SIDEBAR ========== --}}
+            @if(auth()->user()->user_type === 'hr')
+            <flux:sidebar.group>
+                <flux:sidebar.item
+                    icon="home"
+                    :href="route('hr.dashboard')"
+                    :current="request()->routeIs('hr.dashboard')"
+                    wire:navigate
+                    class="font-semibold">
+                    {{ __('Dashboard') }}
                 </flux:sidebar.item>
 
                 <flux:separator class="my-4" />
 
-                <flux:sidebar.item icon="user-circle" :href="route('positions.index')" :current="request()->routeIs('positions.index')" wire:navigate class="font-semibold">
-                    {{ __('Positions') }}
+                <flux:sidebar.item 
+                    icon="academic-cap"
+                    :href="route('hr.modules.index')" 
+                    :current="request()->routeIs('hr.modules.*')" 
+                    wire:navigate 
+                    class="font-semibold">
+                    {{ __('Training Modules') }}
                 </flux:sidebar.item>
 
-                <flux:sidebar.item icon="building-office" :href="route('divisions.index')" :current="request()->routeIs('divisions.index')" wire:navigate class="font-semibold">
-                    {{ __('Divisions') }}
+                <flux:sidebar.item 
+                    icon="clipboard-document-list"
+                    :href="route('hr.assignments.index')" 
+                    :current="request()->routeIs('hr.assignments.*')" 
+                    wire:navigate 
+                    class="font-semibold">
+                    {{ __('Assignments') }}
                 </flux:sidebar.item>
-
-                @endif
             </flux:sidebar.group>
+            @endif
+
+            {{-- ========== USER SIDEBAR ========== --}}
+            @if(auth()->user()->user_type === 'user')
+            <flux:sidebar.group class="grid">
+                <flux:sidebar.item
+                    icon="home"
+                    :href="route('user.dashboard')"
+                    :current="request()->routeIs('user.dashboard')"
+                    wire:navigate>
+                    {{ __('Dashboard') }}
+                </flux:sidebar.item>
+
+                <flux:separator class="my-4" />
+
+                <flux:sidebar.item
+                    icon="academic-cap"
+                    :href="route('user.trainings.index')"
+                    :current="request()->routeIs('user.trainings.*')"
+                    wire:navigate>
+                    {{ __('My Trainings') }}
+                </flux:sidebar.item>
+
+                <flux:sidebar.item
+                    icon="document-text"
+                    :href="route('user.documents.index')"
+                    :current="request()->routeIs('user.documents.*')"
+                    wire:navigate>
+                    {{ __('Learning Journals') }}
+                </flux:sidebar.item>
+            </flux:sidebar.group>
+            @endif
 
             <flux:separator class="my-4" />
         </flux:sidebar.nav>

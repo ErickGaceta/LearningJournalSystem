@@ -54,7 +54,7 @@
 
         <div class="flex flex-col items-end justify-end gap-4 mt-2 me-2">
             <flux:button
-                :href="route('divisions.create')"
+                :href="route('admin.divisions.create')"
                 size="sm"
                 color="teal"
                 variant="primary"
@@ -75,7 +75,7 @@
                     @forelse($divisions as $division)
                     <flux:table.row :key="$division->id">
                         <flux:table.cell>
-                            <a href="{{ route('divisions.show', $division) }}"
+                            <a href="{{ route('admin.divisions.show', $division) }}"
                                 wire:navigate
                                 class="text-sm font-medium hover:underline">
                                 {{ $division->division_units }}
@@ -90,12 +90,12 @@
                             <flux:button
                                 variant="ghost"
                                 color="emerald"
-                                :href="route('divisions.show', $division)"
+                                :href="route('admin.divisions.show', $division)"
                                 size="sm"
                                 icon="eye"
                                 square />
                             <flux:button
-                                :href="route('divisions.edit', $division)"
+                                :href="route('admin.divisions.edit', $division)"
                                 size="sm"
                                 color="sky"
                                 variant="ghost"
@@ -113,7 +113,7 @@
 
                             <!-- Delete Confirmation Modal using Flux -->
                             <flux:modal name="delete-division-{{ $division->id }}" class="max-w-md shadow-lg">
-                                <form action="{{ route('divisions.destroy', $division) }}" method="POST">
+                                <form action="{{ route('admin.divisions.destroy', $division) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
 

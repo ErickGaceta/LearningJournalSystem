@@ -54,7 +54,7 @@
 
         <div class="flex flex-col items-end justify-end gap-4 mt-2 me-2">
             <flux:button
-                :href="route('positions.create')"
+                :href="route('admin.positions.create')"
                 size="sm"
                 color="teal"
                 variant="primary"
@@ -76,7 +76,7 @@
                     <flux:table.row :key="$position->id">
 
                         <flux:table.cell>
-                            <a href="{{ route('positions.show', $position) }}"
+                            <a href="{{ route('admin.positions.show', $position) }}"
                                 class="text-sm font-medium hover:underline">
                                 {{ $position->positions }}
                             </a>
@@ -92,12 +92,12 @@
                             <flux:button
                                 variant="ghost"
                                 color="emerald"
-                                :href="route('positions.show', $position)"
+                                :href="route('admin.positions.show', $position)"
                                 size="sm"
                                 icon="eye"
                                 square />
                             <flux:button
-                                :href="route('positions.edit', $position)"
+                                :href="route('admin.positions.edit', $position)"
                                 size="sm"
                                 color="sky"
                                 variant="ghost"
@@ -115,7 +115,7 @@
 
                             <!-- Delete Confirmation Modal using Flux -->
                             <flux:modal name="delete-position-{{ $position->id }}" class="max-w-md">
-                                <form action="{{ route('positions.destroy', $position) }}" method="POST">
+                                <form action="{{ route('admin.positions.destroy', $position) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
 
@@ -178,7 +178,7 @@
                         <flux:table.cell colspan="3" class="text-center py-8">
                             <span class="text-neutral-500">
                                 No positions found.
-                                <a href="{{ route('positions.create') }}" class="text-blue-500 hover:underline">
+                                <a href="{{ route('admin.positions.create') }}" class="text-blue-500 hover:underline">
                                     Create one now
                                 </a>
                             </span>
