@@ -7,24 +7,26 @@
             <flux:subheading>Manage your learning journal entries</flux:subheading>
         </div>
 
-        <!-- Stats Card - Total Documents -->
-        <div class="grid gap-4 md:grid-cols-3">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <flux:card>
-                <div class="flex items-center gap-4">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/30">
-                        <flux:icon.document-text class="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <div>
-                        <flux:subheading>My Documents Total</flux:subheading>
-                        <flux:heading size="xl">{{ auth()->user()->documents()->count() }}</flux:heading>
-                    </div>
-                </div>
+                <flux:heading size="lg">Assigned Trainings</flux:heading>
+                <flux:text class="mt-2 mb-4">
+                    {{ \App\Models\Document::where('user_id', auth()->id())->count() }}
+                </flux:text>
             </flux:card>
-
-            <div></div>
-
-            <div></div>
-
+            <flux:card>
+                <flux:heading size="lg">Journals Created</flux:heading>
+                <flux:text class="mt-2 mb-4">
+                    {{ \App\Models\Document::where('user_id', auth()->id())->sum('hours') }}
+                </flux:text>
+            </flux:card>
+            <flux:card>
+                <flux:heading size="lg">Ongoing Trainings</flux:heading>
+                <flux:text class="mt-2 mb-4">
+                    {{ \App\Models\Document::where('user_id', auth()->id())->whereYear('datestart', date('Y'))->count() }}
+                </flux:text>
+            </flux:card>
         </div>
 
         <!-- Create New Document Card -->
