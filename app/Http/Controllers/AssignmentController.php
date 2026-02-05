@@ -18,7 +18,7 @@ class AssignmentController extends Controller
             ->latest()
             ->paginate(15);
 
-        return view('assignments.index', compact('assignments'));
+        return view('pages.assignments.index', compact('assignments'));
     }
 
     public function create(): View
@@ -26,7 +26,7 @@ class AssignmentController extends Controller
         $users = User::orderBy('name')->get();
         $trainingModules = TrainingModule::orderBy('title')->get();
 
-        return view('assignments.create', compact('users', 'trainingModules'));
+        return view('pages.assignments.create', compact('users', 'trainingModules'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -40,7 +40,7 @@ class AssignmentController extends Controller
 
         Assignment::create($validated);
 
-        return redirect()->route('assignments.index')
+        return redirect()->route('pages.assignments.index')
             ->with('success', 'Assignment created successfully.');
     }
 
@@ -48,7 +48,7 @@ class AssignmentController extends Controller
     {
         $assignment->load(['user', 'trainingModule']);
 
-        return view('assignments.show', compact('assignment'));
+        return view('pages.assignments.show', compact('assignment'));
     }
 
     public function edit(Assignment $assignment): View
@@ -56,7 +56,7 @@ class AssignmentController extends Controller
         $users = User::orderBy('name')->get();
         $trainingModules = TrainingModule::orderBy('title')->get();
 
-        return view('assignments.edit', compact('assignment', 'users', 'trainingModules'));
+        return view('pages.assignments.edit', compact('assignment', 'users', 'trainingModules'));
     }
 
     public function update(Request $request, Assignment $assignment): RedirectResponse
@@ -70,7 +70,7 @@ class AssignmentController extends Controller
 
         $assignment->update($validated);
 
-        return redirect()->route('assignments.index')
+        return redirect()->route('pages.assignments.index')
             ->with('success', 'Assignment updated successfully.');
     }
 
@@ -78,7 +78,7 @@ class AssignmentController extends Controller
     {
         $assignment->delete();
 
-        return redirect()->route('assignments.index')
+        return redirect()->route('pages.assignments.index')
             ->with('success', 'Assignment deleted successfully.');
     }
 }

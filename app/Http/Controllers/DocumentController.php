@@ -29,7 +29,7 @@ class DocumentController extends Controller
         // IMPORTANT: Use paginate() not get()
         $documents = $query->latest()->paginate(15)->withQueryString(); // Maintains search parameters
 
-        return view('documents.index', compact('documents'));
+        return view('pages.documents.index', compact('documents'));
     }
 
     /**
@@ -37,7 +37,7 @@ class DocumentController extends Controller
      */
     public function create()
     {
-        return view('documents.create');
+        return view('pages.documents.create');
     }
 
     /**
@@ -86,7 +86,7 @@ class DocumentController extends Controller
             abort(403);
         }
 
-        return view('documents.show', compact('document'));
+        return view('pages.documents.show', compact('document'));
     }
 
     /**
@@ -99,7 +99,7 @@ class DocumentController extends Controller
             abort(403);
         }
 
-        return view('documents.edit', compact('document'));
+        return view('pages.documents.edit', compact('document'));
     }
 
     /**
@@ -129,7 +129,7 @@ class DocumentController extends Controller
 
         $document->update($validated);
 
-        return redirect()->route('documents.index')
+        return redirect()->route('pages.documents.index')
             ->with('success', 'Document updated successfully!');
     }
 
@@ -147,7 +147,7 @@ class DocumentController extends Controller
             $document->delete();
 
             return redirect()
-                ->route('documents.index')
+                ->route('pages.documents.index')
                 ->with('success', "Document '{$documentTitle}' has been successfully deleted.");
 
         } catch (\Exception $e) {
@@ -162,6 +162,6 @@ class DocumentController extends Controller
      */
     public function printPreview(Document $document)
     {
-        return view('documents.print-preview', compact('document'));
+        return view('pages.documents.print-preview', compact('document'));
     }
 }

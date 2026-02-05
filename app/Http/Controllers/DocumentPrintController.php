@@ -66,6 +66,6 @@ class DocumentPrintController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        return view('documents.print-preview', compact('document'));
+        return view('pages.documents.print-preview', compact('document'));
     }
 }

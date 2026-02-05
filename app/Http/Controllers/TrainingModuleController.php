@@ -18,7 +18,7 @@ class TrainingModuleController extends Controller
             ->latest()
             ->paginate(15);
 
-        return view('training-modules.index', compact('trainingModules'));
+        return view('pages.modules.index', compact('trainingModules'));
     }
 
     /**
@@ -26,7 +26,7 @@ class TrainingModuleController extends Controller
      */
     public function create(): View
     {
-        return view('training-modules.create');
+        return view('pages.modules.create');
     }
 
     /**
@@ -47,7 +47,7 @@ class TrainingModuleController extends Controller
 
         TrainingModule::create($validated);
 
-        return redirect()->route('training-modules.index')
+        return redirect()->route('pages.modules.index')
             ->with('success', 'Training module created successfully.');
     }
 
@@ -58,7 +58,7 @@ class TrainingModuleController extends Controller
     {
         $trainingModule->load('assignments.user');
 
-        return view('training-modules.show', compact('trainingModule'));
+        return view('pages.modules.show', compact('trainingModule'));
     }
 
     /**
@@ -66,7 +66,7 @@ class TrainingModuleController extends Controller
      */
     public function edit(TrainingModule $trainingModule): View
     {
-        return view('training-modules.edit', compact('trainingModule'));
+        return view('pages.modules.edit', compact('trainingModule'));
     }
 
     /**
@@ -87,7 +87,7 @@ class TrainingModuleController extends Controller
 
         $trainingModule->update($validated);
 
-        return redirect()->route('training-modules.index')
+        return redirect()->route('pages.modules.index')
             ->with('success', 'Training module updated successfully.');
     }
 
@@ -98,7 +98,7 @@ class TrainingModuleController extends Controller
     {
         $trainingModule->delete();
 
-        return redirect()->route('training-modules.index')
+        return redirect()->route('pages.modules.index')
             ->with('success', 'Training module deleted successfully.');
     }
 }

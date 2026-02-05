@@ -6,6 +6,7 @@ use App\Http\Controllers\DocumentPrintController;
 use App\Http\Controllers\DebugController;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\TrainingModuleController;
 use App\Http\Controllers\PositionsController;
 use App\Http\Controllers\DivisionsController;
 
@@ -31,6 +32,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('documents', DocumentController::class);
     Route::get('/documents/{document}/print-preview', [DocumentController::class, 'printPreview'])->name('documents.print.preview');
     Route::get('/documents/{document}/export-word', [DocumentPrintController::class, 'exportWord'])->name('documents.export.word');
+
+    Route::resource('modules', TrainingModuleController::class);
 
     // Positions - use resource route
     Route::resource('positions', PositionsController::class);
