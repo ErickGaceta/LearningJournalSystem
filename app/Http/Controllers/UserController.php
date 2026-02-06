@@ -6,14 +6,15 @@ use Illuminate\Http\Request;
 use App\Models\Assignment;
 use App\Models\Document;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\User;
 class UserController extends Controller
 {
     // ========== Dashboard ==========
     public function dashboard()
     {
         $user = Auth::user();
-        
+        $users = User::where('user_type', 'user')->get();
+
         $myAssignments = Assignment::where('user_id', $user->id)
             ->with('module')
             ->latest()
@@ -37,7 +38,8 @@ class UserController extends Controller
             'myAssignments',
             'activeAssignments',
             'completedAssignments',
-            'myDocuments'
+            'myDocuments',
+            'users'
         ));
     }
 
@@ -45,7 +47,7 @@ class UserController extends Controller
     public function myTrainings()
     {
         $user = Auth::user();
-        
+
         $trainings = Assignment::where('user_id', $user->id)
             ->with('module')
             ->latest()

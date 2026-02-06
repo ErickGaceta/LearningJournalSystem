@@ -29,64 +29,40 @@
             </flux:card>
         </div>
 
-        <!-- Create New Document Card -->
-        <flux:card>
-            <div class="flex flex-col items-center justify-center gap-4 py-8">
-                <div class="text-center">
-                    <flux:subheading>Create a new learning journal entry</flux:subheading>
-                </div>
+<div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
+        <flux:table>
+            <flux:table.columns>
+                <flux:table.column>Training Name</flux:table.column>
+                <flux:table.column>Duration</flux:table.column>
+                <flux:table.column>Status</flux:table.column>
+            </flux:table.columns>
 
-                <flux:button
-                    :href="route('user.documents.create')"
-                    variant="primary"
-                    icon="plus">
-                    Create New Learning Journal
+
+             @forelse($users as $user)
+            <flux:table.rows>
+                <flux:table.row>
+                    <flux:table.cell>{{ $user->first_name . ' ' . $user->middle_name . ' ' . $user->last_name }}</flux:table.cell>
+                    <flux:table.cell></flux:table.cell>
+                    <flux:table.cell><flux:badge color="green" size="sm" inset="top bottom">Completed</flux:badge></flux:table.cell>
+                    <flux:table.cell></flux:table.cell>
+                    <flux:table.cell></flux:table.cell>
+                </flux:table.row>
+            </flux:table.rows>
+            @empty
+            <flux:table.rows>
+                <flux:table.row>
+                    <flux:table.cell class="col-span-6">No users in the database</flux:table.cell>
+                </flux:table.row>
+            </flux:table.rows>
+            @endforelse
+        </flux:table>
+        <flux:button
+                    :href="route('dashboard')"
+                    icon="plus"
+                    wire:navigate>
+                    Create First Journal
                 </flux:button>
-            </div>
-        </flux:card>
-
-        <!-- Recent Documents Section (Optional) -->
-        @php
-        $recentDocuments = auth()->user()->documents()->latest()->take(5)->get();
-        @endphp
-
-        @if($recentDocuments->count() > 0)
-            <div>
-                <div class="flex items-center justify-between">
-                    <flux:heading>Recent Documents</flux:heading>
-                </div>
-            </div>
-
-            <flux:table>
-                <flux:table.columns>
-                    <flux:table.column>Name</flux:column>
-                        <flux:table.column>Status</flux:column>
-                </flux:table.columns>
-
-                <flux:table.rows>
-                    @foreach($recentDocuments as $document)
-                    <flux:table.row>
-                        <flux:table.cell>
-                            <div>
-                                <flux:heading size="sm">{{ $document->title }}</flux:heading>
-                                <flux:subheading class="text-xs">
-                                    {{ $document->created_at->diffForHumans() }}
-                                </flux:subheading>
-                            </div>
-                        </flux:table.cell>
-
-                        <flux:table.cell>
-                            @if($document->isPrinted)
-                            <flux:badge color="green" size="sm">Printed</flux:badge>
-                            @else
-                            <flux:badge color="amber" size="sm">Pending</flux:badge>
-                            @endif
-                        </flux:table.cell>
-                    </flux:table.row>
-                    @endforeach
-                </flux:table.rows>
-            </flux:table>
-        @endif
+    </div>
 
     </div>
 </x-layouts::app>
