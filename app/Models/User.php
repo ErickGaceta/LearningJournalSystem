@@ -21,7 +21,6 @@ class User extends Authenticatable
         'id_positions',
         'id_division_units',
         'employee_type',
-        'roles',
         'username',
         'email',
         'password',

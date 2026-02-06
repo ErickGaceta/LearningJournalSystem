@@ -404,11 +404,11 @@
             @endif
         </header>
 
-     <div class="flex-1 p-6 pb-12 lg:p-20 rounded-es-lg rounded-ee-lg lg:rounded-ss-lg lg:rounded-ee-none flex flex-col justify-end items-center" style="padding-bottom: 10rem;">
-    <h1 class="font-black text-center adaptive-text" style="font-family: 'Arial Black', sans-serif; font-size: 6rem;">
+    <div class="flex-1 p-6 pb-12 lg:p-20 rounded-es-lg rounded-ee-lg lg:rounded-ss-lg lg:rounded-ee-none flex flex-col justify-end items-center" style="padding-bottom: 10rem;">
+    <h1 class="font-black text-center adaptive-text" style="font-family: 'Arial Black', sans-serif; font-size: clamp(2rem, 5vw, 6rem);">
         Welcome to the DOST
     </h1>
-    <h1 class="font-black text-center adaptive-text" style="font-family: 'Arial Black', sans-serif; font-size: 7rem;">
+    <h1 class="font-black text-center adaptive-text" style="font-family: 'Arial Black', sans-serif; font-size: clamp(2.5rem, 6vw, 7rem);">
         Learning Journal System
     </h1>
 </div>
