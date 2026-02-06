@@ -10,13 +10,11 @@
 
             <!-- Email Address -->
             <flux:input
-                name="email"
-                :label="__('Email address')"
+                name="login"
+                :label="__('Username/ Email address')"
                 :value="old('email')"
-                type="email"
                 required
                 autofocus
-                autocomplete="email"
                 placeholder="email@example.com"
             />
 

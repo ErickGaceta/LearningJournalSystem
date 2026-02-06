@@ -2,12 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HRController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentPrintController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ChangePasswordController;
 
 // ========== Guest Routes (No Auth Required) ==========
 Route::get('/', function () {
@@ -16,6 +20,12 @@ Route::get('/', function () {
 
 // ========== Login Route ==========
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
+
+// ========== Change Password Routes (Auth Required) ==========
+Route::middleware('auth')->group(function () {
+    Route::get('/change-password', [ChangePasswordController::class, 'show'])->name('password.change');
+    Route::post('/change-password', [ChangePasswordController::class, 'update'])->name('password.update');
+});
 
 // ========== Dashboard Redirect Route ==========
 Route::get('/dashboard', function () {
@@ -58,7 +68,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/positions', [AdminController::class, 'positionsIndex'])->name('positions.index');
     Route::get('/positions/create', [AdminController::class, 'createPosition'])->name('positions.create');
     Route::post('/positions', [AdminController::class, 'storePosition'])->name('positions.store');
-    Route::get('/positions/{position}', [AdminController::class, 'showPosition'])->name('positions.show'); // ADD THIS
+    Route::get('/positions/{position}', [AdminController::class, 'showPosition'])->name('positions.show');
     Route::get('/positions/{position}/edit', [AdminController::class, 'editPosition'])->name('positions.edit');
     Route::put('/positions/{position}', [AdminController::class, 'updatePosition'])->name('positions.update');
     Route::delete('/positions/{position}', [AdminController::class, 'destroyPosition'])->name('positions.destroy');
@@ -67,7 +77,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/divisions', [AdminController::class, 'divisionsIndex'])->name('divisions.index');
     Route::get('/divisions/create', [AdminController::class, 'createDivision'])->name('divisions.create');
     Route::post('/divisions', [AdminController::class, 'storeDivision'])->name('divisions.store');
-    Route::get('/divisions/{division}', [AdminController::class, 'showDivision'])->name('divisions.show'); // ADD THIS TOO
+    Route::get('/divisions/{division}', [AdminController::class, 'showDivision'])->name('divisions.show');
     Route::get('/divisions/{division}/edit', [AdminController::class, 'editDivision'])->name('divisions.edit');
     Route::put('/divisions/{division}', [AdminController::class, 'updateDivision'])->name('divisions.update');
     Route::delete('/divisions/{division}', [AdminController::class, 'destroyDivision'])->name('divisions.destroy');

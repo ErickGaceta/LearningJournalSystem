@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Position;
 use App\Models\DivisionUnit;
@@ -33,7 +35,7 @@ class AdminController extends Controller
     // ========== User Management ==========
     public function usersIndex()
     {
-        $users = User::all();
+        $users = User::whereIn('user_type', ['user', 'hr'])->with(['position', 'divisionUnit'])->paginate(20);
         return view('pages.admin.users.index', compact('users'));
     }
 
@@ -45,33 +47,38 @@ class AdminController extends Controller
         return view('pages.admin.users.create', compact('positions', 'divisions'));
     }
 
-    public function storeUser(Request $request): RedirectResponse
-    {
-        $validated = $request->validate([
-            'employee_id' => 'required|string|max:255|unique:users',
-            'first_name' => 'required|string|max:255',
-            'middle_name' => 'nullable|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'gender' => 'required|in:Male,Female',
-            'id_positions' => 'required|exists:positions,id',
-            'id_division_units' => 'required|exists:division_units,id',
-            'employee_type' => 'required|string|max:255',
-            'roles' => 'nullable|string|max:255',
-            'username' => 'required|string|max:255|unique:users',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'is_active' => 'nullable|boolean',
-            'user_type' => 'required|in:hr,user',
-        ]);
+    public function storeUser(Request $request)
+{
+    // 1. Validate
+    $validated = $request->validate([
+        'employee_id' => 'required|string|max:255|unique:users',
+        'first_name' => 'required|string|max:255',
+        'middle_name' => 'nullable|string|max:255',
+        'last_name' => 'required|string|max:255',
+        'gender' => 'required|in:Male,Female',
+        'id_positions' => 'required|exists:positions,id',
+        'id_division_units' => 'required|exists:division_units,id',
+        'employee_type' => 'required|string|max:255',
+        'username' => 'required|string|max:255|unique:users',
+        'email' => 'required|string|email|max:255|unique:users',
+        'is_active' => 'nullable',
+        'user_type' => 'required|in:hr,user',
+    ]);
 
-        $validated['password'] = Hash::make($validated['password']);
-        $validated['is_active'] = $validated['is_active'] ?? true;
+    $generatedPassword = Str::random(8);
+    
+    $validated['password'] = $generatedPassword; 
+    
+    $validated['is_active'] = $request->has('is_active'); 
 
-        User::create($validated);
+    $user = DB::transaction(function () use ($validated) {
+        return User::create($validated);
+    });
 
-        return redirect()->route('admin.users.index')
-            ->with('success', ucfirst($validated['user_type']) . ' user created successfully.');
-    }
+    return redirect()->route('admin.users.index')
+        ->with('success', "User created! Password is: {$generatedPassword}")
+        ->with('generated_password', $generatedPassword);
+}
 
     public function editUser(User $user)
     {

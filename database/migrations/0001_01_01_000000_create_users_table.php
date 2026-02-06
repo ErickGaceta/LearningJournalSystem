@@ -36,11 +36,10 @@ return new class extends Migration
             $table->foreignId('id_positions')->nullable()->constrained('positions')->onDelete('cascade')->default(1);
             $table->foreignId('id_division_units')->nullable()->constrained('division_units')->onDelete('cascade')->default(1);
             $table->string('employee_type', 191)->default('Regular');
-            $table->string('roles', 191)->default('user');
             $table->string('username', 191)->unique()->default('');
             $table->string('email', 191)->unique()->default('');
             $table->timestamp('email_verified_at')->nullable()->default(null);
-            $table->string('password', 191)->default('');
+            $table->string('password', 255);
             $table->timestamp('last_login')->nullable()->default(null);
             $table->tinyInteger('is_active')->default(1);
             $table->rememberToken();
