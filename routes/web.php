@@ -22,9 +22,9 @@ Route::get('/dashboard', function () {
     if (!Auth::check()) {
         return redirect()->route('login');
     }
-    
+
     $user = Auth::user();
-    
+
     return match($user->user_type) {
         'admin' => redirect()->route('admin.dashboard'),
         'hr' => redirect()->route('hr.dashboard'),
@@ -45,7 +45,7 @@ Route::post('/logout', function () {
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-    
+
     // User Management
     Route::get('/users', [AdminController::class, 'usersIndex'])->name('users.index');
     Route::get('/users/create', [AdminController::class, 'createUser'])->name('users.create');
@@ -53,7 +53,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('users.edit');
     Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
     Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('users.destroy');
-    
+
     // Position Management
     Route::get('/positions', [AdminController::class, 'positionsIndex'])->name('positions.index');
     Route::get('/positions/create', [AdminController::class, 'createPosition'])->name('positions.create');
@@ -62,7 +62,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/positions/{position}/edit', [AdminController::class, 'editPosition'])->name('positions.edit');
     Route::put('/positions/{position}', [AdminController::class, 'updatePosition'])->name('positions.update');
     Route::delete('/positions/{position}', [AdminController::class, 'destroyPosition'])->name('positions.destroy');
-    
+
     // Division Management
     Route::get('/divisions', [AdminController::class, 'divisionsIndex'])->name('divisions.index');
     Route::get('/divisions/create', [AdminController::class, 'createDivision'])->name('divisions.create');
@@ -76,7 +76,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 // ========== HR Routes ==========
 Route::middleware(['auth'])->prefix('hr')->name('hr.')->group(function () {
     Route::get('/dashboard', [HRController::class, 'dashboard'])->name('dashboard');
-    
+
     // Training Module Management
     Route::get('/modules', [HRController::class, 'modulesIndex'])->name('modules.index');
     Route::get('/modules/create', [HRController::class, 'createModule'])->name('modules.create');
@@ -84,7 +84,7 @@ Route::middleware(['auth'])->prefix('hr')->name('hr.')->group(function () {
     Route::get('/modules/{module}/edit', [HRController::class, 'editModule'])->name('modules.edit');
     Route::put('/modules/{module}', [HRController::class, 'updateModule'])->name('modules.update');
     Route::delete('/modules/{module}', [HRController::class, 'destroyModule'])->name('modules.destroy');
-    
+
     // Assignment Management
     Route::get('/assignments', [HRController::class, 'assignmentsIndex'])->name('assignments.index');
     Route::get('/assignments/create', [HRController::class, 'createAssignment'])->name('assignments.create');
@@ -95,11 +95,11 @@ Route::middleware(['auth'])->prefix('hr')->name('hr.')->group(function () {
 // ========== User Routes ==========
 Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
-    
+
     // Training Tracking
     Route::get('/trainings', [UserController::class, 'myTrainings'])->name('trainings.index');
     Route::get('/trainings/{assignment}', [UserController::class, 'showTraining'])->name('trainings.show');
-    
+
     // Document Management
     Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
     Route::get('/documents/create', [DocumentController::class, 'create'])->name('documents.create');
@@ -108,7 +108,7 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/documents/{document}/edit', [DocumentController::class, 'edit'])->name('documents.edit');
     Route::put('/documents/{document}', [DocumentController::class, 'update'])->name('documents.update');
     Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
-    
+
     // Document Print/Export
     Route::get('/documents/{document}/preview', [DocumentPrintController::class, 'preview'])->name('documents.preview');
     Route::get('/documents/{document}/export', [DocumentPrintController::class, 'exportWord'])->name('documents.export');

@@ -131,4 +131,6 @@ class HRController extends Controller
         return redirect()->route('hr.assignments.index')
             ->with('success', 'Assignment removed successfully.');
     }
+
+
 }
