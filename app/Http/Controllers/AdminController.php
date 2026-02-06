@@ -33,11 +33,7 @@ class AdminController extends Controller
     // ========== User Management ==========
     public function usersIndex()
     {
-        $users = User::whereIn('user_type', ['hr', 'user'])
-            ->with(['position', 'divisionUnit'])
-            ->latest()
-            ->paginate(15);
-
+        $users = User::all();
         return view('pages.admin.users.index', compact('users'));
     }
 
@@ -216,23 +212,20 @@ class AdminController extends Controller
             ->with('success', 'Division updated successfully.');
     }
 
-    public function destroyDivision(DivisionUnit $division): RedirectResponse
-    {
+    public function destroyDivision(DivisionUnit $division): RedirectResponse{
         $division->delete();
 
         return redirect()->route('admin.divisions.index')
             ->with('success', 'Division deleted successfully.');
     }
-    
-    public function showPosition(Position $position)
-    {
+
+    public function showPosition(Position $position){
         $position->loadCount('users');
 
         return view('pages.admin.positions.show', compact('position'));
     }
 
-    public function showDivision(DivisionUnit $division)
-    {
+    public function showDivision(DivisionUnit $division){
         $division->loadCount('users');
 
         return view('pages.admin.divisions.show', compact('division'));
