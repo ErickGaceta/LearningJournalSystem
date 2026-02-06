@@ -30,7 +30,7 @@
         </div>
 
         <!-- Training Name and Duration Section -->
-        @php
+        <?php
         $userTrainings = \App\Models\Document::where('user_id', auth()->id())
             ->latest()
             ->take(5)
@@ -60,7 +60,7 @@
             
             return ['status' => 'Pending', 'color' => 'amber'];
         }
-        @endphp
+        ?>
 
         @if($userTrainings->count() > 0)
             <flux:card>
@@ -123,10 +123,10 @@
                     <flux:text class="mt-2">Start by creating your first learning journal entry</flux:text>
                 </div>
             </flux:card>
-        @endif>
+        @endif
 
         <!-- Training Status Overview -->
-        @php
+        <?php
         $pendingCount = 0;
         $ongoingCount = 0;
         $finishedCount = 0;
@@ -138,7 +138,7 @@
             elseif($status['status'] === 'Ongoing') $ongoingCount++;
             elseif($status['status'] === 'Finished') $finishedCount++;
         }
-        @endphp
+        ?>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <flux:card>
@@ -175,9 +175,9 @@
         </flux:card>
 
         <!-- Recent Documents Section -->
-        @php
+        <?php
         $recentDocuments = auth()->user()->documents()->latest()->take(5)->get();
-        @endphp
+        ?>
 
         @if($recentDocuments->count() > 0)
             <div>
