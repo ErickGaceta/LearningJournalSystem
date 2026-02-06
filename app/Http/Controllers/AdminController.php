@@ -33,7 +33,8 @@ class AdminController extends Controller
     // ========== User Management ==========
     public function usersIndex()
     {
-        return view('pages.admin.users.index');
+        $users = User::all();
+        return view('pages.admin.users.index', compact('users'));
     }
 
     public function createUser()
