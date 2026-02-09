@@ -6,8 +6,8 @@
                 <p class="text-sm text-neutral-600">Position Details</p>
             </div>
             <div class="flex gap-2">
-                <flux:button :href="route('positions.edit', $position)" variant="primary" color="sky" icon="pencil" />
-                <flux:button :href="route('positions.index')" variant="ghost" icon="arrow-uturn-left">
+                <flux:button :href="route('admin.positions.edit', $position)" variant="primary" color="sky" icon="pencil" />
+                <flux:button :href="route('admin.positions.index')" variant="ghost" icon="arrow-uturn-left">
                     Back to List
                 </flux:button>
             </div>

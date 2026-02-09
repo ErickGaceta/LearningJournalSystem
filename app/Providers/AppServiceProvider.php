@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\View;
 use App\Models\Document;
 use App\Models\DivisionUnit;
 use App\Models\Position;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        Paginator::useTailwind();
 
         // Share recent documents only with specific views (like dashboard, sidebar, etc.)
         View::composer(['dashboard', 'layouts.navigation', 'layouts.sidebar'], function ($view) {

@@ -35,7 +35,7 @@ class User extends Authenticatable
         'two_factor_recovery_codes',
         'remember_token',
     ];
-    
+
     protected $with = ['position', 'divisionUnit'];
 
     protected $appends = ['full_name'];
@@ -49,7 +49,7 @@ class User extends Authenticatable
     }
 
     // ========== Relationships ==========
-    
+
     public function position()
     {
         return $this->belongsTo(Position::class, 'id_positions');
@@ -65,6 +65,11 @@ class User extends Authenticatable
         return $this->hasMany(Document::class);
     }
 
+    public function assignments()
+    {
+        return $this->hasMany(Assignment::class);
+    }
+
     // ========== Accessors ==========
 
     public function getFullNameAttribute(): string
@@ -78,7 +83,7 @@ class User extends Authenticatable
         return Str::of($this->first_name . ' ' . $this->last_name)
             ->explode(' ')
             ->take(2)
-            ->map(fn ($word) => Str::substr($word, 0, 1))
+            ->map(fn($word) => Str::substr($word, 0, 1))
             ->implode('');
     }
 }
