@@ -35,29 +35,29 @@
             ->latest()
             ->take(5)
             ->get();
-        
+
         // Function to determine training status
         function getTrainingStatus($training) {
             $now = \Carbon\Carbon::now();
             $startDate = $training->datestart ? \Carbon\Carbon::parse($training->datestart) : null;
             $endDate = $training->dateend ? \Carbon\Carbon::parse($training->dateend) : null;
-            
+
             if (!$startDate) {
                 return ['status' => 'Pending', 'color' => 'amber'];
             }
-            
+
             if ($now->lt($startDate)) {
                 return ['status' => 'Pending', 'color' => 'amber'];
             }
-            
+
             if ($endDate && $now->gt($endDate)) {
                 return ['status' => 'Finished', 'color' => 'green'];
             }
-            
+
             if ($now->gte($startDate) && (!$endDate || $now->lte($endDate))) {
                 return ['status' => 'Ongoing', 'color' => 'blue'];
             }
-            
+
             return ['status' => 'Pending', 'color' => 'amber'];
         }
         ?>
@@ -66,7 +66,7 @@
             <flux:card>
                 <div class="space-y-4">
                     <flux:heading size="lg">Training Name and Duration</flux:heading>
-                    
+
                     <flux:table>
                         <flux:table.columns>
                             <flux:table.column>Training Name</flux:table.column>
@@ -106,9 +106,9 @@
 
                     @if(\App\Models\Document::where('user_id', auth()->id())->count() > 5)
                         <div class="text-center">
-                            <flux:button 
-                                :href="route('documents.index')" 
-                                variant="ghost" 
+                            <flux:button
+                                :href="route('documents.index')"
+                                variant="ghost"
                                 size="sm">
                                 View All Trainings
                             </flux:button>
@@ -116,13 +116,8 @@
                     @endif
                 </div>
             </flux:card>
-        @else
-            <flux:card>
-                <div class="text-center py-8">
-                    <flux:subheading>No trainings assigned yet</flux:subheading>
-                    <flux:text class="mt-2">Start by creating your first learning journal entry</flux:text>
-                </div>
-            </flux:card>
+
+
         @endif
 
         <!-- Training Status Overview -->
@@ -130,7 +125,7 @@
         $pendingCount = 0;
         $ongoingCount = 0;
         $finishedCount = 0;
-        
+
         $allTrainings = \App\Models\Document::where('user_id', auth()->id())->get();
         foreach($allTrainings as $training) {
             $status = getTrainingStatus($training);
@@ -139,24 +134,6 @@
             elseif($status['status'] === 'Finished') $finishedCount++;
         }
         ?>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <flux:card>
-                <flux:heading size="lg">Pending Trainings</flux:heading>
-                <flux:text class="mt-2 mb-4">{{ $pendingCount }}</flux:text>
-                <flux:badge color="amber" size="sm">Not Started</flux:badge>
-            </flux:card>
-            <flux:card>
-                <flux:heading size="lg">Ongoing Trainings</flux:heading>
-                <flux:text class="mt-2 mb-4">{{ $ongoingCount }}</flux:text>
-                <flux:badge color="blue" size="sm">In Progress</flux:badge>
-            </flux:card>
-            <flux:card>
-                <flux:heading size="lg">Finished Trainings</flux:heading>
-                <flux:text class="mt-2 mb-4">{{ $finishedCount }}</flux:text>
-                <flux:badge color="green" size="sm">Completed</flux:badge>
-            </flux:card>
-        </div>
 
 <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
         <flux:table>
@@ -167,11 +144,11 @@
             </flux:table.columns>
 
 
-             @forelse($users as $user)
+             @forelse($userTrainings as $ut)
             <flux:table.rows>
                 <flux:table.row>
-                    <flux:table.cell>{{ $user->first_name . ' ' . $user->middle_name . ' ' . $user->last_name }}</flux:table.cell>
-                    <flux:table.cell></flux:table.cell>
+                    <flux:table.cell>{{ $ut->training_module->title }}</flux:table.cell>
+                    <flux:table.cell>{{ $ut->$interval->format('%a days') }}</flux:table.cell>
                     <flux:table.cell><flux:badge color="green" size="sm" inset="top bottom">Completed</flux:badge></flux:table.cell>
                     <flux:table.cell></flux:table.cell>
                     <flux:table.cell></flux:table.cell>
@@ -180,7 +157,7 @@
             @empty
             <flux:table.rows>
                 <flux:table.row>
-                    <flux:table.cell class="col-span-6">No users in the database</flux:table.cell>
+                    <flux:table.cell class="col-span-6">No Trainings yet</flux:table.cell>
                 </flux:table.row>
             </flux:table.rows>
             @endforelse

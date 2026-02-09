@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Assignment;
 use App\Models\Document;
+use App\Models\TrainingModule;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 class UserController extends Controller
@@ -19,6 +20,10 @@ class UserController extends Controller
             ->with('module')
             ->latest()
             ->paginate(10);
+
+            $datestart = TrainingModule::get('datestart');
+            $dateend = TrainingModule::get('dateend');
+            $interval = $datestart->diff($dateend);
 
         $activeAssignments = Assignment::where('user_id', $user->id)
             ->whereHas('module', function($query) {
@@ -43,7 +48,8 @@ class UserController extends Controller
             'completedAssignments',
             'myDocuments',
             'users',
-            'userTrainings'
+            'interval'
+
         ));
     }
 
