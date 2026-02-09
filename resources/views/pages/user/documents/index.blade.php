@@ -171,7 +171,7 @@
                 <h3 class="text-xl font-semibold text-heading mb-3">No Learning Journals Yet</h3>
                 <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-6">Create your first journal to get started</p>
                 <flux:button
-                    :href="route('dashboard')"
+                    :href="route('user.documents.create')"
                     icon="plus"
                     wire:navigate>
                     Create First Journal

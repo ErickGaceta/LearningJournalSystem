@@ -24,7 +24,7 @@
 
         <!-- Back Button -->
         <div class="mb-4">
-            <a href="{{ route('documents.index') }}" class="inline-flex items-center gap-2 text-blue-500 hover:text-blue-600 transition-colors">
+            <a href="{{ route('user.documents.index') }}" class="inline-flex items-center gap-2 text-blue-500 hover:text-blue-600 transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
@@ -52,7 +52,7 @@
 
                 <flux:button
                     icon:trailing="document-text"
-                    :href="route('documents.export.word', $document)"
+                    :href="route('user.documents.export', $document)"
                     variant="primary"
                     color="sky">Export Word
                 </flux:button>
@@ -186,7 +186,7 @@
                     <!-- Iframe Container -->
                     <div class="relative w-full bg-gray-50" style="height: calc(100% - 73px);">
                         <iframe
-                            src="{{ route('documents.print.preview', $document) }}"
+                            src="{{ route('user.documents.preview', $document) }}"
                             class="w-full h-full border-0"
                             title="Document preview">
                         </iframe>
@@ -198,7 +198,7 @@
 
     <!-- Delete Confirmation Modal using Flux -->
     <flux:modal name="delete-document" class="max-w-md">
-        <form action="{{ route('documents.destroy', $document->id) }}" method="POST">
+        <form action="{{ route('user.documents.destroy', $document->id) }}" method="POST">
             @csrf
             @method('DELETE')
 
