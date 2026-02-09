@@ -7,7 +7,6 @@ use App\Models\Assignment;
 use App\Models\Document;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Models\User;
 class UserController extends Controller
 {
     // ========== Dashboard ==========
@@ -33,6 +32,8 @@ class UserController extends Controller
             })
             ->count();
 
+            $userTrainings = Assignment::all();
+
         $myDocuments = Document::where('user_id', $user->id)->count();
 
         return view('pages.user.dashboard', compact(
@@ -41,7 +42,8 @@ class UserController extends Controller
             'activeAssignments',
             'completedAssignments',
             'myDocuments',
-            'users'
+            'users',
+            'userTrainings'
         ));
     }
 
