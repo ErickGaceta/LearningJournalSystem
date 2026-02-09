@@ -78,11 +78,11 @@
 
                         <flux:table.rows>
                             @foreach($userTrainings as $training)
-                            
+
                             <?php
                                 $statusInfo = getTrainingStatus($training);
                             ?>endphp
-                            
+
                             <flux:table.row>
                                 <flux:table.cell>
                                     <flux:heading size="sm">{{ $training->title }}</flux:heading>
@@ -165,7 +165,7 @@
             @endforelse
         </flux:table>
         <flux:button
-                    :href="route('dashboard')"
+                    :href="route('user.documents.create')"
                     icon="plus"
                     wire:navigate>
                     Create First Journal

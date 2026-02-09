@@ -1,6 +1,6 @@
 <x-layouts::app.sidebar :title="__('DOST CAR Learning Journal System - Create Document')">
     <flux:main>
-        <form action="{{ route('documents.store') }}" method="POST" class="space-y-6">
+        <form action="{{ route('user.documents.store') }}" method="POST" class="space-y-6">
             @csrf
 
             <!-- Personal Information -->

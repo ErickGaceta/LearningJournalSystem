@@ -14,6 +14,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade')->default(1);
             $table->string('training_module');
             $table->foreignId('module_id', 100)->nullable()->constrained('training_module')->onDelete('cascade')->default(1);
+            $table->text('status');
             $table->timestamps();
         });
     }
