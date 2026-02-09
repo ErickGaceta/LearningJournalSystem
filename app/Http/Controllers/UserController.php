@@ -7,6 +7,7 @@ use App\Models\Assignment;
 use App\Models\Document;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\User;
 class UserController extends Controller
 {
     // ========== Dashboard ==========
@@ -35,6 +36,7 @@ class UserController extends Controller
         $myDocuments = Document::where('user_id', $user->id)->count();
 
         return view('pages.user.dashboard', compact(
+            'userTrainings',
             'myAssignments',
             'activeAssignments',
             'completedAssignments',
@@ -53,7 +55,7 @@ class UserController extends Controller
             ->latest()
             ->paginate(15);
 
-        return view('pages.user.trainings.index', compact('trainings'));
+        return view('pages.user.trainings.index', compact('trainings', 'userTrainings'));
     }
 
     public function showTraining(Assignment $assignment)
