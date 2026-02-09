@@ -37,7 +37,7 @@ class UserController extends Controller
             })
             ->count();
 
-            $userTrainings = Assignment::all();
+        $userTrainings = Assignment::all();
 
         $myDocuments = Document::where('user_id', $user->id)->count();
 

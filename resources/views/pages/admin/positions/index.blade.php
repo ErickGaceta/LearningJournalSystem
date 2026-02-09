@@ -64,7 +64,7 @@
         </div>
 
         <div class="overflow-x-auto">
-            <flux:table :paginate="$positions">
+            <flux:table>
                 <flux:table.columns>
                     <flux:table.column>Name</flux:table.column>
                     <flux:table.column>Users Count</flux:table.column>
@@ -187,6 +187,9 @@
                     @endforelse
                 </flux:table.rows>
             </flux:table>
+            <div class="mt-4">
+                {{ $positions->links() }}
+            </div>
 
         </div>
     </div>

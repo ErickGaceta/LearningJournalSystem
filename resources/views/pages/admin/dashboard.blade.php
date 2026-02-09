@@ -13,9 +13,9 @@
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <flux:card>
-                <flux:heading size="lg">Total Journals</flux:heading>
+                <flux:heading size="lg">Total Users on Training</flux:heading>
                 <flux:text class="mt-2 mb-4">
-                    {{ $documents }}
+                    {{ $activeAssignments }}
                 </flux:text>
             </flux:card>
             <flux:card>

@@ -6,7 +6,7 @@
         </div>
 
         <div class="rounded-xl border border-neutral-200 p-6 max-w-2xl">
-            <form action="{{ route('positions.update', $position) }}" method="POST">
+            <form action="{{ route('admin.positions.update', $position) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="flex justify-end gap-3">
-                    <flux:button :href="route('positions.index')" variant="filled">Cancel</flux:button>
+                    <flux:button :href="route('admin.positions.index')" variant="filled">Cancel</flux:button>
                     <flux:button type="submit" variant="primary" color="sky" icon="arrow-up-on-square">Update</flux:button>
                 </div>
             </form>

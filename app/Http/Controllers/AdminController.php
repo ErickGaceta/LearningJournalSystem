@@ -4,114 +4,116 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rules\Password;
 use App\Models\User;
 use App\Models\Position;
 use App\Models\DivisionUnit;
 use App\Models\TrainingModule;
 use App\Models\Document;
+use App\Models\Assignment;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
     // ========== Dashboard ==========
     public function dashboard()
     {
-        $totalModules = TrainingModule::count();
-        $activeModules = TrainingModule::where('dateend', '>=', now())->count();
-        $completedModules = TrainingModule::where('dateend', '<', now())->count();
-        $documents = Document::where('user_id', Auth::id())->count();
-
-        return view('pages.admin.dashboard', compact(
-            'totalModules',
-            'activeModules',
-            'completedModules',
-            'documents'
-        ));
+        $now = Carbon::now();
+        
+        return view('pages.admin.dashboard', [
+            'totalModules' => TrainingModule::count(),
+            'activeModules' => TrainingModule::where('dateend', '>=', $now)->count(),
+            'completedModules' => TrainingModule::where('dateend', '<', $now)->count(),
+            'documents' => Document::where('user_id', Auth::id())->count(),
+            'activeAssignments' => Assignment::whereHas('module', fn($q) => 
+                $q->where('datestart', '<=', $now)
+                  ->where('dateend', '>=', $now)
+            )->count(),
+        ]);
     }
 
     // ========== User Management ==========
     public function usersIndex()
     {
-        $users = User::whereIn('user_type', ['user', 'hr'])->with(['position', 'divisionUnit'])->paginate(20);
+        $users = User::whereIn('user_type', ['user', 'hr'])
+            ->with(['position', 'divisionUnit'])
+            ->latest()
+            ->paginate(20);
+            
         return view('pages.admin.users.index', compact('users'));
     }
 
     public function createUser()
     {
-        $positions = Position::all();
-        $divisions = DivisionUnit::all();
-
-        return view('pages.admin.users.create', compact('positions', 'divisions'));
+        return view('pages.admin.users.create', [
+            'positions' => Position::orderBy('positions')->get(),
+            'divisions' => DivisionUnit::orderBy('division_units')->get(),
+        ]);
     }
 
-    public function storeUser(Request $request)
-{
-    // 1. Validate
-    $validated = $request->validate([
-        'employee_id' => 'required|string|max:255|unique:users',
-        'first_name' => 'required|string|max:255',
-        'middle_name' => 'nullable|string|max:255',
-        'last_name' => 'required|string|max:255',
-        'gender' => 'required|in:Male,Female',
-        'id_positions' => 'required|exists:positions,id',
-        'id_division_units' => 'required|exists:division_units,id',
-        'employee_type' => 'required|string|max:255',
-        'username' => 'required|string|max:255|unique:users',
-        'email' => 'required|string|email|max:255|unique:users',
-        'is_active' => 'nullable',
-        'user_type' => 'required|in:hr,user',
-    ]);
+    public function storeUser(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'employee_id' => ['required', 'string', 'max:255', 'unique:users'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'middle_name' => ['nullable', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'gender' => ['required', 'in:Male,Female'],
+            'id_positions' => ['required', 'exists:positions,id'],
+            'id_division_units' => ['required', 'exists:division_units,id'],
+            'employee_type' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255', 'unique:users'],
+            'email' => ['required', 'email', 'max:255', 'unique:users'],
+            'is_active' => ['nullable', 'boolean'],
+            'user_type' => ['required', 'in:hr,user'],
+        ]);
 
-    $generatedPassword = Str::random(8);
-    
-    $validated['password'] = $generatedPassword; 
-    
-    $validated['is_active'] = $request->has('is_active'); 
+        $generatedPassword = Str::password(12); // More secure, mixed case + symbols
 
-    $user = DB::transaction(function () use ($validated) {
-        return User::create($validated);
-    });
+        $validated['password'] = $generatedPassword;
+        $validated['is_active'] = $request->boolean('is_active');
 
-    return redirect()->route('admin.users.index')
-        ->with('success', "User created! Password is: {$generatedPassword}")
-        ->with('generated_password', $generatedPassword);
-}
+        $user = User::create($validated);
+
+        return redirect()->route('admin.users.index')
+            ->with('success', "User created! Temporary password: {$generatedPassword}");
+    }
 
     public function editUser(User $user)
     {
-        $positions = Position::all();
-        $divisions = DivisionUnit::all();
-
-        return view('pages.admin.users.edit', compact('user', 'positions', 'divisions'));
+        return view('pages.admin.users.edit', [
+            'user' => $user,
+            'positions' => Position::orderBy('positions')->get(),
+            'divisions' => DivisionUnit::orderBy('division_units')->get(),
+        ]);
     }
 
     public function updateUser(Request $request, User $user): RedirectResponse
     {
         $validated = $request->validate([
-            'employee_id' => 'required|string|max:255|unique:users,employee_id,' . $user->id,
-            'first_name' => 'required|string|max:255',
-            'middle_name' => 'nullable|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'gender' => 'required|in:Male,Female',
-            'id_positions' => 'required|exists:positions,id',
-            'id_division_units' => 'required|exists:division_units,id',
-            'employee_type' => 'required|string|max:255',
-            'roles' => 'nullable|string|max:255',
-            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:8|confirmed',
-            'is_active' => 'nullable|boolean',
-            'user_type' => 'required|in:hr,user',
+            'employee_id' => ['required', 'string', 'max:255', 'unique:users,employee_id,' . $user->id],
+            'first_name' => ['required', 'string', 'max:255'],
+            'middle_name' => ['nullable', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'gender' => ['required', 'in:Male,Female'],
+            'id_positions' => ['required', 'exists:positions,id'],
+            'id_division_units' => ['required', 'exists:division_units,id'],
+            'employee_type' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255', 'unique:users,username,' . $user->id],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'password' => ['nullable', 'confirmed', Password::defaults()],
+            'is_active' => ['nullable', 'boolean'],
+            'user_type' => ['required', 'in:hr,user'],
         ]);
 
-        if (!empty($validated['password'])) {
-            $validated['password'] = Hash::make($validated['password']);
-        } else {
+        // Remove password if empty (let 'hashed' cast handle hashing if provided)
+        if (empty($validated['password'])) {
             unset($validated['password']);
         }
+
+        $validated['is_active'] = $request->boolean('is_active');
 
         $user->update($validated);
 
@@ -121,6 +123,11 @@ class AdminController extends Controller
 
     public function destroyUser(User $user): RedirectResponse
     {
+        // Optional: Prevent deleting yourself or check for related data
+        if ($user->id === Auth::id()) {
+            return back()->withErrors(['error' => 'You cannot delete your own account.']);
+        }
+
         $user->delete();
 
         return redirect()->route('admin.users.index')
@@ -130,7 +137,9 @@ class AdminController extends Controller
     // ========== Position Management ==========
     public function positionsIndex()
     {
-        $positions = Position::withCount('users')->latest()->paginate(15);
+        $positions = Position::withCount('users')
+            ->orderBy('positions')
+            ->paginate(15);
 
         return view('pages.admin.positions.index', compact('positions'));
     }
@@ -143,13 +152,20 @@ class AdminController extends Controller
     public function storePosition(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'position_name' => 'required|string|max:255|unique:positions',
+            'positions' => ['required', 'string', 'max:255', 'unique:positions'],
         ]);
 
         Position::create($validated);
 
         return redirect()->route('admin.positions.index')
             ->with('success', 'Position created successfully.');
+    }
+
+    public function showPosition(Position $position)
+    {
+        $position->loadCount('users');
+        
+        return view('pages.admin.positions.show', compact('position'));
     }
 
     public function editPosition(Position $position)
@@ -160,7 +176,7 @@ class AdminController extends Controller
     public function updatePosition(Request $request, Position $position): RedirectResponse
     {
         $validated = $request->validate([
-            'position_name' => 'required|string|max:255|unique:positions,position_name,' . $position->id,
+            'positions' => ['required', 'string', 'max:255', 'unique:positions,positions,' . $position->id],
         ]);
 
         $position->update($validated);
@@ -171,6 +187,11 @@ class AdminController extends Controller
 
     public function destroyPosition(Position $position): RedirectResponse
     {
+        // Optional: Prevent deletion if users are assigned
+        if ($position->users()->count() > 0) {
+            return back()->withErrors(['error' => 'Cannot delete position with assigned users.']);
+        }
+
         $position->delete();
 
         return redirect()->route('admin.positions.index')
@@ -180,7 +201,9 @@ class AdminController extends Controller
     // ========== Division Management ==========
     public function divisionsIndex()
     {
-        $divisions = DivisionUnit::withCount('users')->latest()->paginate(15);
+        $divisions = DivisionUnit::withCount('users')
+            ->orderBy('division_units')
+            ->paginate(15);
 
         return view('pages.admin.divisions.index', compact('divisions'));
     }
@@ -193,13 +216,20 @@ class AdminController extends Controller
     public function storeDivision(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'division_name' => 'required|string|max:255|unique:division_units',
+            'division_units' => ['required', 'string', 'max:255', 'unique:division_units'],
         ]);
 
         DivisionUnit::create($validated);
 
         return redirect()->route('admin.divisions.index')
             ->with('success', 'Division created successfully.');
+    }
+
+    public function showDivision(DivisionUnit $division)
+    {
+        $division->loadCount('users');
+        
+        return view('pages.admin.divisions.show', compact('division'));
     }
 
     public function editDivision(DivisionUnit $division)
@@ -210,7 +240,7 @@ class AdminController extends Controller
     public function updateDivision(Request $request, DivisionUnit $division): RedirectResponse
     {
         $validated = $request->validate([
-            'division_name' => 'required|string|max:255|unique:division_units,division_name,' . $division->id,
+            'division_units' => ['required', 'string', 'max:255', 'unique:division_units,division_units,' . $division->id],
         ]);
 
         $division->update($validated);
@@ -219,22 +249,16 @@ class AdminController extends Controller
             ->with('success', 'Division updated successfully.');
     }
 
-    public function destroyDivision(DivisionUnit $division): RedirectResponse{
+    public function destroyDivision(DivisionUnit $division): RedirectResponse
+    {
+        // Optional: Prevent deletion if users are assigned
+        if ($division->users()->count() > 0) {
+            return back()->withErrors(['error' => 'Cannot delete division with assigned users.']);
+        }
+
         $division->delete();
 
         return redirect()->route('admin.divisions.index')
             ->with('success', 'Division deleted successfully.');
-    }
-
-    public function showPosition(Position $position){
-        $position->loadCount('users');
-
-        return view('pages.admin.positions.show', compact('position'));
-    }
-
-    public function showDivision(DivisionUnit $division){
-        $division->loadCount('users');
-
-        return view('pages.admin.divisions.show', compact('division'));
     }
 }

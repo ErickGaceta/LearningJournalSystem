@@ -5,8 +5,8 @@
             <p class="text-sm text-neutral-600">Add a new division or unit to the system</p>
         </div>
 
-        <flux:card class="size-max hover:bg-zinc-50 dark:hover:bg-zinc-700">
-            <form action="{{ route('divisions.store') }}" method="POST">
+        <flux:card class="size-max dark:hover:bg-zinc-700">
+            <form action="{{ route('admin.divisions.store') }}" method="POST">
                 @csrf
 
                 <div class="mb-6">
@@ -24,7 +24,7 @@
                 </div>
 
                 <div class="flex justify-end gap-3">
-                    <flux:button :href="route('divisions.index')" variant="ghost">
+                    <flux:button :href="route('admin.divisions.index')" variant="ghost">
                         Cancel
                     </flux:button>
                     <flux:button type="submit" variant="primary" icon="folder-arrow-down" color="green" />

@@ -6,8 +6,8 @@
                 <p class="text-sm text-neutral-600">Division/Unit Details</p>
             </div>
             <div class="flex gap-2">
-                <flux:button :href="route('divisions.edit', $division)" variant="primary" color="sky" icon="pencil" />
-                <flux:button :href="route('divisions.index')" variant="ghost" icon="arrow-uturn-left">
+                <flux:button :href="route('admin.divisions.edit', $division)" variant="primary" color="sky" icon="pencil" />
+                <flux:button :href="route('admin.divisions.index')" variant="ghost" icon="arrow-uturn-left">
                     Back to List
                 </flux:button>
             </div>

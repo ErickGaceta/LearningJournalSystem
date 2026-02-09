@@ -6,7 +6,7 @@
         </div>
 
         <div class="rounded-xl border border-neutral-200 p-6 max-w-2xl">
-            <form action="{{ route('positions.store') }}" method="POST">
+            <form action="{{ route('admin.positions.store') }}" method="POST">
                 @csrf
 
                 <div class="mb-4">
@@ -24,7 +24,7 @@
                 </div>
 
                 <div class="flex justify-end gap-3">
-                    <flux:button :href="route('positions.index')" variant="ghost">
+                    <flux:button :href="route('admin.positions.index')" variant="ghost">
                         Cancel
                     </flux:button>
                     <flux:button type="submit" variant="primary" icon="folder-arrow-down" color="green" />

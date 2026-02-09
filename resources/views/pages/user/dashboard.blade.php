@@ -78,9 +78,11 @@
 
                         <flux:table.rows>
                             @foreach($userTrainings as $training)
-                            @php
+                            
+                            <?php
                                 $statusInfo = getTrainingStatus($training);
-                            @endphp
+                            ?>endphp
+                            
                             <flux:table.row>
                                 <flux:table.cell>
                                     <flux:heading size="sm">{{ $training->title }}</flux:heading>
