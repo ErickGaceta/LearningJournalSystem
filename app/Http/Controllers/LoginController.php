@@ -37,7 +37,7 @@ class LoginController extends Controller
 
             // If first login, redirect to change password
             if ($isFirstLogin) {
-                return redirect()->route('password.change')
+                return redirect()->route('password.change.show')
                     ->with('info', 'Welcome! Please change your password for security.');
             }
 

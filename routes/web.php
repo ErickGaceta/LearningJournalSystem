@@ -23,8 +23,8 @@ Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 
 // ========== Change Password Routes (Auth Required) ==========
 Route::middleware('auth')->group(function () {
-    Route::get('/change-password', [ChangePasswordController::class, 'show'])->name('password.change');
-    Route::post('/change-password', [ChangePasswordController::class, 'update'])->name('password.update');
+    Route::get('/change-password', [ChangePasswordController::class, 'show'])->name('password.change.show');
+    Route::post('/change-password', [ChangePasswordController::class, 'update'])->name('password.change.update');
 });
 
 // ========== Dashboard Redirect Route ==========

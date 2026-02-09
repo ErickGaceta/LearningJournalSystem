@@ -10,7 +10,7 @@
 
             {{-- DEBUG: Show route --}}
             <div class="text-xs bg-yellow-100 p-2 rounded">
-                Form will POST to: {{ route('password.update') }}
+                Form will POST to: {{ route('password.change.update') }}
             </div>
 
             @if(session('info'))
@@ -29,7 +29,7 @@
             </div>
             @endif
 
-            <form action="{{ route('password.update') }}" method="POST" class="space-y-4" onsubmit="console.log('Form submitting...')">
+            <form action="{{ route('password.change.update') }}" method="POST" class="space-y-4" onsubmit="console.log('Form submitting...')">
                 @csrf
 
                 <div>
