@@ -27,6 +27,7 @@ class Assignment extends Model
         'user_id',
         'training_module',
         'module_id',
+        'status',
     ];
 
     /**

@@ -14,24 +14,25 @@
         <div>
             <flux:table>
                 <flux:table.columns>
-                    <flux:table.column></flux:table.column>
+                    <flux:table.column>Module Title</flux:table.column>
+                    <flux:table.column>Training Hours</flux:table.column>
+                    <flux:table.column>Start - End</flux:table.column>
+                    <flux:table.column>Venue</flux:table.column>
+                    <flux:table.column>Sponsor/ Conductor</flux:table.column>
+                    <flux:table.column>Registration Fee</flux:table.column>
+                    <flux:table.column>Travel Expenses</flux:table.column>
                 </flux:table.columns>
 
                 <flux:table.rows>
                     <flux:table.row>
                         <flux:table.cell></flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
+                        <flux:table.cell></flux:table.cell>
+                        <flux:table.cell></flux:table.cell>
+                        <flux:table.cell></flux:table.cell>
+                        <flux:table.cell></flux:table.cell>
+                        <flux:table.cell></flux:table.cell>
                         <flux:table.cell></flux:table.cell>
                     </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell></flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell></flux:table.cell>
-                    </flux:table.row>
-                </flux:table.rows>
-            </flux:table>
         </div>
     </div>
 </x-layouts::app>

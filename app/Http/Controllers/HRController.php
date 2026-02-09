@@ -17,12 +17,15 @@ class HRController extends Controller
         $activeModules = TrainingModule::where('dateend', '>=', now())->count();
         $completedModules = TrainingModule::where('dateend', '<', now())->count();
         $totalAssignments = Assignment::count();
+        $usersInTraining = Assignment::where('status', 'ongoing')->count('user_id');
+         
 
         return view('pages.hr.dashboard', compact(
             'totalModules',
             'activeModules',
             'completedModules',
-            'totalAssignments'
+            'totalAssignments',
+            'usersInTraining'
         ));
     }
 
