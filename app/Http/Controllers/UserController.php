@@ -63,7 +63,7 @@ class UserController extends Controller
             ->latest()
             ->paginate(15);
 
-        return view('pages.user.trainings.index', compact('trainings', 'userTrainings'));
+        return view('pages.user.trainings.index', compact('trainings'));
     }
 
     public function showTraining(Assignment $assignment)

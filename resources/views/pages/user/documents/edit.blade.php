@@ -3,7 +3,7 @@
         <div class="p-6">
             <h1 class="text-2xl font-bold mb-6">Edit Learning Journal</h1>
 
-            <form action="{{ route('documents.update', $document) }}" method="POST">
+            <form action="{{ route('user.documents.update', $document) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -264,7 +264,7 @@
                 <!-- Submit Buttons -->
                 <div class="relative h-fit overflow-hidden rounded-xl">
                     <div class="flex justify-end items-center gap-3 p-4">
-                        <a href="{{ route('documents.show', $document) }}"
+                        <a href="{{ route('user.documents.show', $document) }}"
                             class="bg-gray-200 text-gray-700 px-4 py-2 rounded-xl hover:bg-gray-300 transition-colors">
                             Cancel
                         </a>
