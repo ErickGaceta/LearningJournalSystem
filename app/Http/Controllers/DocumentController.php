@@ -23,7 +23,7 @@ class DocumentController extends Controller
                     ->orWhere('topics', 'like', "%{$search}%");
             });
         }
-$userAssignment = Assignment::with('module')
+$userAssignments = Assignment::with('module')
 ->where('user_id', Auth::id())
  ->get();
         $documents = $query->latest()->paginate(15)->withQueryString();
