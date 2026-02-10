@@ -51,7 +51,8 @@ class UserController extends Controller
             'myDocuments',
             'users',
             'interval',
-            'trainingModule'
+            'trainingModule',
+            'user'
 
         ));
     }

@@ -3,7 +3,7 @@
 
         <!-- Welcome Section -->
         <div class="space-y-1">
-            <flux:heading size="xl">Welcome, {{ auth()->user()->first_name }}!</flux:heading>
+            <flux:heading size="xl">Welcome, {{ $user->first_name }}!</flux:heading>
             <flux:subheading>Manage your learning journal entries</flux:subheading>
         </div>
 

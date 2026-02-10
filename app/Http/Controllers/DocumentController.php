@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Assignment;
 use App\Models\Document;
+use App\Models\TrainingModule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,9 +24,32 @@ class DocumentController extends Controller
             });
         }
 
+        $userAssignments = Assignment::with('module')
+        ->where('user_id', Auth::id())
+        ->get();
+
+
         $documents = $query->latest()->paginate(15)->withQueryString();
 
-        return view('pages.user.documents.index', compact('documents'));
+$documents = $query->latest()->paginate(15)->withQueryString();
+
+// Count documents in a rolling 2-year window (current year + next year)
+
+$startOfThisYear = now()->startOfYear();
+$endOfNextYear = now()->addYear()->endOfYear();
+$currentYear = now()->year;
+
+$documentCount = Document::where('user_id', Auth::id())
+    ->whereBetween('created_at', [$startOfThisYear, $endOfNextYear])
+    ->count();
+
+$totalHours = Assignment::where('user_id', Auth::id())
+    ->with('module')
+    ->get()
+    ->sum(fn($assignment) => $assignment->module->hours);
+
+
+        return view('pages.user.documents.index', compact('userAssignments', 'documents', 'documentCount', 'totalHours', 'currentYear'));
     }
 
     public function create()

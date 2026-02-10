@@ -40,19 +40,19 @@
             <flux:card>
                 <flux:heading size="lg">Total Journals</flux:heading>
                 <flux:text class="mt-2 mb-4">
-                    {{ \App\Models\Document::where('user_id', auth()->id())->count() }}
+                    {{ $documentCount }}
                 </flux:text>
             </flux:card>
             <flux:card>
                 <flux:heading size="lg">Total Hours</flux:heading>
                 <flux:text class="mt-2 mb-4">
-                    {{ \App\Models\Document::where('user_id', auth()->id())->sum('hours') }}
+                 {{ $totalHours }}
                 </flux:text>
             </flux:card>
             <flux:card>
-                <flux:heading size="lg">Total Journals This Year</flux:heading>
+                <flux:heading size="lg">Total Journals This Year <flux:text size="sm">{{ $currentYear  }}</flux:text></flux:heading>
                 <flux:text class="mt-2 mb-4">
-                    {{ \App\Models\Document::where('user_id', auth()->id())->whereYear('datestart', date('Y'))->count() }}
+                    {{ $documentCount }}
                 </flux:text>
             </flux:card>
         </div>
