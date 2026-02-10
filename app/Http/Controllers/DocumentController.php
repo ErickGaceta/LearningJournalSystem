@@ -24,32 +24,20 @@ class DocumentController extends Controller
             });
         }
 
-        $userAssignments = Assignment::with('module')
-        ->where('user_id', Auth::id())
-        ->get();
-
-
         $documents = $query->latest()->paginate(15)->withQueryString();
+        $documentCount = Document::where('user_id', Auth::id())->count();
+        $totalHours = Assignment::where('user_id', Auth::id())
+            ->with('module')
+            ->get()
+            ->sum(fn($assignment) => $assignment->module->hours);
 
-$documents = $query->latest()->paginate(15)->withQueryString();
+        $year = now()->year;
 
-// Count documents in a rolling 2-year window (current year + next year)
+        $totalYearlyDocument = Document::where('user_id', Auth::id())
+            ->whereYear('created_at', $year)
+            ->count();
 
-$startOfThisYear = now()->startOfYear();
-$endOfNextYear = now()->addYear()->endOfYear();
-$currentYear = now()->year;
-
-$documentCount = Document::where('user_id', Auth::id())
-    ->whereBetween('created_at', [$startOfThisYear, $endOfNextYear])
-    ->count();
-
-$totalHours = Assignment::where('user_id', Auth::id())
-    ->with('module')
-    ->get()
-    ->sum(fn($assignment) => $assignment->module->hours);
-
-
-        return view('pages.user.documents.index', compact('userAssignments', 'documents', 'documentCount', 'totalHours', 'currentYear'));
+        return view('pages.user.documents.index', compact('userAssignments', 'documents', 'documentCount', 'totalHours', 'totalYearlyDocument', 'year'));
     }
 
     public function create()
@@ -142,7 +130,6 @@ $totalHours = Assignment::where('user_id', Auth::id())
             return redirect()
                 ->route('user.documents.index')
                 ->with('success', "Document '{$documentTitle}' has been successfully deleted.");
-
         } catch (\Exception $e) {
             return redirect()
                 ->back()
