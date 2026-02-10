@@ -28,10 +28,10 @@
                     @forelse($assignments as $as)
                     <flux:table.row>
                         <flux:table.cell>{{ $as->employee_name }}</flux:table.cell>
-                        <flux:table.cell>{{ $as->training_module->hours }}</flux:table.cell>
-                        <flux:table.cell>{{ $as->training_module->title}}</flux:table.cell>
-                        <flux:table.cell>{{ $as->training_module->venue }}</flux:table.cell>
-                        <flux:table.cell>{{ $as->training_module->hours }}</flux:table.cell>
+                        <flux:table.cell>{{ $as->module->hours }}</flux:table.cell>
+                        <flux:table.cell>{{ $as->module->title}}</flux:table.cell>
+                        <flux:table.cell>{{ $as->module->venue }}</flux:table.cell>
+                        <flux:table.cell>{{ $as->module->hours }} hours</flux:table.cell>
                     </flux:table.row>
                     @empty
                     <flux:table.row>

@@ -14,16 +14,12 @@ class HRController extends Controller
     public function dashboard()
     {
         $totalModules = TrainingModule::count();
-        $activeModules = TrainingModule::where('dateend', '>=', now())->count();
-        $completedModules = TrainingModule::where('dateend', '<', now())->count();
-        $activeTraining = Assignment::where('status','ongoing')->count('module_id');
+        $activeTraining = Assignment::where('status', 'ongoing')->count('module_id');
         $usersInTraining = Assignment::where('status', 'ongoing')->count('user_id');
-         
+
 
         return view('pages.hr.dashboard', compact(
             'totalModules',
-            'activeModules',
-            'completedModules',
             'activeTraining',
             'usersInTraining'
         ));
@@ -116,10 +112,18 @@ class HRController extends Controller
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'module_id' => 'required|exists:training_module,id',
-            'assigned_date' => 'required|date',
         ]);
 
-        Assignment::create($validated);
+        $user = User::findOrFail($validated['user_id']);
+        $module = TrainingModule::findOrFail($validated['module_id']);
+
+        $assignmentData = array_merge($validated, [
+            'employee_name' => $user->full_name,
+            'training_module' => $module->title,
+            'status' => 'assigned',
+        ]);
+
+        Assignment::create($assignmentData);
 
         return redirect()->route('hr.assignments.index')
             ->with('success', 'Training module assigned successfully.');
@@ -132,6 +136,4 @@ class HRController extends Controller
         return redirect()->route('hr.assignments.index')
             ->with('success', 'Assignment removed successfully.');
     }
-
-
 }
