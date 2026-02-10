@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Assignment;
 use App\Models\Document;
+use App\Models\TrainingModule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,9 +24,24 @@ class DocumentController extends Controller
             });
         }
 
-        $documents = $query->latest()->paginate(15)->withQueryString();
+        $userAssignments = Assignment::with('module')
+            ->where('user_id', Auth::id())
+            ->get();
 
-        return view('pages.user.documents.index', compact('documents'));
+        $documents = $query->latest()->paginate(15)->withQueryString();
+        $documentCount = Document::where('user_id', Auth::id())->count();
+        $totalHours = Assignment::where('user_id', Auth::id())
+            ->with('module')
+            ->get()
+            ->sum(fn($assignment) => $assignment->module->hours);
+
+        $year = now()->year;
+
+        $totalYearlyDocument = Document::where('user_id', Auth::id())
+            ->whereYear('created_at', $year)
+            ->count();
+
+        return view('pages.user.documents.index', compact('userAssignments', 'documents', 'documentCount', 'totalHours', 'totalYearlyDocument', 'year'));
     }
 
     public function create()
@@ -117,7 +134,6 @@ class DocumentController extends Controller
             return redirect()
                 ->route('user.documents.index')
                 ->with('success', "Document '{$documentTitle}' has been successfully deleted.");
-
         } catch (\Exception $e) {
             return redirect()
                 ->back()

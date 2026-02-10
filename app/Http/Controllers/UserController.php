@@ -21,11 +21,11 @@ class UserController extends Controller
             ->latest()
             ->paginate(10);
 
-            $datestart = TrainingModule::get('datestart');
-            $dateend = TrainingModule::get('dateend');
-            $interval = $datestart->diff($dateend);
+        $datestart = TrainingModule::get('datestart');
+        $dateend = TrainingModule::get('dateend');
+        $interval = $datestart->diff($dateend);
 
-            $trainingModule = TrainingModule::all();
+        $trainingModule = TrainingModule::all();
 
         $activeAssignments = Assignment::where('user_id', $user->id)
             ->whereHas('module', function($query) {
@@ -51,8 +51,8 @@ class UserController extends Controller
             'myDocuments',
             'users',
             'interval',
-            'trainingModule'
-
+            'trainingModule',
+            'user'
         ));
     }
 
