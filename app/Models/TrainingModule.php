@@ -34,6 +34,11 @@ class TrainingModule extends Model
         return $this->hasMany(Assignment::class, 'module_id');
     }
 
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class, 'module_id');
+    }
+
     public function getDurationInDaysAttribute(): int
     {
         return $this->datestart->diffInDays($this->dateend) + 1;

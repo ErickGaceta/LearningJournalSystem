@@ -72,6 +72,11 @@ class Document extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function modules()
+    {
+        return $this->belongsTo(TrainingModule::class);
+    }
+
     // Accessor for formatted date range
     public function getDateRangeAttribute()
     {

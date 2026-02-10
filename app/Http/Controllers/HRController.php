@@ -76,8 +76,7 @@ class HRController extends Controller
             'dateend' => 'required|date|after_or_equal:datestart',
             'venue' => 'required|string|max:255',
             'conductedby' => 'required|string|max:100',
-            'registration_fee' => 'required|string|max:100',
-            'travel_expenses' => 'required|string|max:100',
+            'registration_fee' => 'string|max:100',
         ]);
 
         $module->update($validated);
