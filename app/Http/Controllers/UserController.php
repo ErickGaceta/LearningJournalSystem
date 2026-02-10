@@ -25,6 +25,8 @@ class UserController extends Controller
             $dateend = TrainingModule::get('dateend');
             $interval = $datestart->diff($dateend);
 
+            $trainingModule = TrainingModule::all();
+
         $activeAssignments = Assignment::where('user_id', $user->id)
             ->whereHas('module', function($query) {
                 $query->where('dateend', '>=', now());
@@ -48,7 +50,8 @@ class UserController extends Controller
             'completedAssignments',
             'myDocuments',
             'users',
-            'interval'
+            'interval',
+            'trainingModule'
 
         ));
     }
