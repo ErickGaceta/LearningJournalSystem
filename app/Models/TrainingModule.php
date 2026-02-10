@@ -20,7 +20,6 @@ class TrainingModule extends Model
         'venue',
         'conductedby',
         'registration_fee',
-        'travel_expenses',
     ];
 
     protected $casts = [
@@ -33,6 +32,11 @@ class TrainingModule extends Model
     public function assignments(): HasMany
     {
         return $this->hasMany(Assignment::class, 'module_id');
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class, 'module_id');
     }
 
     public function getDurationInDaysAttribute(): int

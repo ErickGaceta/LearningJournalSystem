@@ -13,15 +13,15 @@
         <div class="flex gap-4 w-full">
             <flux:card class="grow">
                 <flux:heading size="xl">Total Modules/ Trainings</flux:heading>
-                <flux:text class="mt-2">0</flux:text>
+                <flux:text class="mt-2">{{ $totalModules }}</flux:text>
             </flux:card>
             <flux:card class="grow">
                 <flux:heading size="xl">Active Trainings</flux:heading>
-                <flux:text class="mt-2">0</flux:text>
+                <flux:text class="mt-2">{{ $activeTraining }}</flux:text>
             </flux:card>
             <flux:card class="grow">
-                <flux:heading size="xl">Users Training</flux:heading>
-                <flux:text class="mt-2">0</flux:text>
+                <flux:heading size="xl">Users in Training</flux:heading>
+                <flux:text class="mt-2">{{ $usersInTraining }}</flux:text>
             </flux:card>
         </div>
     </div>

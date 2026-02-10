@@ -16,7 +16,7 @@ class HRController extends Controller
         $totalModules = TrainingModule::count();
         $activeModules = TrainingModule::where('dateend', '>=', now())->count();
         $completedModules = TrainingModule::where('dateend', '<', now())->count();
-        $totalAssignments = Assignment::count();
+        $activeTraining = Assignment::where('status','ongoing')->count('module_id');
         $usersInTraining = Assignment::where('status', 'ongoing')->count('user_id');
          
 
@@ -24,7 +24,7 @@ class HRController extends Controller
             'totalModules',
             'activeModules',
             'completedModules',
-            'totalAssignments',
+            'activeTraining',
             'usersInTraining'
         ));
     }
@@ -53,8 +53,7 @@ class HRController extends Controller
             'dateend' => 'required|date|after_or_equal:datestart',
             'venue' => 'required|string|max:255',
             'conductedby' => 'required|string|max:100',
-            'registration_fee' => 'required|string|max:100',
-            'travel_expenses' => 'required|string|max:100',
+            'registration_fee' => 'string|max:100',
         ]);
 
         TrainingModule::create($validated);
@@ -77,8 +76,7 @@ class HRController extends Controller
             'dateend' => 'required|date|after_or_equal:datestart',
             'venue' => 'required|string|max:255',
             'conductedby' => 'required|string|max:100',
-            'registration_fee' => 'required|string|max:100',
-            'travel_expenses' => 'required|string|max:100',
+            'registration_fee' => 'string|max:100',
         ]);
 
         $module->update($validated);

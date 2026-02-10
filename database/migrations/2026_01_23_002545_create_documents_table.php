@@ -15,13 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->text('fullname');
-            $table->text('title');
-            $table->integer('hours');
-            $table->date('datestart');
-            $table->date('dateend');
-            $table->string('venue');
-            $table->string('conductedby', 100);
-            $table->string('registration_fee', 100)->default('N/A')->nullable();
             $table->string('travel_expenses', 100)->default('N/A')->nullable();
             $table->text('topics');
             $table->text('insights');
@@ -29,6 +22,7 @@ return new class extends Migration
             $table->text('challenges');
             $table->text('appreciation');
             $table->integer('isPrinted');
+            $table->foreignId('module_id')->constrained('training_modules')->onDelete('cascade');
             $table->date('printedAt')->nullable();
             $table->timestamps();
         });
