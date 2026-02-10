@@ -81,7 +81,7 @@
 
                             <?php
                                 $statusInfo = getTrainingStatus($training);
-                            ?>endphp
+                            ?>
 
                             <flux:table.row>
                                 <flux:table.cell>
