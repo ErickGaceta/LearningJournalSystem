@@ -10,8 +10,11 @@
             </div>
         </div>
         @endif
-
-        <div>
+        
+        <div class="flex flex-col w-full gap-2">
+            <div class="flex justify-end">
+                <flux:button :href="route('hr.modules.create')" size="sm" icon="folder-plus" variant="primary" color="teal">Create New Training</flux:button>
+            </div>
             <flux:table>
                 <flux:table.columns>
                     <flux:table.column>Module Title</flux:table.column>
@@ -20,19 +23,25 @@
                     <flux:table.column>Venue</flux:table.column>
                     <flux:table.column>Sponsor/ Conductor</flux:table.column>
                     <flux:table.column>Registration Fee</flux:table.column>
-                    <flux:table.column>Travel Expenses</flux:table.column>
                 </flux:table.columns>
 
                 <flux:table.rows>
+                    @forelse($trainingModules as $tm)
                     <flux:table.row>
-                        <flux:table.cell></flux:table.cell>
-                        <flux:table.cell></flux:table.cell>
-                        <flux:table.cell></flux:table.cell>
-                        <flux:table.cell></flux:table.cell>
-                        <flux:table.cell></flux:table.cell>
-                        <flux:table.cell></flux:table.cell>
-                        <flux:table.cell></flux:table.cell>
+                        <flux:table.cell>{{ $tm->title }}</flux:table.cell>
+                        <flux:table.cell>{{ $tm->hours }}</flux:table.cell>
+                        <flux:table.cell>{{ $tm->datestart->format('Y-m-d') }} - {{ $tm->dateend->format('Y-m-d') }}</flux:table.cell>
+                        <flux:table.cell>{{ $tm->venue }}</flux:table.cell>
+                        <flux:table.cell>{{ $tm->conductedby }}</flux:table.cell>
+                        <flux:table.cell>{{ $tm->registration_fee }}</flux:table.cell>
                     </flux:table.row>
+                    @empty
+                    <flux:table.row>
+                        <flux:table.cell class="col-span-7" align="center">No Training Modules Yet</flux:table.cell>
+                    </flux:table.row>
+                    @endforelse
+                </flux:table.rows>
+            </flux:table>
         </div>
     </div>
 </x-layouts::app>
