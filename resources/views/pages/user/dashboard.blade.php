@@ -149,17 +149,15 @@
              @forelse($userTrainings as $ut)
             <flux:table.rows>
                 <flux:table.row>
-                    <flux:table.cell>{{ $ut->training_module->title }}</flux:table.cell>
-                    <flux:table.cell>{{ $ut->$interval->format('%a days') }}</flux:table.cell>
-                    <flux:table.cell>
-    @if($item->user_name)
-        @if($item->status === 'completed')
-            <flux:badge color="green" size="sm" inset="top bottom">Completed</flux:badge>
-        @else
-            <flux:badge color="orange" size="sm" inset="top bottom">Ongoing</flux:badge>
-        @endif
+                    <flux:table.cell>{{ $ut->training_module?->title ?? 'N/A' }}</flux:table.cell>
+<flux:table.cell>{{ $ut->interval?->format('%a days') ?? 'N/A' }}</flux:table.cell>
+<flux:table.cell>
+    @if($ut->appointed_at === null)
+        <flux:badge color="gray" size="sm" inset="top bottom">N/A</flux:badge>
+    @elseif($ut->finished_at !== null)
+        <flux:badge color="green" size="sm" inset="top bottom">Completed</flux:badge>
     @else
-        -
+        <flux:badge color="yellow" size="sm" inset="top bottom">Ongoing</flux:badge>
     @endif
 </flux:table.cell>
                     <flux:table.cell></flux:table.cell>
