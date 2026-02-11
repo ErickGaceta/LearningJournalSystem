@@ -3,47 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Models\Assignment;
-use App\Models\Document;
 use App\Models\TrainingModule;
+use App\Models\User;
+use App\Models\Document;
 use Elibyy\TCPDF\TCPDF;
 use Illuminate\Support\Facades\Auth;
 
-class DocumentPrintController extends Controller
+class PDFController extends Controller
 {
-    /**
-     * Preview a PDF for a specific document.
-     *
-     * @param Document $document
-     * @return \Illuminate\Http\Response
-     */
-    public function previewPdf(Document $document)
+    public function index()
     {
-        // Ensure the user owns the document
-        if ($document->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized');
-        }
-
-        $user = Auth::user();
-
-        // Use related training module or fallback
-        $module = $document->trainingModule ?? TrainingModule::first();
-
-        // Get assignments for this user and module
+        $user   = User::find(Auth::id());
+        $module = TrainingModule::first();
         $assignments = Assignment::where('module_id', $module->id)
             ->where('user_id', $user->id)
             ->get();
+        $documents = Document::where('user_id', Auth::id())->get();
 
-        // Get all documents for this user
-        $documents = Document::where('user_id', $user->id)->get();
-
-        $employeeName = $user->full_name;
+        $documentName = $module->title;
+        $employeeName = trim($user->first_name . ' ' . $user->middle_name . ' ' . $user->last_name);
         $date = now()->format('Y-m-d');
-        $filename = $module->title . ' - ' . $date . ' ' . $employeeName . '.pdf';
+        $filename = $documentName . ' - ' . $date . ' ' . $employeeName . '.pdf';
 
         $data = [
-            'title' => $module->title . ' ' . $date,
+            'title' => $documentName . ' ' . $date,
             'employeeName' => $employeeName,
-            'moduleTitle' => $module->title,
+            'moduleTitle' => $documentName,
             'assignments' => $assignments,
             'trainingModule' => $module,
             'documents' => $documents,
@@ -51,6 +36,7 @@ class DocumentPrintController extends Controller
 
         $html = view('pages.user.documents.print', $data)->render();
 
+        // Extend TCPDF to override header/footer
         $pdf = new class(config('tcpdf')) extends TCPDF {
             public function Header() {
                 $this->Image(public_path('documents/header.PNG'), 0, 0, 210);
@@ -67,7 +53,6 @@ class DocumentPrintController extends Controller
         $pdf->AddPage();
         $pdf->writeHTML($html, true, false, true, false, '');
 
-        // Open inline in browser (new tab)
         return response($pdf->Output($filename, 'I'))
             ->header('Content-Type', 'application/pdf');
     }

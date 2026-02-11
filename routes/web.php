@@ -120,8 +120,7 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
 
     // Document Print/Export
-    Route::get('/documents/{document}/preview', [DocumentPrintController::class, 'preview'])->name('documents.preview');
-    Route::get('/documents/{document}/export', [DocumentPrintController::class, 'exportWord'])->name('documents.export');
+    Route::get('/documents/{document}/preview', [DocumentPrintController::class, 'previewPdf'])->name('documents.preview');
 });
 
 require __DIR__ . '/settings.php';

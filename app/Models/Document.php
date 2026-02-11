@@ -13,13 +13,6 @@ class Document extends Model
     protected $fillable = [
         'user_id',
         'fullname',
-        'title',
-        'hours',
-        'datestart',
-        'dateend',
-        'venue',
-        'conductedby',
-        'registration_fee',
         'travel_expenses',
         'topics',
         'insights',
