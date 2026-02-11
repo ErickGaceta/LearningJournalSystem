@@ -70,10 +70,8 @@
                 </flux:card>
 
                 <div class="flex justify-end gap-2">
-                    <a href="{{ route('hr.modules.index') }}">
-                        <flux:button variant="secondary">Cancel</flux:button>
-                    </a>
-                    <flux:button type="submit" icon="save" variant="primary" color="teal">
+                        <flux:button :href="route('hr.modules.index')" variant="ghost">Cancel</flux:button>
+                    <flux:button type="submit" icon="folder-plus" variant="primary" color="teal">
                         Update
                     </flux:button>
                 </div>

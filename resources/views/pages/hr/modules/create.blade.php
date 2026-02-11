@@ -24,7 +24,7 @@
                 <div class="flex justify-end">
                     <flux:button type="submit" icon="folder-plus" variant="primary" color="teal">Save</flux:button>
                 </div>
-            </form> 
+            </form>
         </div>
     </div>
 </x-layouts::app>
