@@ -33,8 +33,7 @@ class Document extends Model
     ];
 
     // Add this boot method
-    protected static function boot()
-    {
+    protected static function boot() {
         parent::boot();
 
         static::creating(function ($document) {
@@ -66,7 +65,7 @@ class Document extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function modules()
+    public function module()
     {
         return $this->belongsTo(TrainingModule::class, 'module_id');
     }
