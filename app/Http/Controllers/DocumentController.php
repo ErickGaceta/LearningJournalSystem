@@ -81,22 +81,16 @@ class DocumentController extends Controller
         return redirect()->route('user.documents.index')
             ->with('success', 'Learning journal submitted successfully!');
     }
+
     public function show(Document $document)
     {
         if ($document->user_id !== Auth::id()) {
             abort(403);
         }
 
+        $document->load(['module', 'user.divisionUnit', 'user.position']);
+
         return view('pages.user.documents.show', compact('document'));
-    }
-
-    public function edit(Document $document)
-    {
-        if ($document->user_id !== Auth::id()) {
-            abort(403);
-        }
-
-        return view('pages.user.documents.edit', compact('document'));
     }
 
     public function update(Request $request, Document $document)
@@ -106,18 +100,17 @@ class DocumentController extends Controller
         }
 
         $validated = $request->validate([
-            'module_id' => 'required|exists:training_module,id',
             'travel_expenses' => 'nullable|numeric|min:0',
-            'topics' => 'nullable|string',
-            'insights' => 'nullable|string',
-            'application' => 'nullable|string',
-            'challenges' => 'nullable|string',
-            'appreciation' => 'nullable|string',
+            'topics'          => 'nullable|string',
+            'insights'        => 'nullable|string',
+            'application'     => 'nullable|string',
+            'challenges'      => 'nullable|string',
+            'appreciation'    => 'nullable|string',
         ]);
 
         $document->update($validated);
 
-        return redirect()->route('user.documents.index')
+        return redirect()->route('user.documents.show', $document)
             ->with('success', 'Document updated successfully!');
     }
 

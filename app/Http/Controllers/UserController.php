@@ -29,31 +29,30 @@ class UserController extends Controller
         $trainingModule = TrainingModule::all();
 
         $activeAssignments = Assignment::where('user_id', $user->id)
-            ->whereHas('module', function ($query) {
-                $query->where('dateend', '>=', now());
-            })
+            ->whereHas('module', fn($q) => $q->where('dateend', '>=', now()))
             ->count();
 
         $completedAssignments = Assignment::where('user_id', $user->id)
-            ->whereHas('module', function ($query) {
-                $query->where('dateend', '<', now());
-            })
+            ->whereHas('module', fn($q) => $q->where('dateend', '<', now()))
             ->count();
 
-        $userTrainings = Assignment::all();
+        $userTrainings = Assignment::where('user_id', Auth::id());
 
         $myDocuments = Document::where('user_id', $user->id)->count();
 
+        $trainings = Assignment::where('user_id', $user->id)
+            ->with('module')
+            ->latest()
+            ->paginate(15);
+
         return view('pages.user.dashboard', compact(
-            'userTrainings',
             'myAssignments',
             'activeAssignments',
             'completedAssignments',
             'myDocuments',
-            'users',
-            'interval',
-            'trainingModule',
-            'user'
+            'user',
+            'userTrainings',
+            'trainings',
         ));
     }
 
@@ -62,10 +61,9 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        $trainings = Assignment::where('user_id', $user->id)
-            ->with('module')
-            ->latest()
-            ->paginate(15);
+        $trainings = Assignment::with(['module.documents' => function ($q) {
+            $q->where('user_id', Auth::id());
+        }])->where('user_id', Auth::id())->get();
 
         return view('pages.user.trainings.index', compact('trainings', 'user'));
     }

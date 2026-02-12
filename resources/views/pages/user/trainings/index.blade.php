@@ -20,28 +20,46 @@
                     <flux:table.row>
                         <flux:table.cell>{{ $tr->module->title }}</flux:table.cell>
                         <flux:table.cell>{{ $tr->module->hours . ' hours' }}</flux:table.cell>
-                        <flux:table.cell  align="center">
+                        <flux:table.cell align="center">
                             @php
-                                $now = now();
-                                $start = $tr->module->datestart;
-                                $end = $tr->module->dateend;
+                            $now = now();
+                            $start = $tr->module->datestart;
+                            $end = $tr->module->dateend;
                             @endphp
 
                             @if ($now->lt($start))
-                                <flux:badge color="amber" size="sm">Pending</flux:badge>
+                            <flux:badge color="amber" size="sm">Pending</flux:badge>
                             @elseif ($now->between($start, $end))
-                                <flux:badge color="lime" size="sm">Ongoing</flux:badge>
+                            <flux:badge color="lime" size="sm">Ongoing</flux:badge>
                             @elseif ($now->gt($end))
-                                <flux:badge variant="solid" color="lime" size="sm">Completed</flux:badge>
+                            <flux:badge variant="solid" color="lime" size="sm">Completed</flux:badge>
                             @endif
                         </flux:table.cell>
-                        <flux:table.cell align="end" style="max-width:60px;">
+                        <flux:table.cell align="end" class="flex items-center align-end justify-end gap-2">
                             @if ($now->gt($end))
-                            <flux:button href="{{ route('user.documents.create', $tr->id) }}" variant="ghost" size="sm">
+                            @php $doc = $tr->module->documents->first(); @endphp
+                            @if ($doc)
+                            <flux:icon.check-badge size="sm" color="lime" />
+                            <flux:text
+                                size="sm"
+                                color="lime">
+                                Document Created
+                            </flux:text>
+                            @else
+                            <flux:button
+                                href="{{ route('user.documents.create', $tr->id) }}"
+                                variant="ghost"
+                                size="sm">
                                 Create Document
                             </flux:button>
+                            @endif
                             @else
-                            -
+                            <flux:button
+                                href="{{ route('user.documents.show', $tr->id) }}"
+                                variant="ghost"
+                                size="sm">
+                                View Details
+                            </flux:button>
                             @endif
                         </flux:table.cell>
                     </flux:table.row>
