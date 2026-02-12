@@ -16,7 +16,7 @@
                 </flux:table.columns>
 
                 <flux:table.rows>
-                    @foreach($trainings as $tr)
+                    @forelse($trainings as $tr)
                     <flux:table.row>
                         <flux:table.cell>{{ $tr->module->title }}</flux:table.cell>
                         <flux:table.cell>{{ $tr->module->hours . ' hours' }}</flux:table.cell>
@@ -63,7 +63,15 @@
                             @endif
                         </flux:table.cell>
                     </flux:table.row>
-                    @endforeach
+                    @empty
+                    <flux:table.row>
+                    <flux:table.cell colspan="4" class="text-center py-8">
+                        <div class="text-neutral-500">
+                            No Trainings Assigned
+                        </div>
+                    </flux:table.cell>
+                </flux:table.row>
+                    @endforelse
                 </flux:table.rows>
             </flux:table>
         </div>
