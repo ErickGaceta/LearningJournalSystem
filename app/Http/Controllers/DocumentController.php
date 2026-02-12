@@ -16,7 +16,7 @@ class DocumentController extends Controller
         $year = now()->year;
 
         // Base document query with eager loading
-        $documents = Document::with('modules')
+        $documents = Document::with('module')
             ->where('user_id', $userId)
             ->when($request->filled('search'), function ($q) use ($request) {
                 $search = $request->search;
