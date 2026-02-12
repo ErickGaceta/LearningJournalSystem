@@ -12,34 +12,42 @@ class DocumentController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Document::where('user_id', Auth::id())
-            ->orderBy('created_at', 'desc');
-
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                    ->orWhere('venue', 'like', "%{$search}%")
-                    ->orWhere('topics', 'like', "%{$search}%");
-            });
-        }
-        $userAssignments = Assignment::with('module')
-            ->where('user_id', Auth::id())
-            ->get();
-        $documents = $query->latest()->paginate(15)->withQueryString();
-        $documentCount = Document::where('user_id', Auth::id())->count();
-        $totalHours = Assignment::where('user_id', Auth::id())
-            ->with('module')
-            ->get()
-            ->sum(fn($assignment) => $assignment->module->hours);
-
+        $userId = Auth::id();
         $year = now()->year;
 
-        $totalYearlyDocument = Document::where('user_id', Auth::id())
+        // Base document query with eager loading
+        $documents = Document::with('modules')
+            ->where('user_id', $userId)
+            ->when($request->filled('search'), function ($q) use ($request) {
+                $search = $request->search;
+                $q->where(function ($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                        ->orWhere('venue', 'like', "%{$search}%")
+                        ->orWhere('topics', 'like', "%{$search}%");
+                });
+            })
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
+
+        // Total counts and hours, done efficiently
+        $documentCount = $documents->total();
+
+        $totalHours = Assignment::where('user_id', $userId)
+            ->join('training_module', 'assignments.module_id', '=', 'training_module.id')
+            ->sum('training_module.hours');
+
+        $totalYearlyDocument = Document::where('user_id', $userId)
             ->whereYear('created_at', $year)
             ->count();
 
-        return view('pages.user.documents.index', compact('userAssignments', 'documents', 'documentCount', 'totalHours', 'totalYearlyDocument', 'year'));
+        return view('pages.user.documents.index', compact(
+            'documents',
+            'documentCount',
+            'totalHours',
+            'totalYearlyDocument',
+            'year'
+        ));
     }
 
     public function create(Assignment $assignment)
@@ -53,26 +61,26 @@ class DocumentController extends Controller
         return view('pages.user.documents.create', compact('assignment'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Assignment $assignment)
     {
         $validated = $request->validate([
-            'assignment_id' => 'required|exists:assignments,id',
-            'module_id' => 'required|exists:training_modules,id',
             'travel_expenses' => 'nullable|numeric|min:0',
-            'insights' => 'nullable|string',
-            'application' => 'nullable|string',
-            'challenges' => 'nullable|string',
-            'appreciation' => 'nullable|string',
+            'topics'          => 'required|string',
+            'insights'        => 'required|string',
+            'application'     => 'required|string',
+            'challenges'      => 'required|string',
+            'appreciation'    => 'required|string',
         ]);
 
-        $validated['user_id'] = Auth::id();
+        $validated['user_id']   = Auth::id();
+        $validated['assignment_id'] = $assignment->id;
+        $validated['module_id'] = $assignment->module_id;
 
         Document::create($validated);
 
         return redirect()->route('user.documents.index')
             ->with('success', 'Learning journal submitted successfully!');
     }
-
     public function show(Document $document)
     {
         if ($document->user_id !== Auth::id()) {
@@ -98,8 +106,7 @@ class DocumentController extends Controller
         }
 
         $validated = $request->validate([
-            'assignment_id' => 'required|exists:assignments,id',
-            'module_id' => 'required|exists:training_modules,id',
+            'module_id' => 'required|exists:training_module,id',
             'travel_expenses' => 'nullable|numeric|min:0',
             'topics' => 'nullable|string',
             'insights' => 'nullable|string',

@@ -61,15 +61,6 @@
 
         <!-- Documents Table -->
         <div class="relative overflow-hidden">
-            <div class="flex flex-col items-end justify-end gap-4 mt-2 me-2">
-                <flux:button
-                    :href="route('user.documents.create')"
-                    icon="plus"
-                    variant="ghost"
-                    wire:navigate>
-                    Create New Learning Journal
-                </flux:button>
-            </div>
             <div class="overflow-x-auto">
                 <flux:table :paginate="$documents">
                     <flux:table.columns sticky class="bg-white dark:bg-zinc-900">
@@ -90,27 +81,27 @@
                                 <a href="{{ route('user.documents.show', $document) }}"
                                     wire:navigate
                                     class="text-sm font-medium hover:underline">
-                                    {{ $document->title }}
+                                    {{ $document->modules->title }}
                                 </a>
                             </flux:table.cell>
 
                             <flux:table.cell>
                                 <span class="text-sm truncate max-w-xs block">
-                                    {{ $document->venue }}
+                                    {{ $document->modules->venue }}
                                 </span>
                             </flux:table.cell>
 
                             <flux:table.cell>
                                 <span class="text-sm whitespace-nowrap">
-                                    {{ $document->datestart->format('M d, Y') }}
+                                    {{ $document->modules->datestart->format('M d, Y') }}
                                     -
-                                    {{ $document->dateend->format('M d, Y') }}
+                                    {{ $document->modules->dateend->format('M d, Y') }}
                                 </span>
                             </flux:table.cell>
 
                             <flux:table.cell>
                                 <span class="text-sm">
-                                    {{ $document->hours }} hrs
+                                    {{ $document->modules->hours }} hrs
                                 </span>
                             </flux:table.cell>
 
@@ -170,12 +161,6 @@
                 </div>
                 <h3 class="text-xl font-semibold text-heading mb-3">No Learning Journals Yet</h3>
                 <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-6">Create your first journal to get started</p>
-                <flux:button
-                    :href="route('user.documents.create')"
-                    icon="plus"
-                    wire:navigate>
-                    Create First Journal
-                </flux:button>
             </div>
         </div>
 

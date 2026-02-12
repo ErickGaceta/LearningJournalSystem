@@ -64,12 +64,6 @@
                 </flux:table.rows>
                 @endforelse
             </flux:table>
-            <flux:button
-                :href="route('user.documents.create')"
-                icon="plus"
-                wire:navigate>
-                Create First Journal
-            </flux:button>
         </div>
 
     </div>

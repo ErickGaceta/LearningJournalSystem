@@ -1,10 +1,7 @@
 <x-layouts::app.sidebar :title="__('DOST CAR Learning Journal System - Create Document')">
     <flux:main>
-        <form action="{{ route('user.documents.store') }}" method="POST" class="space-y-6">
+        <form action="{{ route('user.documents.store', $assignment) }}" method="POST" class="space-y-6">
             @csrf
-
-            <input type='hidden' name="assignment_id" value="{{ $assignment->id }}">
-            <input type='hidden' name="module_id" value="{{ $assignment->module->title }}">
             <!-- Personal Information -->
             <div class="grid auto-rows-min gap-4 md:grid-cols-3">
                 <!-- Personal Information Card -->

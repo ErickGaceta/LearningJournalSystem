@@ -52,7 +52,7 @@
 
                 <flux:button
                     icon:trailing="document-text"
-                    :href="route('user.documents.export', $document)"
+                    :href="route('user.documents.preview', $document)"
                     variant="primary"
                     color="sky">Export Word
                 </flux:button>

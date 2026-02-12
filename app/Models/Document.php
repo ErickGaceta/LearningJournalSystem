@@ -19,8 +19,9 @@ class Document extends Model
         'application',
         'challenges',
         'appreciation',
-        'isPrinted',
+        'isPrinted',    
         'printedAt',
+        'module_id',
     ];
 
     protected $casts = [
@@ -67,7 +68,7 @@ class Document extends Model
 
     public function modules()
     {
-        return $this->belongsTo(TrainingModule::class);
+        return $this->belongsTo(TrainingModule::class, 'module_id');
     }
 
     // Accessor for formatted date range
