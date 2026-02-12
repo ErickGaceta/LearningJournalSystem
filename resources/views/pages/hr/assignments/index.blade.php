@@ -103,7 +103,11 @@
                     </flux:table.row>
                     @empty
                     <flux:table.row>
-                        <flux:table.cell class="col-span-7" align="center">No Assigned Training Yet</flux:table.cell>
+                    <flux:table.cell colspan="6" class="text-center py-8">
+                        <div class="text-neutral-500">
+                            No assignments yet
+                        </div>
+                    </flux:table.cell>
                     </flux:table.row>
                     @endforelse
                 </flux:table.rows>
