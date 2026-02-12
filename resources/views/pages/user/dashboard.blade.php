@@ -12,6 +12,7 @@
             <flux:card>
                 <flux:heading size="lg">Assigned Trainings</flux:heading>
                 <flux:text class="mt-2 mb-4">
+                    {{ $userTrainings->count() }}
                 </flux:text>
             </flux:card>
 
