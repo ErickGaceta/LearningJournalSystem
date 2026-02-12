@@ -63,7 +63,7 @@
         <div class="relative overflow-hidden">
             <div class="overflow-x-auto">
                 <flux:table :paginate="$documents">
-                    <flux:table.columns sticky class="bg-white dark:bg-zinc-900">
+                    <flux:table.columns sticky>
                         <flux:table.column>Title</flux:table.column>
                         <flux:table.column>Venue</flux:table.column>
                         <flux:table.column>Date Start - Date End</flux:table.column>

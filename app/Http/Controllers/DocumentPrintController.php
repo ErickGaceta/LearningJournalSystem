@@ -2,72 +2,94 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Assignment;
 use App\Models\Document;
-use App\Models\TrainingModule;
-use Elibyy\TCPDF\TCPDF;
+use Elibyy\TCPDF\TCPDF as BaseTCPDF;
 use Illuminate\Support\Facades\Auth;
 
 class DocumentPrintController extends Controller
 {
-    /**
-     * Preview a PDF for a specific document.
-     *
-     * @param Document $document
-     * @return \Illuminate\Http\Response
-     */
     public function previewPdf(Document $document)
     {
-        // Ensure the user owns the document
         if ($document->user_id !== Auth::id()) {
             abort(403, 'Unauthorized');
         }
 
-        $user = Auth::user();
+        $document->load(['module', 'user.divisionUnit', 'user.position']);
 
-        // Use related training module or fallback
-        $module = $document->trainingModule ?? TrainingModule::first();
+        $user   = $document->user;
+        $module = $document->module;
+        $date   = now()->format('Y-m-d');
+        $filename = ($module?->title ?? 'Learning Journal') . ' - ' . $date . ' - ' . $document->fullname . '.pdf';
 
-        // Get assignments for this user and module
-        $assignments = Assignment::where('module_id', $module->id)
-            ->where('user_id', $user->id)
-            ->get();
+        $html = view('pages.user.documents.print', compact('document','user','module','date'))->render();
 
-        // Get all documents for this user
-        $documents = Document::where('user_id', $user->id)->get();
+        $config = config('tcpdf');
 
-        $employeeName = $user->full_name;
-        $date = now()->format('Y-m-d');
-        $filename = $module->title . ' - ' . $date . ' ' . $employeeName . '.pdf';
+        // create new PDF document
+        $pdf = new BaseTCPDF(
+            $config['page_orientation'],
+            $config['page_units'],
+            $config['page_format'],
+            $config['unicode'],
+            $config['encoding'],
+            false
+        );
 
-        $data = [
-            'title' => $module->title . ' ' . $date,
-            'employeeName' => $employeeName,
-            'moduleTitle' => $module->title,
-            'assignments' => $assignments,
-            'trainingModule' => $module,
-            'documents' => $documents,
-        ];
+        // ---------------------------------------------------------
+        // Set document information
+        $pdf->SetCreator('DOST CAR Learning Journal System');
+        $pdf->SetAuthor($document->fullname);
+        $pdf->SetTitle(($module?->title ?? 'Learning Journal') . ' - ' . $date);
+        $pdf->SetSubject('Learning Journal');
+        $pdf->SetKeywords('DOST, CAR, Learning Journal, ' . ($module?->title ?? ''));
 
-        $html = view('pages.user.documents.print', $data)->render();
+        // ---------------------------------------------------------
+        // Set default header data using images
+        $headerFile = __DIR__ . '../../../public/documents/header.PNG';;
+        $footerFile = __DIR__ . '../../../public/documents/footer.PNG';;
 
-        $pdf = new class(config('tcpdf')) extends TCPDF {
-            public function Header() {
-                $this->Image(public_path('documents/header.PNG'), 0, 0, 210);
-            }
+        $pdf->SetHeaderData(
+            $headerFile, // logo
+            210,         // logo width in mm (fits page width)
+            '',          // title (empty, we only want image)
+            '',          // string under header
+            [0,0,0],     // text color
+            [0,0,0]      // line color
+        );
 
-            public function Footer() {
-                $footerHeight = 30;
-                $this->SetY(-$footerHeight);
-                $this->Image(public_path('documents/footer.PNG'), 0, $this->GetY(), 210);
-            }
-        };
+        $pdf->setFooterData(
+            $footerFile,
+            210,
+            '',
+            '',
+            [0,0,0], [0,0,0]);
 
-        $pdf->SetTitle($data['title']);
+        // ---------------------------------------------------------
+        // Set fonts for header and footer
+        $pdf->setHeaderFont([$config['font_directory'] ?: 'dejavusans', '', 10]);
+        $pdf->setFooterFont([$config['font_directory'] ?: 'dejavusans', '', 10]);
+
+        // ---------------------------------------------------------
+        // Set margins
+        $pdf->SetMargins($config['margin_left'], 55, $config['margin_right']); // top margin allows header
+        $pdf->SetHeaderMargin(0);
+        $pdf->SetFooterMargin(35);
+        $pdf->SetAutoPageBreak(true, 40);
+
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        $pdf->SetFont('dejavusans', '', 10);
+
+        // ---------------------------------------------------------
+        // Add a page and write HTML
         $pdf->AddPage();
         $pdf->writeHTML($html, true, false, true, false, '');
 
-        // Open inline in browser (new tab)
+        // Mark as printed
+        $document->update([
+            'isPrinted' => 1,
+            'printedAt' => now(),
+        ]);
+
         return response($pdf->Output($filename, 'I'))
             ->header('Content-Type', 'application/pdf');
     }
