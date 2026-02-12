@@ -8,6 +8,7 @@ use App\Models\Document;
 use App\Models\TrainingModule;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+
 class UserController extends Controller
 {
     // ========== Dashboard ==========
@@ -28,13 +29,13 @@ class UserController extends Controller
         $trainingModule = TrainingModule::all();
 
         $activeAssignments = Assignment::where('user_id', $user->id)
-            ->whereHas('module', function($query) {
+            ->whereHas('module', function ($query) {
                 $query->where('dateend', '>=', now());
             })
             ->count();
 
         $completedAssignments = Assignment::where('user_id', $user->id)
-            ->whereHas('module', function($query) {
+            ->whereHas('module', function ($query) {
                 $query->where('dateend', '<', now());
             })
             ->count();
@@ -66,12 +67,11 @@ class UserController extends Controller
             ->latest()
             ->paginate(15);
 
-        return view('pages.user.trainings.index', compact('trainings'));
+        return view('pages.user.trainings.index', compact('trainings', 'user'));
     }
 
     public function showTraining(Assignment $assignment)
     {
-        // Ensure user can only view their own assignments
         if ($assignment->user_id !== Auth::id()) {
             abort(403);
         }

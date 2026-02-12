@@ -42,22 +42,22 @@ class DocumentController extends Controller
         return view('pages.user.documents.index', compact('userAssignments', 'documents', 'documentCount', 'totalHours', 'totalYearlyDocument', 'year'));
     }
 
-    public function create()
+    public function create(Assignment $assignment)
     {
-        return view('pages.user.documents.create');
+        if ($assignment->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $assignment->load('module');
+
+        return view('pages.user.documents.create', compact('assignment'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'venue' => 'required|string|max:255',
-            'conductedby' => 'required|string|max:255',
-            'datestart' => 'required|date',
-            'dateend' => 'required|date|after_or_equal:datestart',
-            'hours' => 'required|numeric|min:0',
-            'topics' => 'nullable|string',
-            'registration_fee' => 'nullable|numeric|min:0',
+            'assignment_id' => 'required|exists:assignments,id',
+            'module_id' => 'required|exists:training_modules,id',
             'travel_expenses' => 'nullable|numeric|min:0',
             'insights' => 'nullable|string',
             'application' => 'nullable|string',
@@ -98,15 +98,10 @@ class DocumentController extends Controller
         }
 
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'venue' => 'required|string|max:255',
-            'conductedby' => 'required|string|max:255',
-            'datestart' => 'required|date',
-            'dateend' => 'required|date|after_or_equal:datestart',
-            'hours' => 'required|numeric|min:0',
-            'topics' => 'nullable|string',
-            'registration_fee' => 'nullable|numeric|min:0',
+            'assignment_id' => 'required|exists:assignments,id',
+            'module_id' => 'required|exists:training_modules,id',
             'travel_expenses' => 'nullable|numeric|min:0',
+            'topics' => 'nullable|string',
             'insights' => 'nullable|string',
             'application' => 'nullable|string',
             'challenges' => 'nullable|string',

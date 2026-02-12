@@ -3,6 +3,8 @@
         <form action="{{ route('user.documents.store') }}" method="POST" class="space-y-6">
             @csrf
 
+            <input type='hidden' name="assignment_id" value="{{ $assignment->id }}">
+            <input type='hidden' name="module_id" value="{{ $assignment->module->title }}">
             <!-- Personal Information -->
             <div class="grid auto-rows-min gap-4 md:grid-cols-3">
                 <!-- Personal Information Card -->
@@ -68,8 +70,8 @@
                                 type="text"
                                 name="title"
                                 placeholder="L&D Title"
-                                value="{{ old('title') }}"
-                                required />
+                                value="{{ old('title', $assignment->module->title) }}"
+                                readonly />
                             <flux:error name="title" />
                         </flux:field>
 
@@ -80,8 +82,8 @@
                                 name="hours"
                                 min="1"
                                 placeholder="L&D Hours"
-                                value="{{ old('hours') }}"
-                                required />
+                                value="{{ old('hours', $assignment->module->hours) }}"
+                                readonly />
                             <flux:error name="hours" />
                         </flux:field>
 
@@ -91,8 +93,8 @@
                                 <flux:input
                                     type="date"
                                     name="datestart"
-                                    value="{{ old('datestart') }}"
-                                    required />
+                                    value="{{ old('datestart', $assignment->module->datestart->format('Y-m-d')) }}"
+                                    readonly />
                                 <flux:error name="datestart" />
                             </flux:field>
 
@@ -101,8 +103,8 @@
                                 <flux:input
                                     type="date"
                                     name="dateend"
-                                    value="{{ old('dateend') }}"
-                                    required />
+                                    value="{{ old('dateend', $assignment->module->dateend->format('Y-m-d')) }}"
+                                    readonly />
                                 <flux:error name="dateend" />
                             </flux:field>
                         </div>
@@ -122,8 +124,8 @@
                                 type="text"
                                 name="venue"
                                 placeholder="Venue"
-                                value="{{ old('venue') }}"
-                                required />
+                                value="{{ old('venue', $assignment->module->venue) }}"
+                                readonly />
                             <flux:error name="venue" />
                         </flux:field>
 
@@ -133,8 +135,8 @@
                                 type="text"
                                 name="conductedby"
                                 placeholder="Conducted By"
-                                value="{{ old('conductedby') }}"
-                                required />
+                                value="{{ old('conductedby', $assignment->module->conductedby) }}"
+                                readonly />
                             <flux:error name="conductedby" />
                         </flux:field>
 
@@ -145,8 +147,8 @@
                                     type="text"
                                     name="registration_fee"
                                     placeholder="Registration Fee"
-                                    value="{{ old('registration_fee') }}"
-                                    required />
+                                    value="{{ old('registration_fee', $assignment->module->registration_fee) }}"
+                                    readonly />
                                 <flux:error name="registration_fee" />
                             </flux:field>
 

@@ -14,11 +14,13 @@
                 <flux:text class="mt-2 mb-4">
                 </flux:text>
             </flux:card>
+
             <flux:card>
                 <flux:heading size="lg">Journals Created</flux:heading>
                 <flux:text class="mt-2 mb-4">
                 </flux:text>
             </flux:card>
+            
             <flux:card>
                 <flux:heading size="lg">Ongoing Trainings</flux:heading>
                 <flux:text class="mt-2 mb-4">
