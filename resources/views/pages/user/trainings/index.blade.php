@@ -49,7 +49,7 @@
                     <flux:table.row>
                     <flux:table.cell colspan="4" class="text-center py-8">
                         <div class="text-neutral-500">
-                            No Trainings Assigned
+                            No trainings assigned yet
                         </div>
                     </flux:table.cell>
                 </flux:table.row>
