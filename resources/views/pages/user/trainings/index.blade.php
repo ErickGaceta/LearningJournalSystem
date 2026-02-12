@@ -70,7 +70,7 @@
                             No trainings assigned yet
                         </div>
                     </flux:table.cell>
-                </flux:table.row>
+                    </flux:table.row>
                     @endforelse
                 </flux:table.rows>
             </flux:table>

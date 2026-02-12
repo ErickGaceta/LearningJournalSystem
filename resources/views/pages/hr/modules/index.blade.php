@@ -115,7 +115,11 @@
                     </flux:table.row>
                     @empty
                     <flux:table.row>
-                        <flux:table.cell class="col-span-7" align="center">No Training Modules Yet</flux:table.cell>
+                    <flux:table.cell colspan="7" class="text-center py-8">
+                        <div class="text-neutral-500">
+                            No trainings modules yet
+                        </div>
+                    </flux:table.cell>
                     </flux:table.row>
                     @endforelse
                 </flux:table.rows>
