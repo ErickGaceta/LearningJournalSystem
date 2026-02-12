@@ -81,27 +81,27 @@
                                 <a href="{{ route('user.documents.show', $document) }}"
                                     wire:navigate
                                     class="text-sm font-medium hover:underline">
-                                    {{ $document->modules->title }}
+                                    {{ $document->module->title }}
                                 </a>
                             </flux:table.cell>
 
                             <flux:table.cell>
                                 <span class="text-sm truncate max-w-xs block">
-                                    {{ $document->modules->venue }}
+                                    {{ $document->module->venue }}
                                 </span>
                             </flux:table.cell>
 
                             <flux:table.cell>
                                 <span class="text-sm whitespace-nowrap">
-                                    {{ $document->modules->datestart->format('M d, Y') }}
+                                    {{ $document->module->datestart->format('M d, Y') }}
                                     -
-                                    {{ $document->modules->dateend->format('M d, Y') }}
+                                    {{ $document->module->dateend->format('M d, Y') }}
                                 </span>
                             </flux:table.cell>
 
                             <flux:table.cell>
                                 <span class="text-sm">
-                                    {{ $document->modules->hours }} hrs
+                                    {{ $document->module->hours }} hrs
                                 </span>
                             </flux:table.cell>
 
@@ -132,13 +132,6 @@
                                         variant="ghost"
                                         size="sm"
                                         icon="eye"
-                                        wire:navigate />
-
-                                    <flux:button
-                                        :href="route('user.documents.edit', $document)"
-                                        variant="ghost"
-                                        size="sm"
-                                        icon="pencil"
                                         wire:navigate />
                                 </div>
                             </flux:table.cell>
