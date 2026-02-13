@@ -110,6 +110,10 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/trainings', [UserController::class, 'myTrainings'])->name('trainings.index');
     Route::get('/trainings/{assignment}', [UserController::class, 'showTraining'])->name('trainings.show');
 
+    // User Profile Routes
+    Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::put('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
+
     // Document Management
     Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
     Route::get('/documents/create/{assignment}', [DocumentController::class, 'create'])->name('documents.create');
