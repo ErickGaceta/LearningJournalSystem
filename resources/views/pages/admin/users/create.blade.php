@@ -25,17 +25,17 @@
 
         <form action="{{ route('admin.users.store') }}" method="POST">
             @csrf
-            
+
             <div class="grid grid-cols-3 gap-4">
                 <flux:card class="space-y-6">
                     <flux:heading size="lg">Personal Information</flux:heading>
 
                     <div>
-                        <flux:input 
-                            name="first_name" 
-                            label="First Name" 
+                        <flux:input
+                            name="first_name"
+                            label="First Name"
                             value="{{ old('first_name') }}"
-                            required 
+                            required
                         />
                         @error('first_name')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -43,19 +43,19 @@
                     </div>
 
                     <div>
-                        <flux:input 
-                            name="middle_name" 
+                        <flux:input
+                            name="middle_name"
                             label="Middle Name"
                             value="{{ old('middle_name') }}"
                         />
                     </div>
 
                     <div>
-                        <flux:input 
-                            name="last_name" 
+                        <flux:input
+                            name="last_name"
                             label="Last Name"
                             value="{{ old('last_name') }}"
-                            required 
+                            required
                         />
                         @error('last_name')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -78,11 +78,11 @@
                     <flux:heading size="lg">Login Information</flux:heading>
 
                     <div>
-                        <flux:input 
-                            name="username" 
+                        <flux:input
+                            name="username"
                             label="Username"
                             value="{{ old('username') }}"
-                            required 
+                            required
                         />
                         @error('username')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -90,12 +90,12 @@
                     </div>
 
                     <div>
-                        <flux:input 
-                            name="email" 
-                            label="Email" 
+                        <flux:input
+                            name="email"
+                            label="Email"
                             type="email"
                             value="{{ old('email') }}"
-                            required 
+                            required
                         />
                         @error('email')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -135,11 +135,11 @@
                     <flux:heading size="lg">Others</flux:heading>
 
                     <div>
-                        <flux:input 
-                            name="employee_id" 
+                        <flux:input
+                            name="employee_id"
                             label="Employee ID"
                             value="{{ old('employee_id') }}"
-                            required 
+                            required
                         />
                         @error('employee_id')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -147,11 +147,11 @@
                     </div>
 
                     <div>
-                        <flux:input 
-                            name="employee_type" 
+                        <flux:input
+                            name="employee_type"
                             label="Employee Type"
                             value="{{ old('employee_type') }}"
-                            required 
+                            required
                         />
                         @error('employee_type')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -170,9 +170,9 @@
                     </div>
 
                     <div>
-                        <flux:checkbox 
-                            name="is_active" 
-                            label="Active" 
+                        <flux:checkbox
+                            name="is_active"
+                            label="Active"
                             value="1"
                             {{ old('is_active', true) ? 'checked' : '' }}
                         />

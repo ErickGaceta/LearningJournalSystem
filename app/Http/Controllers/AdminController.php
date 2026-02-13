@@ -21,13 +21,13 @@ class AdminController extends Controller
     public function dashboard()
     {
         $now = Carbon::now();
-        
+
         return view('pages.admin.dashboard', [
             'totalModules' => TrainingModule::count(),
             'activeModules' => TrainingModule::where('dateend', '>=', $now)->count(),
             'completedModules' => TrainingModule::where('dateend', '<', $now)->count(),
             'documents' => Document::where('user_id', Auth::id())->count(),
-            'activeAssignments' => Assignment::whereHas('module', fn($q) => 
+            'activeAssignments' => Assignment::whereHas('module', fn($q) =>
                 $q->where('datestart', '<=', $now)
                   ->where('dateend', '>=', $now)
             )->count(),
@@ -41,7 +41,7 @@ class AdminController extends Controller
             ->with(['position', 'divisionUnit'])
             ->latest()
             ->paginate(20);
-            
+
         return view('pages.admin.users.index', compact('users'));
     }
 
@@ -81,9 +81,9 @@ class AdminController extends Controller
             ->with('success', "User created! Temporary password: {$generatedPassword}");
     }
 
-    public function editUser(User $user)
+    public function showUser(User $user)
     {
-        return view('pages.admin.users.edit', [
+        return view('pages.admin.users.show', [
             'user' => $user,
             'positions' => Position::orderBy('positions')->get(),
             'divisions' => DivisionUnit::orderBy('division_units')->get(),
@@ -164,7 +164,7 @@ class AdminController extends Controller
     public function showPosition(Position $position)
     {
         $position->loadCount('users');
-        
+
         return view('pages.admin.positions.show', compact('position'));
     }
 
@@ -228,7 +228,7 @@ class AdminController extends Controller
     public function showDivision(DivisionUnit $division)
     {
         $division->loadCount('users');
-        
+
         return view('pages.admin.divisions.show', compact('division'));
     }
 

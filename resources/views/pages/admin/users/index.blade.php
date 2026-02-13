@@ -71,7 +71,7 @@
                         <flux:table.cell>{{ $user->email }}</flux:table.cell>
                         <flux:table.cell>{{ $user->user_type === 'hr' ? 'HR' : ucfirst($user->user_type) }}</flux:table.cell>
                         <flux:table.cell>
-                            <flux:button variant="ghost" icon="pencil-square" :href="route('admin.users.edit', $user)"></flux:button>
+                            <flux:button variant="ghost" icon="eye" :href="route('admin.users.show', $user)"></flux:button>
                             <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
