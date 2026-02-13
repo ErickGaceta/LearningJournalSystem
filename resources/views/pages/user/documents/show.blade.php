@@ -33,8 +33,8 @@
             <div class="flex gap-2">
                 <!-- Toggle Edit / Cancel -->
 
+
                 <div x-data="{ open: false }">
-                    <!-- Trigger button -->
                     <flux:button
                         x-on:click="open = true"
                         icon="trash"
@@ -42,8 +42,7 @@
                         Delete
                     </flux:button>
 
-                    <!-- Confirmation Modal -->
-                    <flux:modal x-model="open" class="min-w-[22rem]">
+                    <flux:modal x-model="open" class="min-w-88">
                         <form action="{{ route('user.documents.destroy', $document) }}" method="POST">
                             @csrf
                             @method('DELETE')
@@ -81,14 +80,15 @@
                     </flux:modal>
                 </div>
 
+                @if(!$document->isPrinted)
                 <flux:button
                     href="{{ route('user.documents.preview', $document) }}"
                     target="_blank"
                     icon="printer"
-                    variant="primary"
-                    color="sky">
+                    variant="primary">
                     Print
                 </flux:button>
+                @endif
 
                 <flux:button
                     x-show="!editing"

@@ -391,14 +391,6 @@
                         >
                             Log in
                         </a>
-
-                        @if (Route::has('register'))
-                            <a
-                                href="{{ route('register') }}"
-                                class="adaptive-text inline-block px-5 py-1.5 rounded-sm text-sm leading-normal border transition-all">
-                                Register
-                            </a>
-                        @endif
                     @endauth
                 </nav>
             @endif
