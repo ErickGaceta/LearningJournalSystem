@@ -23,6 +23,7 @@
         </div>
         @endif
 
+
         <!-- Header -->
         <div class="flex items-center justify-between">
             <div class="space-y-1">
@@ -31,6 +32,64 @@
             </div>
             <div class="flex gap-2">
                 <!-- Toggle Edit / Cancel -->
+
+                <div x-data="{ open: false }">
+                    <!-- Trigger button -->
+                    <flux:button
+                        x-on:click="open = true"
+                        icon="trash"
+                        variant="danger">
+                        Delete
+                    </flux:button>
+
+                    <!-- Confirmation Modal -->
+                    <flux:modal x-model="open" class="min-w-[22rem]">
+                        <form action="{{ route('user.documents.destroy', $document) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+
+                            <div class="flex">
+                                <div class="flex-1">
+                                    <flux:heading size="lg">Are you sure?</flux:heading>
+                                    <flux:text class="mt-2">
+                                        This learning journal will be deleted permanently.<br>
+                                        This action cannot be undone.
+                                    </flux:text>
+                                </div>
+                                <div class="-mx-2 -mt-2">
+                                    <flux:button
+                                        x-on:click="open = false"
+                                        variant="ghost"
+                                        size="sm"
+                                        icon="x-mark"
+                                        inset="top right bottom" />
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <flux:spacer />
+                                <flux:button
+                                    x-on:click="open = false"
+                                    variant="ghost">
+                                    Cancel
+                                </flux:button>
+                                <flux:button type="submit" variant="danger">
+                                    Delete
+                                </flux:button>
+                            </div>
+
+                        </form>
+                    </flux:modal>
+                </div>
+
+                <flux:button
+                    href="{{ route('user.documents.preview', $document) }}"
+                    target="_blank"
+                    icon="printer"
+                    variant="primary"
+                    color="sky">
+                    Print
+                </flux:button>
+
                 <flux:button
                     x-show="!editing"
                     x-on:click="editing = true"

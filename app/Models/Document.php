@@ -28,11 +28,10 @@ class Document extends Model
         'datestart' => 'date',
         'dateend' => 'date',
         'hours' => 'integer',
-        'printedAt' => 'date',
+        'printedAt' => 'datetime',
         'isPrinted' => 'integer',
     ];
 
-    // Add this boot method
     protected static function boot() {
         parent::boot();
 
@@ -70,7 +69,6 @@ class Document extends Model
         return $this->belongsTo(TrainingModule::class, 'module_id');
     }
 
-    // Accessor for formatted date range
     public function getDateRangeAttribute()
     {
         if ($this->datestart && $this->dateend) {

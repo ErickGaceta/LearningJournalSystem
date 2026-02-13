@@ -2,72 +2,72 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Assignment;
 use App\Models\Document;
-use App\Models\TrainingModule;
-use Elibyy\TCPDF\TCPDF;
+use App\Pdf\LearningJournalPDF;
 use Illuminate\Support\Facades\Auth;
 
 class DocumentPrintController extends Controller
 {
-    /**
-     * Preview a PDF for a specific document.
-     *
-     * @param Document $document
-     * @return \Illuminate\Http\Response
-     */
     public function previewPdf(Document $document)
     {
-        // Ensure the user owns the document
         if ($document->user_id !== Auth::id()) {
             abort(403, 'Unauthorized');
         }
 
-        $user = Auth::user();
+        $document->load(['module', 'user.divisionUnit', 'user.position']);
 
-        // Use related training module or fallback
-        $module = $document->trainingModule ?? TrainingModule::first();
+        $user     = $document->user;
+        $module   = $document->module;
+        $date     = now()->format('Y-m-d');
+        $filename = ($module?->title ?? 'Learning Journal')
+            . ' - ' . $date
+            . ' - ' . $document->fullname
+            . '.pdf';
 
-        // Get assignments for this user and module
-        $assignments = Assignment::where('module_id', $module->id)
-            ->where('user_id', $user->id)
-            ->get();
+        $html = view('pages.user.documents.print', compact('document', 'user', 'module', 'date'))->render();
 
-        // Get all documents for this user
-        $documents = Document::where('user_id', $user->id)->get();
+        $pdf = new LearningJournalPDF(
+            PDF_PAGE_ORIENTATION,
+            PDF_UNIT,
+            PDF_PAGE_FORMAT,
+            true,   // unicode
+            'UTF-8',
+            false
+        );
 
-        $employeeName = $user->full_name;
-        $date = now()->format('Y-m-d');
-        $filename = $module->title . ' - ' . $date . ' ' . $employeeName . '.pdf';
+        $pdf->SetCreator('DOST CAR Learning Journal System');
+        $pdf->SetAuthor($document->fullname);
+        $pdf->SetTitle(($module?->title ?? 'Learning Journal') . ' - ' . $date);
+        $pdf->SetSubject('Learning Journal');
+        $pdf->SetKeywords('DOST, CAR, Learning Journal, ' . ($module?->title ?? ''));
 
-        $data = [
-            'title' => $module->title . ' ' . $date,
-            'employeeName' => $employeeName,
-            'moduleTitle' => $module->title,
-            'assignments' => $assignments,
-            'trainingModule' => $module,
-            'documents' => $documents,
-        ];
+        // Set paths before enabling header/footer
+        $pdf->setHeaderImagePath(public_path('documents/header.PNG'));
+        $pdf->setFooterImagePath(public_path('documents/footer.PNG'));
 
-        $html = view('pages.user.documents.print', $data)->render();
+        $pdf->setPrintHeader(true);
+        $pdf->setPrintFooter(true);
 
-        $pdf = new class(config('tcpdf')) extends TCPDF {
-            public function Header() {
-                $this->Image(public_path('documents/header.PNG'), 0, 0, 210);
-            }
+        // Tune top margin (30) to match your header image height in mm
+        // Tune footer margin (25) to match your footer image height in mm
+        $pdf->SetMargins(10, 30, 10);
+        $pdf->SetHeaderMargin(0);
+        $pdf->SetFooterMargin(25);
+        $pdf->SetAutoPageBreak(true, 30);
 
-            public function Footer() {
-                $footerHeight = 30;
-                $this->SetY(-$footerHeight);
-                $this->Image(public_path('documents/footer.PNG'), 0, $this->GetY(), 210);
-            }
-        };
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        $pdf->SetFont('dejavusans', '', 10);
 
-        $pdf->SetTitle($data['title']);
         $pdf->AddPage();
         $pdf->writeHTML($html, true, false, true, false, '');
 
-        // Open inline in browser (new tab)
+        $document->withoutEvents(function () use ($document) {
+            $document->forceFill([
+                'isPrinted' => 1,
+                'printedAt' => now()->toDateString(),
+            ])->save();
+        });
+
         return response($pdf->Output($filename, 'I'))
             ->header('Content-Type', 'application/pdf');
     }
