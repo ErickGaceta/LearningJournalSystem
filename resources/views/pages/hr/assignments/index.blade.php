@@ -38,10 +38,10 @@
                             <!-- Delete Button with Modal -->
                             <flux:modal.trigger name="delete-position-{{ $as->id }}">
                                 <flux:button
-                                    variant="filled"
+                                    variant="primary"
                                     color="red"
                                     size="sm">
-                                    Unassigned
+                                    Unassign
                                 </flux:button>
                             </flux:modal.trigger>
 

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Document;
-use Elibyy\TCPDF\TCPDF as BaseTCPDF;
+use App\Pdf\LearningJournalPDF;
 use Illuminate\Support\Facades\Auth;
 
 class DocumentPrintController extends Controller
@@ -16,79 +16,57 @@ class DocumentPrintController extends Controller
 
         $document->load(['module', 'user.divisionUnit', 'user.position']);
 
-        $user   = $document->user;
-        $module = $document->module;
-        $date   = now()->format('Y-m-d');
-        $filename = ($module?->title ?? 'Learning Journal') . ' - ' . $date . ' - ' . $document->fullname . '.pdf';
+        $user     = $document->user;
+        $module   = $document->module;
+        $date     = now()->format('Y-m-d');
+        $filename = ($module?->title ?? 'Learning Journal')
+            . ' - ' . $date
+            . ' - ' . $document->fullname
+            . '.pdf';
 
-        $html = view('pages.user.documents.print', compact('document','user','module','date'))->render();
+        $html = view('pages.user.documents.print', compact('document', 'user', 'module', 'date'))->render();
 
-        $config = config('tcpdf');
-
-        // create new PDF document
-        $pdf = new BaseTCPDF(
-            $config['page_orientation'],
-            $config['page_units'],
-            $config['page_format'],
-            $config['unicode'],
-            $config['encoding'],
+        $pdf = new LearningJournalPDF(
+            PDF_PAGE_ORIENTATION,
+            PDF_UNIT,
+            PDF_PAGE_FORMAT,
+            true,   // unicode
+            'UTF-8',
             false
         );
 
-        // ---------------------------------------------------------
-        // Set document information
         $pdf->SetCreator('DOST CAR Learning Journal System');
         $pdf->SetAuthor($document->fullname);
         $pdf->SetTitle(($module?->title ?? 'Learning Journal') . ' - ' . $date);
         $pdf->SetSubject('Learning Journal');
         $pdf->SetKeywords('DOST, CAR, Learning Journal, ' . ($module?->title ?? ''));
 
-        // ---------------------------------------------------------
-        // Set default header data using images
-        $headerFile = __DIR__ . '../../../public/documents/header.PNG';;
-        $footerFile = __DIR__ . '../../../public/documents/footer.PNG';;
+        // Set paths before enabling header/footer
+        $pdf->setHeaderImagePath(public_path('documents/header.PNG'));
+        $pdf->setFooterImagePath(public_path('documents/footer.PNG'));
 
-        $pdf->SetHeaderData(
-            $headerFile, // logo
-            210,         // logo width in mm (fits page width)
-            '',          // title (empty, we only want image)
-            '',          // string under header
-            [0,0,0],     // text color
-            [0,0,0]      // line color
-        );
+        $pdf->setPrintHeader(true);
+        $pdf->setPrintFooter(true);
 
-        $pdf->setFooterData(
-            $footerFile,
-            210,
-            '',
-            '',
-            [0,0,0], [0,0,0]);
-
-        // ---------------------------------------------------------
-        // Set fonts for header and footer
-        $pdf->setHeaderFont([$config['font_directory'] ?: 'dejavusans', '', 10]);
-        $pdf->setFooterFont([$config['font_directory'] ?: 'dejavusans', '', 10]);
-
-        // ---------------------------------------------------------
-        // Set margins
-        $pdf->SetMargins($config['margin_left'], 55, $config['margin_right']); // top margin allows header
+        // Tune top margin (30) to match your header image height in mm
+        // Tune footer margin (25) to match your footer image height in mm
+        $pdf->SetMargins(10, 30, 10);
         $pdf->SetHeaderMargin(0);
-        $pdf->SetFooterMargin(35);
-        $pdf->SetAutoPageBreak(true, 40);
+        $pdf->SetFooterMargin(25);
+        $pdf->SetAutoPageBreak(true, 30);
 
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
         $pdf->SetFont('dejavusans', '', 10);
 
-        // ---------------------------------------------------------
-        // Add a page and write HTML
         $pdf->AddPage();
         $pdf->writeHTML($html, true, false, true, false, '');
 
-        // Mark as printed
-        $document->update([
-            'isPrinted' => 1,
-            'printedAt' => now(),
-        ]);
+        $document->withoutEvents(function () use ($document) {
+            $document->forceFill([
+                'isPrinted' => 1,
+                'printedAt' => now()->toDateString(),
+            ])->save();
+        });
 
         return response($pdf->Output($filename, 'I'))
             ->header('Content-Type', 'application/pdf');
