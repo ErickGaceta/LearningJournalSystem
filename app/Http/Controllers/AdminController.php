@@ -22,6 +22,7 @@ class AdminController extends Controller
     {
         $now = Carbon::now();
 
+
         return view('pages.admin.dashboard', [
             'totalModules' => TrainingModule::count(),
             'activeModules' => TrainingModule::where('dateend', '>=', $now)->count(),
@@ -37,12 +38,13 @@ class AdminController extends Controller
     // ========== User Management ==========
     public function usersIndex()
     {
+         $admins = User::where('user_type', 'admin')->get();
         $users = User::whereIn('user_type', ['user', 'hr'])
             ->with(['position', 'divisionUnit'])
             ->latest()
             ->paginate(20);
 
-        return view('pages.admin.users.index', compact('users'));
+        return view('pages.admin.users.index', compact('users', 'admins'));
     }
 
     public function createUser()
