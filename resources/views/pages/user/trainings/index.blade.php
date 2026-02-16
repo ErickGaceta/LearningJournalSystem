@@ -55,7 +55,7 @@
                             @endif
                             @else
                             <flux:button
-                                href="{{ route('user.documents.show', $tr->id) }}"
+                                href="{{ route('user.trainings.show', $tr->id) }}"
                                 variant="ghost"
                                 size="sm">
                                 View Details

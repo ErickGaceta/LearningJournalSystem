@@ -13,7 +13,7 @@
 
         <div class="flex flex-col w-full gap-2">
             <div class="flex justify-end">
-                <flux:button :href="route('hr.assignments.create')" size="sm" icon="folder-plus" variant="primary" color="teal">Create New Training</flux:button>
+                <flux:button :href="route('hr.assignments.create')" size="sm" icon="folder-plus" variant="primary" color="teal">Assign Training</flux:button>
             </div>
             <flux:table>
                 <flux:table.columns>

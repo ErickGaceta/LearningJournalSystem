@@ -18,7 +18,7 @@
                     <flux:input name="datestart" type="date" label="Date Start" required />
                     <flux:input name="dateend" type="date" label="Date End" required />
                     <flux:input name="hours" class="grow" label="Training Hours" required />
-                    <flux:input name="registration_fee" class="grow" label="Registration Fee" />
+                    <flux:input name="registration_fee" class="grow" label="Registration Fee" placeholder="Write N/A for free registrations" />
                 </flux:card>
 
                 <div class="flex justify-end">

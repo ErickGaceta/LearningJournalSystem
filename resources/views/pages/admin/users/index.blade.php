@@ -60,8 +60,8 @@
                     <flux:table.column>Actions</flux:table.column>
                 </flux:table.columns>
 
-                @forelse($users as $user)
                 <flux:table.rows>
+                @forelse($users as $user)
                     <flux:table.row>
                         <flux:table.cell>{{ $user->employee_id }}</flux:table.cell>
                         <flux:table.cell>{{ $user->first_name . ' ' . $user->middle_name . ' ' . $user->last_name }}</flux:table.cell>
@@ -83,14 +83,12 @@
                             </form>
                         </flux:table.cell>
                     </flux:table.row>
-                </flux:table.rows>
                 @empty
-                <flux:table.rows>
-                    <flux:table.row>
-                        <flux:table.cell class="col-span-6">No users in the database</flux:table.cell>
+                    <flux:table.row class="col-span-8 text-center">
+                        <flux:table.cell>No users in the database</flux:table.cell>
                     </flux:table.row>
-                </flux:table.rows>
                 @endforelse
+                </flux:table.rows>
             </flux:table>
         </div>
 

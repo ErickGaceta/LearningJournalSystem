@@ -102,7 +102,12 @@ class HRController extends Controller
     public function createAssignment()
     {
         $users = User::where('user_type', 'user')->get();
-        $modules = TrainingModule::all();
+
+        // Only show modules that have not yet ended (or have no end date)
+        $modules = TrainingModule::where(function ($query) {
+            $query->whereNull('dateend')
+                ->orWhere('dateend', '>=', now());
+        })->get();
 
         return view('pages.hr.assignments.create', compact('users', 'modules'));
     }
@@ -110,20 +115,28 @@ class HRController extends Controller
     public function storeAssignment(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'module_id' => 'required|exists:training_module,id',
+            'user_ids'   => 'required|array|min:1',
+            'user_ids.*' => 'required|exists:users,id',
+            'module_id'  => 'required|exists:training_module,id',
         ]);
 
-        $user = User::findOrFail($validated['user_id']);
         $module = TrainingModule::findOrFail($validated['module_id']);
 
-        $assignmentData = array_merge($validated, [
-            'employee_name' => $user->full_name,
-            'training_module' => $module->title,
-            'status' => 'assigned',
-        ]);
+        if ($module->date_end && now()->gte($module->date_end)) {
+            return back()->withErrors(['module_id' => 'This training module has already ended.']);
+        }
 
-        Assignment::create($assignmentData);
+        foreach ($validated['user_ids'] as $userId) {
+            $user = User::findOrFail($userId);
+
+            Assignment::create([
+                'user_id'         => $userId,
+                'module_id'       => $module->id,
+                'employee_name'   => $user->full_name,
+                'training_module' => $module->title,
+                'status'          => 'assigned',
+            ]);
+        }
 
         return redirect()->route('hr.assignments.index')
             ->with('success', 'Training module assigned successfully.');

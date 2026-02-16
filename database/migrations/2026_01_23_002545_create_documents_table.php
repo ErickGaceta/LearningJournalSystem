@@ -11,6 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('training_module', function (Blueprint $table) {
+            $table->id();
+            $table->text('title');
+            $table->text('hours');
+            $table->date('datestart');
+            $table->date('dateend');
+            $table->string('venue');
+            $table->string('conductedby', 100);
+            $table->string('registration_fee', 100)->default('N/A')->nullable();
+            $table->timestamps();
+        });
+
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
@@ -22,7 +34,7 @@ return new class extends Migration
             $table->text('challenges');
             $table->text('appreciation');
             $table->integer('isPrinted');
-            $table->foreignId('module_id')->constrained('training_modules')->onDelete('cascade');
+            $table->foreignId('module_id')->constrained('training_module')->onDelete('cascade');
             $table->date('printedAt')->nullable();
             $table->timestamps();
         });

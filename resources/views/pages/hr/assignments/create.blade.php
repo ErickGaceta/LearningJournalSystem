@@ -4,11 +4,20 @@
         <div>
             <form action="{{ route('hr.assignments.store') }}" method="POST" class="flex flex-col gap-4">
                 @csrf
-                <flux:select name="user_id" placeholder="Choose user...">
-                    @foreach($users as $user)
-                        <flux:select.option value="{{ $user->id }}">{{ $user->full_name }}</flux:select.option>
-                    @endforeach
-                </flux:select>
+
+                <flux:fieldset>
+                    <flux:legend>Select Users</flux:legend>
+                    <flux:checkbox.group>
+                        <flux:checkbox.all label="Select all" class="grid grid-cols-2" />
+                        @foreach($users as $user)
+                            <flux:checkbox
+                                name="user_ids[]"
+                                value="{{ $user->id }}"
+                                label="{{ $user->full_name }}"
+                            />
+                        @endforeach
+                    </flux:checkbox.group>
+                </flux:fieldset>
 
                 <flux:select name="module_id" placeholder="Choose training module...">
                     @foreach($modules as $mod)
