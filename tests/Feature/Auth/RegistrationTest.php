@@ -4,6 +4,8 @@ namespace Tests\Feature\Auth;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Models\DivisionUnit;
+use App\Models\Position;
 
 class RegistrationTest extends TestCase
 {
@@ -18,13 +20,16 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register(): void
     {
+        $division = DivisionUnit::create(['name' => 'IT']);
+        $position = Position::create(['name' => 'Developer']);
+
         $response = $this->post('/register', [
             'employee_id' => 'EMP001',
             'fname' => 'John',
             'lname' => 'Doe',
             'gender' => 'Male',
-            'division' => 1,
-            'position' => 1,
+            'division' => $division->id,
+            'position' => $position->id,
             'username' => 'johndoe',
             'user_type' => 'employee',
             'email' => 'john@example.com',
