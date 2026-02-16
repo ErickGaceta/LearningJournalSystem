@@ -44,7 +44,8 @@
             </div>
         </div>
 
-        <form action="{{ route('admin.users.update', $user) }}" method="POST">
+        <form action="{{ route('admin.users.update', $user
+        ) }}" method="POST">
             @csrf
 
             <div class="grid grid-cols-3 gap-4">

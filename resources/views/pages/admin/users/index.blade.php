@@ -40,7 +40,46 @@
 
         <div class="flex justify-between">
             <div>
-                <flux:heading size="xl">User Profiles and Management</flux:heading>
+                <flux:heading size="xl">Admin Profiles</flux:heading>
+            </div>
+        </div>
+
+        <div>
+
+            <flux:table>
+                <flux:table.columns>
+                    <flux:table.column>Employee ID</flux:table.column>
+                    <flux:table.column>Full Name</flux:table.column>
+                    <flux:table.column>Position</flux:table.column>
+                    <flux:table.column>Division/ Unit</flux:table.column>
+                    <flux:table.column>Employee Type</flux:table.column>
+                    <flux:table.column>Email</flux:table.column>
+                    <flux:table.column>Role</flux:table.column>
+                    <flux:table.column>Actions</flux:table.column>
+                </flux:table.columns>
+
+                <flux:table.rows>
+                    @foreach($admins as $admin)
+                    <flux:table.row>
+                        <flux:table.cell>{{ $admin->employee_id }}</flux:table.cell>
+                        <flux:table.cell>{{ $admin->first_name . ' ' . $admin->middle_name . ' ' . $admin->last_name }}</flux:table.cell>
+                        <flux:table.cell>{{ $admin->position->positions }}</flux:table.cell>
+                        <flux:table.cell>{{ $admin->divisionUnit->division_units }}</flux:table.cell>
+                        <flux:table.cell>{{ $admin->employee_type }}</flux:table.cell>
+                        <flux:table.cell>{{ $admin->email }}</flux:table.cell>
+                        <flux:table.cell>{{ $admin->user_type === 'hr' ? 'HR' : ucfirst($admin->user_type) }}</flux:table.cell>
+                        <flux:table.cell>
+                            <flux:button variant="ghost" icon="eye" :href="route('admin.users.show', $admin)"></flux:button>
+                        </flux:table.cell>
+                    </flux:table.row>
+                    @endforeach
+                </flux:table.rows>
+            </flux:table>
+        </div>
+
+        <div class="flex justify-between">
+            <div>
+                <flux:heading size="xl">User Management</flux:heading>
             </div>
             <div>
                 <flux:button icon="user-plus" variant="primary" color="sky" :href="route('admin.users.create')">Add User</flux:button>
@@ -48,6 +87,7 @@
         </div>
 
         <div>
+
             <flux:table :paginate="$users">
                 <flux:table.columns>
                     <flux:table.column>Employee ID</flux:table.column>
