@@ -63,12 +63,12 @@
                     </div>
 
                     <div>
-                        <flux:select name="gender" label="Gender" required>
-                            <option value="">Select gender...</option>
-                            <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
-                            <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
+                        <flux:select name="sex" label="Sex" required>
+                            <option value="">Select sex...</option>
+                            <option value="Male" {{ old('sex') == 'Male' ? 'selected' : '' }}>Male</option>
+                            <option value="Female" {{ old('v') == 'Female' ? 'selected' : '' }}>Female</option>
                         </flux:select>
-                        @error('gender')
+                        @error('sex')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
