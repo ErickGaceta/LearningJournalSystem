@@ -19,16 +19,14 @@ class Document extends Model
         'application',
         'challenges',
         'appreciation',
-        'isPrinted',    
         'printedAt',
+        'printCount',
+        'isPrinted',    
         'module_id',
     ];
 
     protected $casts = [
-        'datestart' => 'date',
-        'dateend' => 'date',
-        'hours' => 'integer',
-        'printedAt' => 'datetime',
+        'printedAt' => 'date',
         'isPrinted' => 'integer',
     ];
 

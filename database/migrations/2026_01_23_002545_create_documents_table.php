@@ -34,6 +34,7 @@ return new class extends Migration
             $table->text('challenges');
             $table->text('appreciation');
             $table->integer('isPrinted');
+            $table->integer('printCount')->nullable();
             $table->foreignId('module_id')->constrained('training_module')->onDelete('cascade');
             $table->date('printedAt')->nullable();
             $table->timestamps();

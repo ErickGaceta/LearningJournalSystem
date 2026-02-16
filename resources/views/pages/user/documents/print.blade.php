@@ -88,8 +88,8 @@
 <div class="text"><strong><i>Department / Unit / Office:</i></strong> {{ $document->user->divisionUnit->division_units }}</div>
 <div class="text"><strong><i>Position:</i></strong> {{ $document->user->position->positions  }}</div>
 <div class="text">Title of L&D Program Attended: {{ $document->module->title }}</div>
-<div class="text"><strong><i>Date started:</i></strong> {{ $document->module->datestart }}</div>
-<div class="text"><strong><i>Date ended:</i></strong> {{ $document->module->dateend }}</div>
+<div class="text"><strong><i>Date started:</i></strong> {{ $document->module->datestart->format('M d, Y') }}</div>
+<div class="text"><strong><i>Date ended:</i></strong> {{ $document->module->dateend->format('M d, Y') }}</div>
 <div class="text">Venue: {{ $document->module->venue }}</div>
 <div class="text">No. of L&D Hours: {{ $document->module->hours }}</div>
 <div class="text"><strong><i>Conducted/sponsored by:</i></strong> {{ $document->module->conductedby }}</div>

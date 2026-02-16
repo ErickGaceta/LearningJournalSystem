@@ -103,10 +103,8 @@ class HRController extends Controller
     {
         $users = User::where('user_type', 'user')->get();
 
-        // Only show modules that have not yet ended (or have no end date)
         $modules = TrainingModule::where(function ($query) {
-            $query->whereNull('dateend')
-                ->orWhere('dateend', '>=', now());
+            $query->whereNull('dateend');
         })->get();
 
         return view('pages.hr.assignments.create', compact('users', 'modules'));

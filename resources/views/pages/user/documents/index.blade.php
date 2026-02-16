@@ -69,7 +69,7 @@
                         <flux:table.column>Date Start - Date End</flux:table.column>
                         <flux:table.column>Hours</flux:table.column>
                         <flux:table.column>Created</flux:table.column>
-                        <flux:table.column>Printed / Date</flux:table.column>
+                        <flux:table.column align="center">Printed / Date</flux:table.column>
                         <flux:table.column>Actions</flux:table.column>
                     </flux:table.columns>
 
@@ -111,8 +111,8 @@
                                 </span>
                             </flux:table.cell>
 
-                            <flux:table.cell>
-                                <div class="flex items-center gap-1 text-sm">
+                            <flux:table.cell align="center"> 
+                                <div class="flex items-center align-center justify-center gap-1 text-sm">
                                     @if($document->isPrinted === 1)
                                     <flux:icon.check class="text-green-600" />
                                     @else
@@ -123,6 +123,7 @@
                             ? $document->printedAt->format('M d, Y')
                             : 'Not Yet Printed' }}
                                 </div>
+                                <flux:text class="text-xs text-center">Print Count: {{ $document->printCount }}</flux:text>
                             </flux:table.cell>
 
                             <flux:table.cell class="text-right">

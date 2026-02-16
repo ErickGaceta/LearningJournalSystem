@@ -80,7 +80,6 @@
                     </flux:modal>
                 </div>
 
-                @if(!$document->isPrinted)
                 <flux:button
                     href="{{ route('user.documents.preview', $document) }}"
                     target="_blank"
@@ -88,7 +87,6 @@
                     variant="primary">
                     Print
                 </flux:button>
-                @endif
 
                 <flux:button
                     x-show="!editing"

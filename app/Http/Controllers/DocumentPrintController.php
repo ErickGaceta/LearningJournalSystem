@@ -64,6 +64,7 @@ class DocumentPrintController extends Controller
         $document->withoutEvents(function () use ($document) {
             $document->forceFill([
                 'isPrinted' => 1,
+                'printCount' => $document->printCount + 1,
                 'printedAt' => now()->toDateString(),
             ])->save();
         });
