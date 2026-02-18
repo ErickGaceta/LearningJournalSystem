@@ -15,23 +15,26 @@ class ChangePasswordController extends Controller
     }
 
     public function update(Request $request)
-    {
-        $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed', Password::defaults()],
-        ]);
+{
+    $request->validate([
+        'current_password' => ['required', 'current_password'],
+        'password'         => ['required', 'confirmed', Password::defaults()],
+    ]);
 
-        $user = Auth::user();
-        
-        $user->update([
-            'password' => $request->password,
-        ]);
+    $user = Auth::user();
 
-        Auth::guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+    $user->update([
+        'password' => Hash::make($request->password), // ← was missing Hash::make()
+    ]);
 
-        return redirect()->route('login')
-            ->with('success', 'Password updated successfully! Please login with your new credentials.');
-    }
+    // Clear the force-change flag before session is wiped
+    $request->session()->forget('must_change_password');
+
+    Auth::guard('web')->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect()->route('login')
+        ->with('success', 'Password updated successfully! Please login with your new credentials.');
+}
 }

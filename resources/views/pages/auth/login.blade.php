@@ -1,9 +1,19 @@
 <x-layouts::auth>
     <div class="flex flex-col gap-6">
-        <x-auth-header :title="__('Log in to your account')" :description="__('Enter your email and password below to log in')" />
+        @if(session('success'))
+        <flux:callout color="green" icon="check-circle">
+            <flux:callout.heading>Success</flux:callout.heading>
+            <flux:text>{{ session('success') }}</flux:text>
+        </flux:callout>
+        @endif
 
-        <!-- Session Status -->
-        <x-auth-session-status class="text-center" :status="session('status')" />
+        @if(session('status'))
+        <flux:callout color="green" icon="presentation-chart-line">
+            <flux:callout.heading>Status</flux:callout.heading>
+            <flux:text>{{ session('status') }}</flux:text>
+        </flux:callout>
+        @endif
+        <x-auth-header :title="__('Log in to your account')" :description="__('Enter your email and password below to log in')" />
 
         <form method="POST" action="{{ route('login.store') }}" class="flex flex-col gap-6">
             @csrf
@@ -11,12 +21,11 @@
             <!-- Email Address -->
             <flux:input
                 name="login"
-                :label="__('Username/ Email address')"
+                :label="__('Username/Email address')"
                 :value="old('email')"
                 required
                 autofocus
-                placeholder="email@example.com"
-            />
+                placeholder="email@example.com" />
 
             <!-- Password -->
             <div class="relative">
@@ -27,13 +36,12 @@
                     required
                     autocomplete="current-password"
                     :placeholder="__('Password')"
-                    viewable
-                />
+                    viewable />
 
                 @if (Route::has('password.request'))
-                    <flux:link class="absolute top-0 text-sm end-0" :href="route('password.request')" wire:navigate>
-                        {{ __('Forgot your password?') }}
-                    </flux:link>
+                <flux:link class="absolute top-0 text-sm end-0" :href="route('password.request')" wire:navigate>
+                    {{ __('Forgot your password?') }}
+                </flux:link>
                 @endif
             </div>
 
