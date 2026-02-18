@@ -18,28 +18,123 @@
                 </div>
             </div>
 
-            <flux:table>
-                <flux:table.columns>
-                    <flux:table.column>Module Title</flux:table.column>
-                    <flux:table.column>Training Hours</flux:table.column>
-                    <flux:table.column>Start - End</flux:table.column>
-                    <flux:table.column>Venue</flux:table.column>
-                    <flux:table.column>Sponsor/ Conductor</flux:table.column>
-                    <flux:table.column>Registration Fee</flux:table.column>
-                    <flux:table.column>Actions</flux:table.column>
-                </flux:table.columns>
+            <div class="hidden lg:block">
+                <flux:table>
+                    <flux:table.columns>
+                        <flux:table.column>Module Title</flux:table.column>
+                        <flux:table.column>Training Hours</flux:table.column>
+                        <flux:table.column>Start - End</flux:table.column>
+                        <flux:table.column>Venue</flux:table.column>
+                        <flux:table.column>Sponsor/ Conductor</flux:table.column>
+                        <flux:table.column>Registration Fee</flux:table.column>
+                        <flux:table.column>Actions</flux:table.column>
+                    </flux:table.columns>
 
-                <flux:table.rows>
-                    @forelse($trainingModules as $tm)
-                    <flux:table.row>
-                        <flux:table.cell>{{ $tm->title }}</flux:table.cell>
-                        <flux:table.cell>{{ $tm->hours }}</flux:table.cell>
-                        <flux:table.cell>{{ $tm->datestart->format('Y-m-d') }} - {{ $tm->dateend->format('Y-m-d') }}</flux:table.cell>
-                        <flux:table.cell>{{ $tm->venue }}</flux:table.cell>
-                        <flux:table.cell>{{ $tm->conductedby }}</flux:table.cell>
-                        <flux:table.cell>{{ $tm->registration_fee }}</flux:table.cell>
+                    <flux:table.rows>
+                        @forelse($trainingModules as $tm)
+                        <flux:table.row>
+                            <flux:table.cell>{{ $tm->title }}</flux:table.cell>
+                            <flux:table.cell>{{ $tm->hours }}</flux:table.cell>
+                            <flux:table.cell>{{ $tm->datestart->format('Y-m-d') }} - {{ $tm->dateend->format('Y-m-d') }}</flux:table.cell>
+                            <flux:table.cell>{{ $tm->venue }}</flux:table.cell>
+                            <flux:table.cell>{{ $tm->conductedby }}</flux:table.cell>
+                            <flux:table.cell>{{ $tm->registration_fee }}</flux:table.cell>
 
-                        <flux:table.cell align="right">
+                            <flux:table.cell align="right">
+                                <flux:button
+                                    :href="route('hr.modules.edit', $tm)"
+                                    size="sm"
+                                    color="sky"
+                                    variant="ghost"
+                                    icon="eye"
+                                    square />
+
+                                <!-- Delete Button with Modal -->
+                                <flux:modal.trigger name="delete-position-{{  $tm->id }}">
+                                    <flux:button
+                                        variant="ghost"
+                                        size="sm"
+                                        icon="trash"
+                                        square />
+                                </flux:modal.trigger>
+
+                                <!-- Delete Confirmation Modal using Flux -->
+                                <flux:modal name="delete-position-{{ $tm->id }}" class="max-w-md">
+                                    <form action="{{ route('hr.modules.destroy', $tm) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <div class="p-2 bg-white dark:bg-neutral-800">
+                                            <div class="flex items-center justify-center w-16 h-16 mx-auto rounded-full shadow-lg">
+                                                <flux:icon.exclamation-triangle class="w-8 h-8 text-red-500" />
+                                            </div>
+                                        </div>
+
+                                        <div class="p-6 space-y-4 bg-white dark:bg-neutral-800">
+                                            <flux:heading size="lg" class="text-center text-zinc-900 dark:text-white">
+                                                Delete Training Module?
+                                            </flux:heading>
+
+                                            <div class="rounded-lg p-4 shadow-sm">
+                                                <flux:text size="sm" class="text-zinc-900 dark:text-white text-center">
+                                                    You are about to delete:
+                                                </flux:text>
+                                                <flux:text size="lg" class="font-semibold text-zinc-900 dark:text-white text-center mt-2">
+                                                    {{ $tm->name }}
+                                                </flux:text>
+                                            </div>
+
+                                            <div class="bg-red-50 dark:bg-red-950/30 rounded-lg p-4 shadow-sm">
+                                                <div class="flex flex-col items-center gap-2">
+                                                    <flux:icon.information-circle class="w-5 h-5 text-red-500 dark:text-red-400" />
+                                                    <flux:text size="sm" class="text-zinc-900 dark:text-white text-center">
+                                                        <strong class="font-semibold text-red-500">Warning:</strong> This action cannot be undone. All associated data will be permanently deleted.
+                                                    </flux:text>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="bg-white dark:bg-neutral-800 px-6 py-3 flex gap-2">
+                                            <flux:modal.close>
+                                                <flux:button variant="ghost" size="sm" class="flex-1">
+                                                    Cancel
+                                                </flux:button>
+                                            </flux:modal.close>
+
+                                            <flux:button
+                                                type="submit"
+                                                variant="primary"
+                                                color="red"
+                                                size="sm"
+                                                class="flex-1">
+                                                Delete Permanently
+                                            </flux:button>
+                                        </div>
+                                    </form>
+                                </flux:modal>
+                            </flux:table.cell>
+                        </flux:table.row>
+                        @empty
+                        <flux:table.row>
+                            <flux:table.cell colspan="7" class="text-center py-8">
+                                <div class="text-neutral-500">
+                                    No trainings modules yet
+                                </div>
+                            </flux:table.cell>
+                        </flux:table.row>
+                        @endforelse
+                    </flux:table.rows>
+                </flux:table>
+            </div>
+        </div>
+        <!-- Module Mobile -->
+        <div class="lg:hidden space-y-4">
+            @forelse($trainingModules as $tm)
+            <flux:card class="p-4 bg-transparent">
+                <div class="flex flex-col gap-2">
+                    <div class="flex justify-between align-center items-center">
+                        <flux:heading>{{ $tm->title }}</flux:heading>
+                        <div class="flex gap-2">
                             <flux:button
                                 :href="route('hr.modules.edit', $tm)"
                                 size="sm"
@@ -47,8 +142,6 @@
                                 variant="ghost"
                                 icon="eye"
                                 square />
-
-                            <!-- Delete Button with Modal -->
                             <flux:modal.trigger name="delete-position-{{  $tm->id }}">
                                 <flux:button
                                     variant="ghost"
@@ -57,7 +150,6 @@
                                     square />
                             </flux:modal.trigger>
 
-                            <!-- Delete Confirmation Modal using Flux -->
                             <flux:modal name="delete-position-{{ $tm->id }}" class="max-w-md">
                                 <form action="{{ route('hr.modules.destroy', $tm) }}" method="POST">
                                     @csrf
@@ -111,19 +203,38 @@
                                     </div>
                                 </form>
                             </flux:modal>
-                        </flux:table.cell>
-                    </flux:table.row>
-                    @empty
-                    <flux:table.row>
-                    <flux:table.cell colspan="7" class="text-center py-8">
-                        <div class="text-neutral-500">
-                            No trainings modules yet
                         </div>
-                    </flux:table.cell>
-                    </flux:table.row>
-                    @endforelse
-                </flux:table.rows>
-            </flux:table>
+                    </div>
+
+                    <flux:separator />
+
+                    <div class="flex gap-2 text-sm text-neutral-500">
+                        Module: <flux:text variant="subtle">{{ $tm->venue }}</flux:text>
+                    </div>
+
+                    <div class="flex gap-2 text-sm text-neutral-500">
+                        Venue: <flux:text variant="subtle">{{ $tm->conductedby }}</flux:text>
+                    </div>
+
+                    <div class="flex gap-2 text-sm text-neutral-500">
+                        Venue: <flux:text variant="subtle">{{ $tm->registration_fee }}</flux:text>
+                    </div>
+
+                    <div class="flex gap-2 text-sm text-neutral-500">
+                        Duration: <flux:text variant="subtle">
+                            {{ $tm->datestart->format('Y-m-d') }}
+                            - {{ $tm->dateend->format('Y-m-d') }}
+                        </flux:text>
+                    </div>
+
+                    <div class="flex gap-2 text-sm text-neutral-500">
+                        Hours: <flux:text variant="subtle">{{ $tm->hours  }} hrs</flux:text>
+                    </div>
+                </div>
+            </flux:card>
+            @empty
+            <flux:card></flux:card>
+            @endforelse
         </div>
     </div>
 </x-layouts::app>

@@ -70,5 +70,7 @@
                 </flux:table.rows>
             </flux:table>
         </div>
+
+
     </div>
 </x-layouts::app>
