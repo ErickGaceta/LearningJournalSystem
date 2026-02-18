@@ -154,7 +154,7 @@
         <div class="flex-1 flex flex-col">
 
             {{-- MOBILE HEADER --}}
-            <flux:header class="lg:hidden border-b border-zinc-200 dark:border-zinc-700">
+            <flux:header sticky container class="lg:hidden border-b bg-zinc-200 dark:bg-zinc-700 border-zinc-200 dark:border-zinc-700">
                 <flux:sidebar.toggle icon="bars-2" inset="left" />
                 <flux:heading size="lg" class="ml-3">
                     {{ config('app.name') }}

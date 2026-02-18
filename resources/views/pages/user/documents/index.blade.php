@@ -50,8 +50,9 @@
                 </flux:text>
             </flux:card>
             <flux:card>
-                <flux:heading size="lg" class="flex">Total Journals This Year <flux:text size="sm">({{ $year }})</flux:text></flux:heading>
-                    {{ $totalYearlyDocument }}
+                <flux:heading size="lg" class="flex">Total Journals This Year <flux:text size="sm">({{ $year }})</flux:text>
+                </flux:heading>
+                {{ $totalYearlyDocument }}
                 <flux:text class="mt-2 mb-4">
                 </flux:text>
             </flux:card>
@@ -60,7 +61,7 @@
         @if($documents->count() > 0)
 
         <!-- Documents Table -->
-        <div class="relative overflow-hidden">
+        <div class="relative overflow-hidden hidden lg:block">
             <div class="overflow-x-auto">
                 <flux:table :paginate="$documents">
                     <flux:table.columns sticky>
@@ -111,7 +112,7 @@
                                 </span>
                             </flux:table.cell>
 
-                            <flux:table.cell align="center"> 
+                            <flux:table.cell align="center">
                                 <div class="flex items-center align-center justify-center gap-1 text-sm">
                                     @if($document->isPrinted === 1)
                                     <flux:icon.check class="text-green-600" />
@@ -143,6 +144,57 @@
                 </flux:table>
 
             </div>
+        </div>
+
+        <div class="lg:hidden space-y-4">
+            @foreach($documents as $document)
+            <flux:card class="p-4 bg-transparent">
+                <div class="flex flex-col gap-2">
+                    <div class="flex justify-between align-center items-center">
+                        <flux:heading>
+                            {{ $document->module->title }}
+                        </flux:heading>
+                        <flux:button
+                            :href="route('user.documents.show', $document)"
+                            variant="ghost"
+                            size="sm"
+                            icon="eye"
+                            wire:navigate />
+                    </div>
+
+                    <flux:separator />
+
+                    <div class="flex gap-2 text-sm text-neutral-500">
+                        Venue: <flux:text variant="subtle">{{ $document->module->venue }}</flux:text>
+                    </div>
+
+                    <div class="flex gap-2 text-sm text-neutral-500">
+                        Dates: <flux:text variant="subtle"> {{ $document->module->datestart->format('M d, Y') }}
+                            - {{ $document->module->dateend->format('M d, Y') }}</flux:text>
+                    </div>
+
+                    <div class="flex gap-2 text-sm text-neutral-500">
+                        Hours: <flux:text variant="subtle"> {{ $document->module->hours }} hrs</flux:text>
+                    </div>
+
+                    <div class="flex gap-2 text-sm text-neutral-500">
+                        Created: <flux:text variant="subtle"> {{ $document->created_at->diffForHumans() }}</flux:text>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2 text-sm">
+                            @if($document->isPrinted === 1)
+                            <flux:icon.check variant="micro" class="text-green-600" />
+                            @else
+                            <flux:icon.x-mark variant="micro" class="text-red-500" />
+                            @endif
+                            <flux:text variant="subtle">{{ $document->printedAt ? $document->printedAt->format('M d, Y') : 'Not Yet Printed' }}</flux:text>
+                        </div>
+                        <flux:text class="text-xs text-right">Print Count: {{ $document->printCount }}</flux:text>
+                    </div>
+                </div>
+            </flux:card>
+            @endforeach
         </div>
 
         @else
