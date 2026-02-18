@@ -1,28 +1,74 @@
-<x-layouts::app :title="__('HR Dashboard')">
-    <div class="flex flex-col h-full w-full gap-4 items-center justify-start pt-12">
-        @if(session('success'))
-        <div class="bg-green-500/10 border border-green-500/20 text-green-400 px-4 py-3 rounded-xl text-sm w-72">
-            <div class="flex items-center">
-                <svg class="w-3 h-3 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                </svg>
-                {{ session('success') }}
-            </div>
+<x-layouts::app :title="__('DOST CAR Learning Journal System - HR Dashboard')">
+    <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
+        <!-- Welcome Section -->
+        <div class="space-y-1">
+            <flux:heading size="xl">Welcome, {{ auth()->user()->first_name }}!</flux:heading>
+            <flux:subheading>Monitor trainings, users, and learning journal entries</flux:subheading>
         </div>
-        @endif
-        <div class="flex flex-col gap-4 items-center">
-            <flux:card class="w-72 h-28 flex flex-col justify-center text-center">
-                <flux:heading size="xl">Total Modules/ Trainings</flux:heading>
-                <flux:text class="mt-2">{{ $totalModules }}</flux:text>
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <flux:card>
+                <flux:heading size="lg">Total Users on Training</flux:heading>
+                <flux:text class="mt-2 mb-4">
+                    {{ $usersInTraining ?? 0 }}
+                </flux:text>
             </flux:card>
-            <flux:card class="w-72 h-28 flex flex-col justify-center text-center">
-                <flux:heading size="xl">Active Trainings</flux:heading>
-                <flux:text class="mt-2">{{ $activeTraining }}</flux:text>
+            <flux:card>
+                <flux:heading size="lg">Total Modules / Trainings</flux:heading>
+                <flux:text class="mt-2 mb-4">
+                    {{ $totalModules ?? 0 }}
+                </flux:text>
             </flux:card>
-            <flux:card class="w-72 h-28 flex flex-col justify-center text-center">
-                <flux:heading size="xl">Users in Training</flux:heading>
-                <flux:text class="mt-2">{{ $usersInTraining }}</flux:text>
+            <flux:card>
+                <flux:heading size="lg">Active Trainings</flux:heading>
+                <flux:text class="mt-2 mb-4">
+                    {{ $activeTraining ?? 0 }}
+                </flux:text>
             </flux:card>
+        </div>
+        <!-- Trainings Overview Table -->
+        <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
+            <flux:table>
+                <flux:table.columns>
+                    <flux:table.column>Training Name</flux:table.column>
+                    <flux:table.column>Assigned Users</flux:table.column>
+                    <flux:table.column align="center">Duration</flux:table.column>
+                    <flux:table.column align="end">Status</flux:table.column>
+                </flux:table.columns>
+                <flux:table.rows>
+                    @forelse($modules ?? [] as $module)
+                    <flux:table.row>
+                        <flux:table.cell>{{ $module->title ?? 'N/A' }}</flux:table.cell>
+                        <flux:table.cell>
+                            {{ $module->assignments->count() ?? 0 }} user(s)
+                        </flux:table.cell>
+                        <flux:table.cell align="center">
+                            {{ $module->datestart->format('M d, Y') . ' - ' . $module->dateend->format('M d, Y') }}
+                        </flux:table.cell>
+                        <flux:table.cell align="end">
+                            @php
+                                $now = now();
+                                $start = $module->datestart;
+                                $end = $module->dateend;
+                            @endphp
+                            @if ($now->lt($start))
+                                <flux:badge color="amber" size="sm">Pending</flux:badge>
+                            @elseif ($now->between($start, $end))
+                                <flux:badge color="lime" size="sm">Ongoing</flux:badge>
+                            @elseif ($now->gt($end))
+                                <flux:badge variant="solid" color="lime" size="sm">Completed</flux:badge>
+                            @endif
+                        </flux:table.cell>
+                    </flux:table.row>
+                    @empty
+                    <flux:table.row>
+                        <flux:table.cell colspan="4" class="text-center py-8">
+                            <div class="text-neutral-500">No training modules found</div>
+                        </flux:table.cell>
+                    </flux:table.row>
+                    @endforelse
+                </flux:table.rows>
+            </flux:table>
         </div>
     </div>
 </x-layouts::app>
