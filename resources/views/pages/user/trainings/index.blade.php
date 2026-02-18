@@ -84,7 +84,7 @@
             $end = $tr->module->dateend;
             $doc = $tr->module->documents->first();
             @endphp
-            <flux:card class="p-4">
+            <flux:card class="p-4 bg-transparent">
                 <div class="flex flex-col gap-2">
                     <div class="flex justify-between items-center align-center">
                         <a href="{{ route('user.trainings.show', $tr->id) }}" wire:navigate class="text-sm font-semibold hover:underline">
@@ -103,9 +103,9 @@
 
                     <flux:separator/>
 
-                    <div class="text-sm text-neutral-500">Duration: {{ $tr->module->hours }} hours</div>
-                    <div class="text-sm text-neutral-500">
-                        Dates: {{ $tr->module->datestart->format('M d, Y') }} - {{ $tr->module->dateend->format('M d, Y') }}
+                    <div class="text-sm text-neutral-500 flex gap-2">Duration: <flux:text variant="subtle">{{ $tr->module->hours }} hours</flux:text></div>
+                    <div class="text-sm text-neutral-500 flex gap-2">
+                        Dates: <flux:text variant="subtle">{{ $tr->module->datestart->format('M d, Y') }} - {{ $tr->module->dateend->format('M d, Y') }}</flux:text>
                     </div>
 
                     <div class="flex justify-between items-center mt-2">
@@ -121,7 +121,7 @@
                         </flux:button>
                         @endif
                         @else
-                        <flux:button href="{{ route('user.trainings.show', $tr->id) }}" variant="ghost" size="sm">
+                        <flux:button href="{{ route('user.trainings.show', $tr->id) }}" variant="primary" size="sm">
                             View Details
                         </flux:button>
                         @endif
