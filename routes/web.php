@@ -15,7 +15,7 @@ use App\Http\Controllers\ChangePasswordController;
 
 // ========== Guest Routes (No Auth Required) ==========
 Route::get('/', function () {
-    return view('welcome');
+    return view('pages.auth.login');
 })->name('home');
 
 // ========== Login Route ==========
