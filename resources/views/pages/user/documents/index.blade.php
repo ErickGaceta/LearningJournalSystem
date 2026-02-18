@@ -145,7 +145,7 @@
 
             </div>
         </div>
-
+ <!-- Mobile View -->
         <div class="lg:hidden space-y-4">
             @foreach($documents as $document)
             <flux:card class="p-4 bg-transparent">

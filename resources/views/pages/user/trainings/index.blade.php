@@ -75,7 +75,7 @@
                 </flux:table.rows>
             </flux:table>
         </div>
-
+<!-- Mobile View -->
         <div class="lg:hidden space-y-4">
             @forelse($trainings as $tr)
             @php
