@@ -10,7 +10,7 @@
             </div>
         </div>
         @endif
-        <div class="flex gap-4 w-full">
+        <div class="flex flex-wrap gap-4 w-full">
             <flux:card class="grow">
                 <flux:heading size="xl">Total Modules/ Trainings</flux:heading>
                 <flux:text class="mt-2">{{ $totalModules }}</flux:text>

@@ -199,7 +199,7 @@
             <a href="{{ route('hr.dashboard') }}"
                 wire:navigate
                 class="flex items-center gap-2 px-3 py-2 rounded-lg {{ request()->routeIs('hr.dashboard') ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950' : 'text-zinc-600 dark:text-zinc-400' }}">
-                <<flux:button
+                <flux:button
                     type="Dashboard"
                     variant="ghost"
                     icon="home" />
@@ -255,14 +255,7 @@
                     icon="academic-cap" />
             </a>
 
-            <a href="{{ route('user.documents.index') }}"
-                wire:navigate
-                class="flex items-center gap-2 px-3 py-2 rounded-lg {{ request()->routeIs('user.documents.*') ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950' : 'text-zinc-600 dark:text-zinc-400' }}">
-                <flux:button
-                    type="Journals"
-                    variant="ghost"
-                    icon="doucment-text" />
-            </a>
+
 
             <form method="POST" action="{{ route('logout') }}">
                 @csrf

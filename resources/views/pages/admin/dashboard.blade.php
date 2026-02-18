@@ -1,5 +1,5 @@
 <x-layouts::app :title="__('Admin Dashboard')">
-    <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
+    <div class="flex flex-col h-full w-full gap-4">
         @if(session('success'))
         <div class="bg-green-500/10 border border-green-500/20 text-green-400 px-4 py-3 rounded-xl text-sm">
             <div class="flex items-center">
