@@ -52,7 +52,6 @@
         @endif
 
         <div class="flex flex-col items-end justify-end gap-4 mt-2 me-2">
-            {{-- Trigger for Create Modal --}}
             <flux:modal.trigger name="division-create">
                 <flux:button size="sm" color="teal" variant="primary" icon="folder-plus">
                     Add Division
@@ -84,8 +83,8 @@
                         </flux:table.cell>
 
                         <flux:table.cell align="end">
-                            <flux:modal.trigger name="division-edit-{{ $division->id }}">
-                                <flux:button size="sm" color="sky" variant="ghost" icon="eye" square />
+                            <flux:modal.trigger name="division-show-{{ $division->id }}">
+                                <flux:button variant="ghost" color="emerald" size="sm" icon="eye" square />
                             </flux:modal.trigger>
 
                             <flux:modal.trigger name="division-delete-{{ $division->id }}">
@@ -117,45 +116,37 @@
         subtitle="Add a new division or unit to the system"
         :action="route('admin.divisions.store')"
         :fields="[
-        ['label' => 'Division/Unit Name', 'name' => 'division_units', 'placeholder' => 'Division Name', 'required' => true],
-    ]" />
+            ['label' => 'Division/Unit Name', 'name' => 'division_units', 'placeholder' => 'Division Name', 'required' => true],
+        ]" />
 
     @foreach($divisions as $division)
 
-    {{-- Show --}}
-    <x-crud-modal
-        name="division"
-        mode="show"
-        :model="$division"
-        :title="$division->division_units"
-        subtitle="Division/Unit Details"
-        :details="[
-            ['label' => 'Division/Unit Name', 'value' => $division->division_units],
-            ['label' => 'Number of Users',    'value' => $division->users->count()],
-            ['label' => 'Created At',         'value' => $division->created_at->format('M d, Y h:i A')],
-            ['label' => 'Last Updated',       'value' => $division->updated_at->format('M d, Y h:i A')],
-        ]" />
+        {{-- Show + Edit (tabbed) --}}
+        <x-crud-modal
+            name="division"
+            mode="show"
+            :model="$division"
+            :title="$division->division_units"
+            subtitle="Division/Unit Details"
+            :action="route('admin.divisions.update', $division)"
+            :fields="[
+                ['label' => 'Division/Unit Name', 'name' => 'division_units', 'placeholder' => 'Division Name', 'value' => $division->division_units, 'required' => true],
+            ]"
+            :details="[
+                ['label' => 'Division/Unit Name', 'value' => $division->division_units],
+                ['label' => 'Number of Users',    'value' => $division->users->count()],
+                ['label' => 'Created At',         'value' => $division->created_at->format('M d, Y h:i A')],
+                ['label' => 'Last Updated',       'value' => $division->updated_at->format('M d, Y h:i A')],
+            ]" />
 
-    {{-- Edit --}}
-    <x-crud-modal
-        name="division"
-        mode="edit"
-        :model="$division"
-        title="Edit Division/Unit"
-        subtitle="Update division/unit information"
-        :action="route('admin.divisions.update', $division)"
-        :fields="[
-            ['label' => 'Division/Unit Name', 'name' => 'division_units', 'placeholder' => 'Division Name', 'value' => $division->division_units, 'required' => true],
-        ]" />
-
-    {{-- Delete --}}
-    <x-crud-modal
-        name="division"
-        mode="delete"
-        :model="$division"
-        title="Delete Division/Unit?"
-        :action="route('admin.divisions.destroy', $division)"
-        :deleteLabel="$division->division_units" />
+        {{-- Delete --}}
+        <x-crud-modal
+            name="division"
+            mode="delete"
+            :model="$division"
+            title="Delete Division/Unit?"
+            :action="route('admin.divisions.destroy', $division)"
+            :deleteLabel="$division->division_units" />
 
     @endforeach
 
