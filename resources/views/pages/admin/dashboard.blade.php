@@ -41,6 +41,11 @@
 
                 <flux:table.rows>
                     @forelse($modules ?? [] as $module)
+                    @php
+                        $now = now();
+                        $start = $module->datestart;
+                        $end = $module->dateend;
+                    @endphp
                     <flux:table.row>
                         <flux:table.cell>{{ $module->title ?? 'N/A' }}</flux:table.cell>
                         <flux:table.cell>
@@ -50,11 +55,6 @@
                             {{ $module->datestart->format('M d, Y') . ' - ' . $module->dateend->format('M d, Y') }}
                         </flux:table.cell>
                         <flux:table.cell align="end">
-                            @php
-                                $now = now();
-                                $start = $module->datestart;
-                                $end = $module->dateend;
-                            @endphp
                             @if ($now->lt($start))
                                 <flux:badge color="amber" size="sm">Pending</flux:badge>
                             @elseif ($now->between($start, $end))
@@ -86,8 +86,10 @@
 
             <flux:card class="p-4 bg-transparent">
                 <div class="flex flex-col gap-2">
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm font-semibold">{{ $module->title ?? 'N/A' }}</span>
+                    <div class="flex justify-between items-center align-center">
+                        <a href="{{ route('admin.modules.show', $module) }}" wire:navigate class="text-sm font-semibold hover:underline">
+                            {{ $module->title ?? 'N/A' }}
+                        </a>
                         <div>
                             @if ($now->lt($start))
                                 <flux:badge color="amber" size="sm">Pending</flux:badge>
