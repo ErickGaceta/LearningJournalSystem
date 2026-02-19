@@ -19,9 +19,9 @@
                     </flux:checkbox.group>
                 </flux:fieldset>
 
-                <flux:select name="module_id" placeholder="Choose training module...">
+                <flux:select class="max-w-fit" name="module_id" placeholder="Choose training module...">
                     @foreach($modules as $mod)
-                        <flux:select.option value="{{ $mod->id }}">{{ $mod->title }}</flux:select.option>
+                        <flux:select.option class="max-w-fit" value="{{ $mod->id }}">{{ $mod->title }}</flux:select.option>
                     @endforeach
                 </flux:select>
 

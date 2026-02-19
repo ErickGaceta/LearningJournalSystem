@@ -46,35 +46,31 @@
 
         <div>
 
-            <flux:table>
-                <flux:table.columns>
-                    <flux:table.column>Employee ID</flux:table.column>
-                    <flux:table.column>Full Name</flux:table.column>
-                    <flux:table.column>Position</flux:table.column>
-                    <flux:table.column>Division/ Unit</flux:table.column>
-                    <flux:table.column>Employee Type</flux:table.column>
-                    <flux:table.column>Email</flux:table.column>
-                    <flux:table.column>Role</flux:table.column>
-                    <flux:table.column>Actions</flux:table.column>
-                </flux:table.columns>
-
-                <flux:table.rows>
-                    @foreach($admins as $admin)
-                    <flux:table.row>
-                        <flux:table.cell>{{ $admin->employee_id }}</flux:table.cell>
-                        <flux:table.cell>{{ $admin->first_name . ' ' . $admin->middle_name . ' ' . $admin->last_name }}</flux:table.cell>
-                        <flux:table.cell>{{ $admin->position->positions }}</flux:table.cell>
-                        <flux:table.cell>{{ $admin->divisionUnit->division_units }}</flux:table.cell>
-                        <flux:table.cell>{{ $admin->employee_type }}</flux:table.cell>
-                        <flux:table.cell>{{ $admin->email }}</flux:table.cell>
-                        <flux:table.cell>{{ $admin->user_type === 'hr' ? 'HR' : ucfirst($admin->user_type) }}</flux:table.cell>
-                        <flux:table.cell>
-                            <flux:button variant="ghost" icon="eye" :href="route('admin.users.show', $admin)"></flux:button>
-                        </flux:table.cell>
-                    </flux:table.row>
-                    @endforeach
-                </flux:table.rows>
-            </flux:table>
+            @foreach($admins as $admin)
+            <flux:card class="bg-transparent border-zinc-500 flex flex-col gap-2">
+                <div class="flex justify-between align-center items-center">
+                    <flux:heading size="lg">{{ $admin->first_name . ' ' . $admin->middle_name . ' ' . $admin->last_name }}</flux:heading>
+                    <flux:button variant="ghost" icon="eye" :href="route('admin.users.show', $admin)"></flux:button>
+                </div>
+                <flux:separator />
+                <div class="flex gap-3">
+                    <flux:text>Employee ID:</flux:text>
+                    <flux:text>{{ $admin->employee_id }}</flux:text>
+                </div>
+                <div class="flex gap-3">
+                    <flux:text>Position:</flux:text>
+                    <flux:text>{{ $admin->position->positions }}</flux:text>
+                </div>
+                <div class="flex gap-3">
+                    <flux:text>Division/ Unit:</flux:text>
+                    <flux:text>{{ $admin->divisionUnit->division_units }}</flux:text>
+                </div>
+                <div class="flex gap-3">
+                    <flux:text>Email:</flux:text>
+                    <flux:text>{{ $admin->email }}</flux:text>
+                </div>
+            </flux:card>
+            @endforeach
         </div>
 
         <div class="flex justify-between">
@@ -101,7 +97,7 @@
                 </flux:table.columns>
 
                 <flux:table.rows>
-                @forelse($users as $user)
+                    @forelse($users as $user)
                     <flux:table.row>
                         <flux:table.cell>{{ $user->employee_id }}</flux:table.cell>
                         <flux:table.cell>{{ $user->first_name . ' ' . $user->middle_name . ' ' . $user->last_name }}</flux:table.cell>
@@ -123,11 +119,11 @@
                             </form>
                         </flux:table.cell>
                     </flux:table.row>
-                @empty
+                    @empty
                     <flux:table.row class="col-span-8 text-center">
                         <flux:table.cell>No users in the database</flux:table.cell>
                     </flux:table.row>
-                @endforelse
+                    @endforelse
                 </flux:table.rows>
             </flux:table>
         </div>
