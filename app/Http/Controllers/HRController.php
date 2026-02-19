@@ -104,7 +104,7 @@ class HRController extends Controller
         $users = User::where('user_type', 'user')->get();
 
         $modules = TrainingModule::where(function ($query) {
-            $query->whereNull('dateend');
+            $query;
         })->get();
 
         return view('pages.hr.assignments.create', compact('users', 'modules'));
