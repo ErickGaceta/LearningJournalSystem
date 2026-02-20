@@ -66,7 +66,7 @@ class UserController extends Controller
 
         $trainings = Assignment::with(['module.documents' => function ($q) {
             $q->where('user_id', Auth::id());
-        }])->where('user_id', Auth::id())->get();
+        }])->where('user_id', Auth::id())->latest()->get();
 
         return view('pages.user.trainings.index', compact('trainings', 'user'));
     }
