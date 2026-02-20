@@ -89,15 +89,11 @@ Route::middleware(['auth'])->prefix('hr')->name('hr.')->group(function () {
 
     // Training Module Management
     Route::get('/modules', [HRController::class, 'modulesIndex'])->name('modules.index');
-    Route::get('/modules/create', [HRController::class, 'createModule'])->name('modules.create');
     Route::post('/modules', [HRController::class, 'storeModule'])->name('modules.store');
-    Route::get('/modules/{module}/edit', [HRController::class, 'editModule'])->name('modules.edit');
     Route::put('/modules/{module}', [HRController::class, 'updateModule'])->name('modules.update');
     Route::delete('/modules/{module}', [HRController::class, 'destroyModule'])->name('modules.destroy');
 
     // Assignment Management
-    Route::get('/assignments', [HRController::class, 'assignmentsIndex'])->name('assignments.index');
-    Route::get('/assignments/create', [HRController::class, 'createAssignment'])->name('assignments.create');
     Route::post('/assignments', [HRController::class, 'storeAssignment'])->name('assignments.store');
     Route::delete('/assignments/{assignment}', [HRController::class, 'destroyAssignment'])->name('assignments.destroy');
 });

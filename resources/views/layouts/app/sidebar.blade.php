@@ -86,16 +86,7 @@
                         :current="request()->routeIs('hr.modules.*')"
                         wire:navigate
                         class="font-semibold">
-                        {{ __('Training Modules') }}
-                    </flux:sidebar.item>
-
-                    <flux:sidebar.item
-                        icon="clipboard-document-list"
-                        :href="route('hr.assignments.index')"
-                        :current="request()->routeIs('hr.assignments.*')"
-                        wire:navigate
-                        class="font-semibold">
-                        {{ __('Assignments') }}
+                        {{ __('Training & Assignments') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
                 @endif

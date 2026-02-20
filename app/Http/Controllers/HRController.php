@@ -13,12 +13,22 @@ class HRController extends Controller
     // ========== Dashboard ==========
     public function dashboard()
     {
-        $totalModules = TrainingModule::count();
-        $activeTraining = Assignment::where('status', 'ongoing')->count('module_id');
-        $usersInTraining = Assignment::where('status', 'ongoing')->count('user_id');
+        $now = now();
 
+        $modules = TrainingModule::with('assignments')->latest()->get();
+
+        $totalModules = $modules->count();
+
+        $activeTraining = $modules->filter(
+            fn($m) => $now->between($m->datestart, $m->dateend)
+        )->count();
+
+        $usersInTraining = Assignment::whereHas('module', function ($q) use ($now) {
+            $q->where('datestart', '<=', $now)->where('dateend', '>=', $now);
+        })->distinct('user_id')->count('user_id');
 
         return view('pages.hr.dashboard', compact(
+            'modules',
             'totalModules',
             'activeTraining',
             'usersInTraining'
@@ -26,18 +36,31 @@ class HRController extends Controller
     }
 
     // ========== Training Module Management ==========
-    public function modulesIndex()
+    public function modulesIndex(Request $request)
     {
+        $search = $request->get('search');
+
         $trainingModules = TrainingModule::withCount('assignments')
+            ->with('assignments:id,module_id,user_id,employee_name')
+            ->when($search, function ($query) use ($search) {
+                $query->where('title', 'like', "%{$search}%")
+                    ->orWhere('venue', 'like', "%{$search}%")
+                    ->orWhere('conductedby', 'like', "%{$search}%")
+                    ->orWhereHas('assignments', function ($q) use ($search) {
+                        $q->where('employee_name', 'like', "%{$search}%");
+                    });
+            })
             ->latest()
-            ->paginate(15);
+            ->paginate(15)
+            ->withQueryString();
 
-        return view('pages.hr.modules.index', compact('trainingModules'));
-    }
+        $assignments = Assignment::with('module')->get();
 
-    public function createModule()
-    {
-        return view('pages.hr.modules.create');
+        $users = User::where('user_type', 'user')
+            ->orderBy('last_name')
+            ->get();
+
+        return view('pages.hr.modules.index', compact('trainingModules', 'users', 'assignments'));
     }
 
     public function storeModule(Request $request): RedirectResponse
@@ -56,11 +79,6 @@ class HRController extends Controller
 
         return redirect()->route('hr.modules.index')
             ->with('success', 'Training module created successfully.');
-    }
-
-    public function editModule(TrainingModule $module)
-    {
-        return view('pages.hr.modules.edit', compact('module'));
     }
 
     public function updateModule(Request $request, TrainingModule $module): RedirectResponse
@@ -90,26 +108,6 @@ class HRController extends Controller
     }
 
     // ========== Assignment Management ==========
-    public function assignmentsIndex()
-    {
-        $assignments = Assignment::with(['user', 'module'])
-            ->latest()
-            ->paginate(15);
-
-        return view('pages.hr.assignments.index', compact('assignments'));
-    }
-
-    public function createAssignment()
-    {
-        $users = User::where('user_type', 'user')->get();
-
-        $modules = TrainingModule::where(function ($query) {
-            $query;
-        })->get();
-
-        return view('pages.hr.assignments.create', compact('users', 'modules'));
-    }
-
     public function storeAssignment(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -120,31 +118,28 @@ class HRController extends Controller
 
         $module = TrainingModule::findOrFail($validated['module_id']);
 
-        if ($module->date_end && now()->gte($module->date_end)) {
-            return back()->withErrors(['module_id' => 'This training module has already ended.']);
-        }
-
         foreach ($validated['user_ids'] as $userId) {
             $user = User::findOrFail($userId);
 
-            Assignment::create([
-                'user_id'         => $userId,
-                'module_id'       => $module->id,
-                'employee_name'   => $user->full_name,
-                'training_module' => $module->title,
-                'status'          => 'assigned',
-            ]);
+            Assignment::firstOrCreate(
+                ['user_id' => $userId, 'module_id' => $module->id],
+                [
+                    'employee_name'   => $user->full_name,
+                    'training_module' => $module->title,
+                    'status'          => 'assigned',
+                ]
+            );
         }
 
-        return redirect()->route('hr.assignments.index')
-            ->with('success', 'Training module assigned successfully.');
+        return redirect()->route('hr.modules.index')
+            ->with('success', 'Training assigned successfully.');
     }
 
     public function destroyAssignment(Assignment $assignment): RedirectResponse
     {
         $assignment->delete();
 
-        return redirect()->route('hr.assignments.index')
+        return redirect()->route('hr.modules.index')
             ->with('success', 'Assignment removed successfully.');
     }
 }
