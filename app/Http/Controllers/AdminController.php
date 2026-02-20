@@ -22,37 +22,34 @@ class AdminController extends Controller
     {
         $now = Carbon::now();
 
+        $modules = TrainingModule::with('assignments')->latest()->get();
 
         return view('pages.admin.dashboard', [
-            'totalModules' => TrainingModule::count(),
-            'activeModules' => TrainingModule::where('dateend', '>=', $now)->count(),
-            'completedModules' => TrainingModule::where('dateend', '<', $now)->count(),
-            'documents' => Document::where('user_id', Auth::id())->count(),
-            'activeAssignments' => Assignment::whereHas('module', fn($q) =>
-                $q->where('datestart', '<=', $now)
-                  ->where('dateend', '>=', $now)
-            )->count(),
+            'modules'           => $modules,
+            'totalModules'      => $modules->count(),
+            'activeModules'     => $modules->filter(fn($m) => $now->between($m->datestart, $m->dateend))->count(),
+            'completedModules'  => $modules->filter(fn($m) => $now->gt($m->dateend))->count(),
+            'activeAssignments' => Assignment::whereHas(
+                'module',
+                fn($q) =>
+                $q->where('datestart', '<=', $now)->where('dateend', '>=', $now)
+            )->distinct('user_id')->count('user_id'),
         ]);
     }
 
     // ========== User Management ==========
     public function usersIndex()
     {
-         $admins = User::where('user_type', 'admin')->get();
+        $admins = User::where('user_type', 'admin')->get();
         $users = User::whereIn('user_type', ['user', 'hr'])
             ->with(['position', 'divisionUnit'])
             ->latest()
             ->paginate(20);
 
-        return view('pages.admin.users.index', compact('users', 'admins'));
-    }
+        $positions = Position::orderBy('positions')->get();
+        $divisions = DivisionUnit::orderBy('division_units')->get();
 
-    public function createUser()
-    {
-        return view('pages.admin.users.create', [
-            'positions' => Position::orderBy('positions')->get(),
-            'divisions' => DivisionUnit::orderBy('division_units')->get(),
-        ]);
+        return view('pages.admin.users.index', compact('users', 'admins', 'positions', 'divisions'));
     }
 
     public function storeUser(Request $request): RedirectResponse
@@ -81,15 +78,6 @@ class AdminController extends Controller
 
         return redirect()->route('admin.users.index')
             ->with('success', "User created! Temporary password: {$generatedPassword}");
-    }
-
-    public function showUser(User $user)
-    {
-        return view('pages.admin.users.show', [
-            'user' => $user,
-            'positions' => Position::orderBy('positions')->get(),
-            'divisions' => DivisionUnit::orderBy('division_units')->get(),
-        ]);
     }
 
     public function updateUser(Request $request, User $user): RedirectResponse
@@ -146,11 +134,6 @@ class AdminController extends Controller
         return view('pages.admin.positions.index', compact('positions'));
     }
 
-    public function createPosition()
-    {
-        return view('pages.admin.positions.create');
-    }
-
     public function storePosition(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -161,13 +144,6 @@ class AdminController extends Controller
 
         return redirect()->route('admin.positions.index')
             ->with('success', 'Position created successfully.');
-    }
-
-    public function showPosition(Position $position)
-    {
-        $position->loadCount('users');
-
-        return view('pages.admin.positions.show', compact('position'));
     }
 
     public function editPosition(Position $position)
@@ -210,11 +186,6 @@ class AdminController extends Controller
         return view('pages.admin.divisions.index', compact('divisions'));
     }
 
-    public function createDivision()
-    {
-        return view('pages.admin.divisions.create');
-    }
-
     public function storeDivision(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -225,18 +196,6 @@ class AdminController extends Controller
 
         return redirect()->route('admin.divisions.index')
             ->with('success', 'Division created successfully.');
-    }
-
-    public function showDivision(DivisionUnit $division)
-    {
-        $division->loadCount('users');
-
-        return view('pages.admin.divisions.show', compact('division'));
-    }
-
-    public function editDivision(DivisionUnit $division)
-    {
-        return view('pages.admin.divisions.edit', compact('division'));
     }
 
     public function updateDivision(Request $request, DivisionUnit $division): RedirectResponse
