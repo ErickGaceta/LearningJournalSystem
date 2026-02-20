@@ -70,20 +70,6 @@ class UserController extends Controller
 
         return view('pages.user.trainings.index', compact('trainings', 'user'));
     }
-
-    public function showTraining(Assignment $assignment)
-    {
-        abort_if($assignment->user_id !== Auth::id(), 403);
-
-        $assignment->load('module');
-
-        abort_if(
-            $assignment->module->dateend && now()->gt($assignment->module->dateend),
-            404
-        );
-
-        return view('pages.user.trainings.show', compact('assignment'));
-    }
     // ========== Profile Management ==========
     public function editProfile()
     {

@@ -50,7 +50,9 @@
             <flux:card class="bg-transparent border-zinc-500 flex flex-col gap-2">
                 <div class="flex justify-between align-center items-center">
                     <flux:heading size="lg">{{ $admin->first_name . ' ' . $admin->middle_name . ' ' . $admin->last_name }}</flux:heading>
-                    <flux:button variant="ghost" icon="eye" :href="route('admin.users.show', $admin)"></flux:button>
+                    <flux:modal.trigger name="edit-user-{{ $admin->id }}">
+                        <flux:button variant="ghost" icon="eye" square />
+                    </flux:modal.trigger>
                 </div>
                 <flux:separator />
                 <div class="flex gap-3">
@@ -78,7 +80,9 @@
                 <flux:heading size="xl">User Management</flux:heading>
             </div>
             <div>
-                <flux:button icon="user-plus" variant="primary" color="sky" :href="route('admin.users.create')">Add User</flux:button>
+                <flux:modal.trigger name="create-user">
+                    <flux:button size="sm" icon="user-plus" variant="primary" color="cyan">Create User</flux:button>
+                </flux:modal.trigger>
             </div>
         </div>
 
@@ -107,16 +111,12 @@
                         <flux:table.cell>{{ $user->email }}</flux:table.cell>
                         <flux:table.cell>{{ $user->user_type === 'hr' ? 'HR' : ucfirst($user->user_type) }}</flux:table.cell>
                         <flux:table.cell>
-                            <flux:button variant="ghost" icon="eye" :href="route('admin.users.show', $user)"></flux:button>
-                            <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <flux:button
-                                    type="submit"
-                                    variant="ghost"
-                                    icon="trash"
-                                    onclick="return confirm('Delete this user?')" />
-                            </form>
+                            <flux:modal.trigger name="edit-user-{{ $user->id }}">
+                                <flux:button variant="ghost" icon="eye" square />
+                            </flux:modal.trigger>
+                            <flux:modal.trigger name="delete-user-{{ $user->id }}">
+                                <flux:button variant="ghost" icon="trash" square />
+                            </flux:modal.trigger>
                         </flux:table.cell>
                     </flux:table.row>
                     @empty
@@ -126,7 +126,16 @@
                     @endforelse
                 </flux:table.rows>
             </flux:table>
-        </div>
 
+            <x-admin.create-user-modal :positions="$positions" :divisions="$divisions" />
+            @foreach($admins as $admin)
+            <x-admin.edit-user-modal :user="$admin" :positions="$positions" :divisions="$divisions" />
+            @endforeach
+            @foreach($users as $user)
+            <x-admin.edit-user-modal :user="$user" :positions="$positions" :divisions="$divisions" />
+            <x-admin.delete-user-modal :user="$user" />
+            @endforeach
+        </div>
     </div>
+
 </x-layouts::app>

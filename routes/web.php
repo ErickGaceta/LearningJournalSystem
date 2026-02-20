@@ -58,27 +58,19 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // User Management
     Route::get('/users', [AdminController::class, 'usersIndex'])->name('users.index');
-    Route::get('/users/create', [AdminController::class, 'createUser'])->name('users.create');
     Route::post('/users', [AdminController::class, 'storeUser'])->name('users.store');
-    Route::get('/users/{user}/show', [AdminController::class, 'showUser'])->name('users.show');
     Route::post('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
     Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('users.destroy');
 
     // Position Management
     Route::get('/positions', [AdminController::class, 'positionsIndex'])->name('positions.index');
-    Route::get('/positions/create', [AdminController::class, 'createPosition'])->name('positions.create');
     Route::post('/positions', [AdminController::class, 'storePosition'])->name('positions.store');
-    Route::get('/positions/{position}', [AdminController::class, 'showPosition'])->name('positions.show');
-    Route::get('/positions/{position}/edit', [AdminController::class, 'editPosition'])->name('positions.edit');
     Route::put('/positions/{position}', [AdminController::class, 'updatePosition'])->name('positions.update');
     Route::delete('/positions/{position}', [AdminController::class, 'destroyPosition'])->name('positions.destroy');
 
     // Division Management
     Route::get('/divisions', [AdminController::class, 'divisionsIndex'])->name('divisions.index');
-    Route::get('/divisions/create', [AdminController::class, 'createDivision'])->name('divisions.create');
     Route::post('/divisions', [AdminController::class, 'storeDivision'])->name('divisions.store');
-    Route::get('/divisions/{division}', [AdminController::class, 'showDivision'])->name('divisions.show');
-    Route::get('/divisions/{division}/edit', [AdminController::class, 'editDivision'])->name('divisions.edit');
     Route::put('/divisions/{division}', [AdminController::class, 'updateDivision'])->name('divisions.update');
     Route::delete('/divisions/{division}', [AdminController::class, 'destroyDivision'])->name('divisions.destroy');
 });
@@ -104,7 +96,6 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
 
     // Training Tracking
     Route::get('/trainings', [UserController::class, 'myTrainings'])->name('trainings.index');
-    Route::get('/trainings/{assignment}', [UserController::class, 'showTraining'])->name('trainings.show');
 
     // User Profile Routes
     Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
