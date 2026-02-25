@@ -4,12 +4,13 @@
 $positionOptions = $positions->map(fn($p) => "<option value=\"{$p->id}\">{$p->positions}</option>")->implode('');
 $divisionOptions = $divisions->map(fn($d) => "<option value=\"{$d->id}\">{$d->division_units}</option>")->implode('');
 
-$inputClass  = 'w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-700 text-black dark:text-white px-3 py-1.5 text-sm shadow-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-sky-500 disabled:opacity-50 read-only:bg-zinc-50 dark:read-only:bg-zinc-900 read-only:text-zinc-500';
+$inputClass = 'w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-700 text-black dark:text-white px-3 py-1.5 text-sm shadow-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-sky-500 disabled:opacity-50 read-only:bg-zinc-50 dark:read-only:bg-zinc-900 read-only:text-zinc-500';
 $selectClass = 'w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-700 text-black dark:text-white px-3 py-1.5 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 disabled:opacity-50 disabled:bg-zinc-50 dark:disabled:bg-zinc-900';
 @endphp
 
 <flux:modal name="shared-edit-user" style="width: 75vw; max-width: 75vw;">
     <div x-data="{ editing: false }" x-on:flux-modal.opened.window="editing = false" class="w-full">
+
         <form :action="`{{ rtrim(route('admin.users.update', '_placeholder_'), '_placeholder_') }}${selectedUser?.id}`" method="POST" class="flex flex-col gap-0 w-full">
             @csrf
 
@@ -24,8 +25,8 @@ $selectClass = 'w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg
                         <p class="text-sm text-zinc-500 mt-1" x-text="selectedUser?.email"></p>
                     </div>
                     <div class="flex gap-2">
-                        <flux:button x-show="!editing" x-on:click="editing = true"  variant="ghost" size="sm" icon="pencil">Edit</flux:button>
-                        <flux:button x-show="editing"  x-on:click="editing = false" variant="ghost" size="sm" icon="x-mark">Cancel</flux:button>
+                        <flux:button x-show="!editing" x-on:click="editing = true" variant="ghost" size="sm" icon="pencil">Edit</flux:button>
+                        <flux:button x-show="editing" x-on:click="editing = false" variant="ghost" size="sm" icon="x-mark">Cancel</flux:button>
                     </div>
                 </div>
 
@@ -147,6 +148,15 @@ $selectClass = 'w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg
                     <flux:button variant="ghost" size="sm">Close</flux:button>
                 </flux:modal.close>
             </div>
+        </form>
+        
+        <form :action="`{{ route('admin.users.resetPassword', ['user' => 'USER_ID']) }}` .replace('USER_ID', selectedUser.id)" method="POST">
+            @csrf
+            <flux:button type="submit" variant="ghost" size="sm" icon="key"
+                onclick="return confirm('Generate a new temporary password for this user?')"
+                class="text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/30">
+                Reset Password
+            </flux:button>
         </form>
     </div>
 </flux:modal>

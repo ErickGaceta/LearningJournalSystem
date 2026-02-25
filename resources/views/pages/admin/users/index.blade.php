@@ -1,8 +1,15 @@
 <x-layouts::app :title="__('User Management - DOST LJS')">
+    @php
+    $positionOptions = $positions->map(fn($p) => "<option value=\"{$p->id}\">{$p->positions}</option>")->implode('');
+    $divisionOptions = $divisions->map(fn($d) => "<option value=\"{$d->id}\">{$d->division_units}</option>")->implode('');
+
+    $tableStyle = 'py-2 px-3 border-r border-zinc-900 dark:border-zinc-700 font-extralight text-zinc-600 dark:text-zinc-400';
+    $cellStyle = 'font-weight: 200;';
+    $selectClass = 'w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-700 text-black dark:text-white px-3 py-1.5 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 disabled:opacity-50 disabled:bg-zinc-50 dark:disabled:bg-zinc-900';
+    @endphp
     <div
         class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl"
-        x-data="{ selectedUser: null }"
-    >
+        x-data="{ selectedUser: null }">
 
         {{-- ── Success banner ── --}}
         @if(session('success'))
@@ -14,8 +21,8 @@
 
                     @if(str_contains(session('success'), 'Temporary password'))
                     @php
-                        preg_match('/Temporary password: (.+)$/', session('success'), $matches);
-                        $password = $matches[1] ?? '';
+                    preg_match('/Temporary password: (.+)$/', session('success'), $matches);
+                    $password = $matches[1] ?? '';
                     @endphp
                     @if($password)
                     <div class="mt-3 p-3 bg-white border border-green-200 rounded-md">
@@ -74,10 +81,22 @@
                     </div>
                 </div>
                 <flux:separator />
-                <div class="flex gap-3"><flux:text>Employee ID:</flux:text><flux:text>{{ $admin->employee_id }}</flux:text></div>
-                <div class="flex gap-3"><flux:text>Position:</flux:text><flux:text>{{ $admin->position?->positions ?? '—' }}</flux:text></div>
-                <div class="flex gap-3"><flux:text>Division/ Unit:</flux:text><flux:text>{{ $admin->divisionUnit?->division_units ?? '—' }}</flux:text></div>
-                <div class="flex gap-3"><flux:text>Email:</flux:text><flux:text>{{ $admin->email }}</flux:text></div>
+                <div class="flex gap-3">
+                    <flux:text>Employee ID:</flux:text>
+                    <flux:text>{{ $admin->employee_id }}</flux:text>
+                </div>
+                <div class="flex gap-3">
+                    <flux:text>Position:</flux:text>
+                    <flux:text>{{ $admin->position?->positions ?? '—' }}</flux:text>
+                </div>
+                <div class="flex gap-3">
+                    <flux:text>Division/ Unit:</flux:text>
+                    <flux:text>{{ $admin->divisionUnit?->division_units ?? '—' }}</flux:text>
+                </div>
+                <div class="flex gap-3">
+                    <flux:text>Email:</flux:text>
+                    <flux:text>{{ $admin->email }}</flux:text>
+                </div>
             </flux:card>
             @endforeach
         </div>
@@ -91,29 +110,29 @@
         </div>
 
         <div>
-            <flux:table :paginate="$users">
-                <flux:table.columns>
-                    <flux:table.column>Employee ID</flux:table.column>
-                    <flux:table.column>Full Name</flux:table.column>
-                    <flux:table.column>Position</flux:table.column>
-                    <flux:table.column>Division/ Unit</flux:table.column>
-                    <flux:table.column>Employee Type</flux:table.column>
-                    <flux:table.column>Email</flux:table.column>
-                    <flux:table.column>Role</flux:table.column>
-                    <flux:table.column>Actions</flux:table.column>
-                </flux:table.columns>
+            <table class="font-bold text-black dark:text-white w-full table-auto">
+                <thead class="border-b border-zinc-900 dark:border-zinc-700">
+                    <th class="pb-2">Employee ID</th>
+                    <th class="pb-2">Full Name</th>
+                    <th class="pb-2">Position</th>
+                    <th class="pb-2">Division/ Unit</th>
+                    <th class="pb-2">Employee Type</th>
+                    <th class="pb-2">Email</th>
+                    <th class="pb-2">Role</th>
+                    <th class="pb-2">Actions</th>
+                </thead>
 
-                <flux:table.rows>
+                <tbody>
                     @forelse($users as $user)
-                    <flux:table.row>
-                        <flux:table.cell>{{ $user->employee_id }}</flux:table.cell>
-                        <flux:table.cell>{{ $user->first_name . ' ' . $user->middle_name . ' ' . $user->last_name }}</flux:table.cell>
-                        <flux:table.cell>{{ $user->position->positions }}</flux:table.cell>
-                        <flux:table.cell>{{ $user->divisionUnit->division_units }}</flux:table.cell>
-                        <flux:table.cell>{{ $user->employee_type }}</flux:table.cell>
-                        <flux:table.cell>{{ $user->email }}</flux:table.cell>
-                        <flux:table.cell>{{ $user->user_type === 'hr' ? 'HR' : ucfirst($user->user_type) }}</flux:table.cell>
-                        <flux:table.cell>
+                    <tr class="bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-500 dark:hover:bg-zinc-600">
+                        <td class="{{ $tableStyle }}">{{ $user->employee_id }}</td>
+                        <td class="{{ $tableStyle }}">{{ $user->first_name . ' ' . $user->middle_name . ' ' . $user->last_name }}</td>
+                        <td class="{{ $tableStyle }}">{{ $user->position->positions }}</td>
+                        <td class="{{ $tableStyle }}">{{ $user->divisionUnit->division_units }}</td>
+                        <td class="{{ $tableStyle }}">{{ $user->employee_type }}</td>
+                        <td class="{{ $tableStyle }}">{{ $user->email }}</td>
+                        <td class="{{ $tableStyle }}">{{ $user->user_type === 'hr' ? 'HR' : ucfirst($user->user_type) }}</td>
+                        <td class="py-2 px-3 flex items-end justify-end font-extralight">
                             {{-- Plain buttons: no flux:button sub-component chain per row --}}
                             <div class="flex items-center gap-1">
                                 <div @click="selectedUser = {{ Js::from([
@@ -134,10 +153,7 @@
                                     <flux:modal.trigger name="shared-edit-user">
                                         <button type="button" title="View / Edit"
                                             class="p-1.5 rounded-md text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-700 dark:hover:text-zinc-200 transition">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.641 0-8.573-3.007-9.963-7.178Z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                            </svg>
+                                            <x-icon.eye class="size-4 text-gray-500 hover:text-gray-700" />
                                         </button>
                                     </flux:modal.trigger>
                                 </div>
@@ -159,20 +175,21 @@
                                     </flux:modal.trigger>
                                 </div>
                             </div>
-                        </flux:table.cell>
-                    </flux:table.row>
+                        </td>
+                    </tr>
                     @empty
-                    <flux:table.row>
-                        <flux:table.cell>No users in the database</flux:table.cell>
-                    </flux:table.row>
+                    <tr class="py-2">
+                        <td>No users in the database</td>
+                    </tr>
                     @endforelse
-                </flux:table.rows>
-            </flux:table>
+                </tbody>
+                <x-pagination :paginator="$users" />
+            </table>
         </div>
 
         {{-- ── Modals — rendered exactly once each ── --}}
         <x-admin.create-user-modal :positions="$positions" :divisions="$divisions" />
-        <x-admin.edit-user-modal   :positions="$positions" :divisions="$divisions" />
+        <x-admin.edit-user-modal :positions="$positions" :divisions="$divisions" />
         <x-admin.delete-user-modal />
 
     </div>
