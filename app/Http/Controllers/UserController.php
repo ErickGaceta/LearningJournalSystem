@@ -40,6 +40,8 @@ class UserController extends Controller
 
         $myDocuments = Document::where('user_id', $user->id)->count();
 
+        $userTrainings = Assignment::where('user_id', $user->id);
+
         $trainings = Assignment::where('user_id', $user->id)
             ->with('module:id,title,datestart,dateend')
             ->latest()
@@ -51,6 +53,7 @@ class UserController extends Controller
             'myDocuments',
             'user',
             'trainings',
+            'userTrainings'
         ));
     }
 

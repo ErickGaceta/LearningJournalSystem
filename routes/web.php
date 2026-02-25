@@ -12,44 +12,36 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentPrintController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ChangePasswordController;
+use App\Http\Controllers\ForgotPasswordController;
 
 // ========== Guest Routes (No Auth Required) ==========
-Route::get('/', function () {
-    return view('pages.auth.login');
-})->name('home');
+Route::get('/', fn() => redirect()->route('login'))->name('home');
 
-// ========== Login Route ==========
-Route::post('/login', [LoginController::class, 'store'])->name('login.store');
-
-// ========== Change Password Routes (Auth Required) ==========
-Route::middleware('auth')->group(function () {
-    Route::get('/change-password', [ChangePasswordController::class, 'show'])->name('password.change.show');
-    Route::post('/change-password', [ChangePasswordController::class, 'update'])->name('password.change.update');
+// ========== Guest Routes ==========
+Route::middleware('guest')->group(function () {
+    Route::get('/login',  [LoginController::class, 'create'])->name('login');
+    Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 });
 
-// ========== Dashboard Redirect Route ==========
-Route::get('/dashboard', function () {
-    if (!Auth::check()) {
-        return redirect()->route('login');
-    }
+// ========== Auth Routes ==========
+Route::middleware('auth')->group(function () {
 
-    $user = Auth::user();
+    // Change Password
+    Route::get('/change-password',  [ChangePasswordController::class, 'show'])->name('password.change.show');
+    Route::post('/change-password', [ChangePasswordController::class, 'update'])->name('password.change.update');
 
-    return match($user->user_type) {
-        'admin' => redirect()->route('admin.dashboard'),
-        'hr' => redirect()->route('hr.dashboard'),
-        'user' => redirect()->route('user.dashboard'),
-        default => redirect()->route('user.dashboard'),
-    };
-})->middleware('auth')->name('dashboard');
+    // Dashboard redirect — move match() to LoginController::redirectByUserType()
+    Route::get('/dashboard', function () {
+        return match(Auth::user()->user_type) {
+            'admin' => redirect()->route('admin.dashboard'),
+            'hr'    => redirect()->route('hr.dashboard'),
+            default => redirect()->route('user.dashboard'),
+        };
+    })->name('dashboard');
 
-// ========== Logout Route ==========
-Route::post('/logout', function () {
-    Auth::logout();
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
-    return redirect('/');
-})->name('logout');
+    // Logout
+    Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
+});
 
 // ========== Admin Routes ==========
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {

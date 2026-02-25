@@ -1,93 +1,142 @@
-@props(['user', 'positions', 'divisions'])
+@props(['positions', 'divisions'])
 
-<flux:modal name="edit-user-{{ $user->id }}" class="w-7xl" style="width: 80vw;">
-    <div x-data="{ editing: false }">
-        <form action="{{ route('admin.users.update', $user) }}" method="POST" class="flex flex-col gap-0">
+@php
+$positionOptions = $positions->map(fn($p) => "<option value=\"{$p->id}\">{$p->positions}</option>")->implode('');
+$divisionOptions = $divisions->map(fn($d) => "<option value=\"{$d->id}\">{$d->division_units}</option>")->implode('');
+
+$inputClass  = 'w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-700 text-black dark:text-white px-3 py-1.5 text-sm shadow-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-sky-500 disabled:opacity-50 read-only:bg-zinc-50 dark:read-only:bg-zinc-900 read-only:text-zinc-500';
+$selectClass = 'w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-700 text-black dark:text-white px-3 py-1.5 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 disabled:opacity-50 disabled:bg-zinc-50 dark:disabled:bg-zinc-900';
+@endphp
+
+<flux:modal name="shared-edit-user" style="width: 75vw; max-width: 75vw;">
+    <div x-data="{ editing: false }" x-on:flux-modal.opened.window="editing = false" class="w-full">
+        <form :action="`{{ rtrim(route('admin.users.update', '_placeholder_'), '_placeholder_') }}${selectedUser?.id}`" method="POST" class="flex flex-col gap-0 w-full">
             @csrf
-            @method('POST')
 
-            <div class="p-6 bg-white dark:bg-neutral-800 space-y-4">
+            <div class="p-6 bg-white dark:bg-neutral-800 space-y-4 w-full">
+
+                {{-- Header --}}
                 <div class="flex items-center justify-between">
                     <div>
-                        <flux:heading size="lg">{{ $user->full_name }}</flux:heading>
-                        <flux:text variant="subtle" class="text-sm mt-1">{{ $user->email }}</flux:text>
+                        <h2 class="text-lg font-semibold text-zinc-900 dark:text-white"
+                            x-text="selectedUser ? [selectedUser.first_name, selectedUser.middle_name, selectedUser.last_name].filter(Boolean).join(' ') : ''">
+                        </h2>
+                        <p class="text-sm text-zinc-500 mt-1" x-text="selectedUser?.email"></p>
                     </div>
                     <div class="flex gap-2">
-                        <flux:button x-show="!editing" x-on:click="editing = true" variant="ghost" size="sm" icon="pencil">Edit</flux:button>
-                        <flux:button x-show="editing" x-on:click="editing = false" variant="ghost" size="sm" icon="x-mark">Cancel</flux:button>
+                        <flux:button x-show="!editing" x-on:click="editing = true"  variant="ghost" size="sm" icon="pencil">Edit</flux:button>
+                        <flux:button x-show="editing"  x-on:click="editing = false" variant="ghost" size="sm" icon="x-mark">Cancel</flux:button>
                     </div>
                 </div>
 
                 <flux:separator />
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 w-full gap-6">
+
                     {{-- Personal Information --}}
                     <div class="flex flex-col gap-3">
-                        <flux:heading size="sm">Personal Information</flux:heading>
-                        <flux:input x-bind:readonly="!editing" name="first_name" label="First Name"
-                            value="{{ old('first_name', $user->first_name) }}" required />
-                        <flux:input x-bind:readonly="!editing" name="middle_name" label="Middle Name"
-                            value="{{ old('middle_name', $user->middle_name) }}" />
-                        <flux:input x-bind:readonly="!editing" name="last_name" label="Last Name"
-                            value="{{ old('last_name', $user->last_name) }}" required />
-                        <flux:select x-bind:disabled="!editing" name="gender" label="Gender" required>
-                            <flux:select.option value="">Select gender...</flux:select.option>
-                            <flux:select.option value="Male" :selected="old('gender', $user->gender) == 'Male'">Male</flux:select.option>
-                            <flux:select.option value="Female" :selected="old('gender', $user->gender) == 'Female'">Female</flux:select.option>
-                        </flux:select>
+                        <p class="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Personal Information</p>
+
+                        <x-admin.field label="First Name">
+                            <input name="first_name" x-bind:readonly="!editing" x-bind:value="selectedUser?.first_name"
+                                class="{{ $inputClass }}" required />
+                        </x-admin.field>
+
+                        <x-admin.field label="Middle Name">
+                            <input name="middle_name" x-bind:readonly="!editing" x-bind:value="selectedUser?.middle_name"
+                                class="{{ $inputClass }}" />
+                        </x-admin.field>
+
+                        <x-admin.field label="Last Name">
+                            <input name="last_name" x-bind:readonly="!editing" x-bind:value="selectedUser?.last_name"
+                                class="{{ $inputClass }}" required />
+                        </x-admin.field>
+
+                        <x-admin.field label="Gender">
+                            <select name="gender" x-bind:disabled="!editing"
+                                x-effect="if (selectedUser) $el.value = selectedUser.gender"
+                                class="{{ $selectClass }}">
+                                <option value="">Select gender...</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </x-admin.field>
                     </div>
 
                     {{-- Login Information --}}
                     <div class="flex flex-col gap-3">
-                        <flux:heading size="sm">Login Information</flux:heading>
-                        <flux:input x-bind:readonly="!editing" name="username" label="Username"
-                            value="{{ old('username', $user->username) }}" required />
-                        <flux:input x-bind:readonly="!editing" name="email" label="Email" type="email"
-                            value="{{ old('email', $user->email) }}" required />
-                        <flux:select x-bind:disabled="!editing" name="id_positions" label="Position" required>
-                            <flux:select.option value="">Select position...</flux:select.option>
-                            @foreach($positions as $pos)
-                                <flux:select.option value="{{ $pos->id }}"
-                                    :selected="old('id_positions', $user->id_positions) == $pos->id">
-                                    {{ $pos->positions }}
-                                </flux:select.option>
-                            @endforeach
-                        </flux:select>
-                        <flux:select x-bind:disabled="!editing" name="id_division_units" label="Division/Unit" required>
-                            <flux:select.option value="">Select division...</flux:select.option>
-                            @foreach($divisions as $div)
-                                <flux:select.option value="{{ $div->id }}"
-                                    :selected="old('id_division_units', $user->id_division_units) == $div->id">
-                                    {{ $div->division_units }}
-                                </flux:select.option>
-                            @endforeach
-                        </flux:select>
+                        <p class="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Login Information</p>
+
+                        <x-admin.field label="Username">
+                            <input name="username" x-bind:readonly="!editing" x-bind:value="selectedUser?.username"
+                                class="{{ $inputClass }}" required />
+                        </x-admin.field>
+
+                        <x-admin.field label="Email">
+                            <input name="email" type="email" x-bind:readonly="!editing" x-bind:value="selectedUser?.email"
+                                class="{{ $inputClass }}" required />
+                        </x-admin.field>
+
+                        <x-admin.field label="Position">
+                            <select name="id_positions" x-bind:disabled="!editing"
+                                x-effect="if (selectedUser) $el.value = selectedUser.position_id"
+                                class="{{ $selectClass }}">
+                                <option value="">Select position...</option>
+                                {!! $positionOptions !!}
+                            </select>
+                        </x-admin.field>
+
+                        <x-admin.field label="Division/Unit">
+                            <select name="id_division_units" x-bind:disabled="!editing"
+                                x-effect="if (selectedUser) $el.value = selectedUser.division_id"
+                                class="{{ $selectClass }}">
+                                <option value="">Select division...</option>
+                                {!! $divisionOptions !!}
+                            </select>
+                        </x-admin.field>
                     </div>
 
                     {{-- Others --}}
                     <div class="flex flex-col gap-3">
-                        <flux:heading size="sm">Others</flux:heading>
-                        <flux:input x-bind:readonly="!editing" name="employee_id" label="Employee ID"
-                            value="{{ old('employee_id', $user->employee_id) }}" required />
-                        <flux:input x-bind:readonly="!editing" name="employee_type" label="Employee Type"
-                            value="{{ old('employee_type', $user->employee_type) }}" required />
-                        <flux:select x-bind:disabled="!editing" name="user_type" label="User Role" required>
-                            <flux:select.option value="">Select role...</flux:select.option>
-                            <flux:select.option value="user" :selected="old('user_type', $user->user_type) == 'user'">User</flux:select.option>
-                            <flux:select.option value="hr" :selected="old('user_type', $user->user_type) == 'hr'">HR</flux:select.option>
-                        </flux:select>
-                        <flux:checkbox x-bind:disabled="!editing" name="is_active" label="Active" value="1"
-                            :checked="old('is_active', $user->is_active)" />
+                        <p class="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Others</p>
+
+                        <x-admin.field label="Employee ID">
+                            <input name="employee_id" x-bind:readonly="!editing" x-bind:value="selectedUser?.employee_id"
+                                class="{{ $inputClass }}" required />
+                        </x-admin.field>
+
+                        <x-admin.field label="Employee Type">
+                            <input name="employee_type" x-bind:readonly="!editing" x-bind:value="selectedUser?.employee_type"
+                                class="{{ $inputClass }}" required />
+                        </x-admin.field>
+
+                        <x-admin.field label="User Role">
+                            <select name="user_type" x-bind:disabled="!editing"
+                                x-effect="if (selectedUser) $el.value = selectedUser.user_type"
+                                class="{{ $selectClass }}">
+                                <option value="">Select role...</option>
+                                <option value="user">User</option>
+                                <option value="hr">HR</option>
+                            </select>
+                        </x-admin.field>
+
+                        <label class="flex items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300">
+                            <input type="checkbox" name="is_active" value="1"
+                                x-bind:disabled="!editing"
+                                x-bind:checked="selectedUser?.is_active"
+                                class="rounded border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-sky-600 focus:ring-sky-500 disabled:opacity-50" />
+                            Active
+                        </label>
                     </div>
                 </div>
             </div>
 
             <div x-show="editing"
-                class="bg-white dark:bg-neutral-800 px-6 py-3 flex gap-2 border-t border-neutral-200 dark:border-neutral-700">
+                class="bg-white dark:bg-neutral-800 px-6 py-3 items-end justify-end flex gap-2 border-t border-neutral-200 dark:border-neutral-700">
                 <flux:modal.close>
                     <flux:button variant="ghost" size="sm" class="flex-1">Close</flux:button>
                 </flux:modal.close>
-                <flux:button type="submit" variant="primary" color="sky" size="sm" icon="arrow-up-on-square" class="flex-1">
+                <flux:button style="max-width: max-content;" type="submit" variant="primary" color="sky" size="sm" icon="arrow-up-on-square" class="flex-1">
                     Save Changes
                 </flux:button>
             </div>

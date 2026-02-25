@@ -46,7 +46,8 @@ class AdminController extends Controller
     public function usersIndex()
     {
         $admins = User::where('user_type', 'admin')
-            ->select('id', 'first_name', 'last_name', 'email')
+            ->select('id', 'first_name', 'middle_name', 'last_name', 'email', 'employee_id', 'id_positions', 'id_division_units')
+            ->with(['position:id,positions', 'divisionUnit:id,division_units'])
             ->get();
 
         $users = User::whereIn('user_type', ['user', 'hr'])
