@@ -20,29 +20,37 @@ class AdminController extends Controller
     // ========== Dashboard ==========
     public function dashboard()
     {
-        $now = Carbon::now();
+        $now = now();
 
-        $modules = TrainingModule::with('assignments')->latest()->get();
+        $totalModules     = TrainingModule::count();
+        $activeModules    = TrainingModule::where('datestart', '<=', $now)->where('dateend', '>=', $now)->count();
+        $completedModules = TrainingModule::where('dateend', '<', $now)->count();
 
-        return view('pages.admin.dashboard', [
-            'modules'           => $modules,
-            'totalModules'      => $modules->count(),
-            'activeModules'     => $modules->filter(fn($m) => $now->between($m->datestart, $m->dateend))->count(),
-            'completedModules'  => $modules->filter(fn($m) => $now->gt($m->dateend))->count(),
-            'activeAssignments' => Assignment::whereHas(
-                'module',
-                fn($q) =>
-                $q->where('datestart', '<=', $now)->where('dateend', '>=', $now)
-            )->distinct('user_id')->count('user_id'),
-        ]);
+        $activeAssignments = Assignment::whereHas(
+            'module',
+            fn($q) => $q->where('datestart', '<=', $now)->where('dateend', '>=', $now)
+        )->distinct('user_id')->count('user_id');
+
+        $modules = TrainingModule::withCount('assignments')->latest()->get();
+
+        return view('pages.admin.dashboard', compact(
+            'modules',
+            'totalModules',
+            'activeModules',
+            'completedModules',
+            'activeAssignments',
+        ));
     }
 
     // ========== User Management ==========
     public function usersIndex()
     {
-        $admins = User::where('user_type', 'admin')->get();
+        $admins = User::where('user_type', 'admin')
+            ->select('id', 'first_name', 'last_name', 'email')
+            ->get();
+
         $users = User::whereIn('user_type', ['user', 'hr'])
-            ->with(['position', 'divisionUnit'])
+            ->with(['position:id,positions', 'divisionUnit:id,division_units'])
             ->latest()
             ->paginate(20);
 
@@ -165,8 +173,7 @@ class AdminController extends Controller
 
     public function destroyPosition(Position $position): RedirectResponse
     {
-        // Optional: Prevent deletion if users are assigned
-        if ($position->users()->count() > 0) {
+        if ($position->users()->exists()) {
             return back()->withErrors(['error' => 'Cannot delete position with assigned users.']);
         }
 
@@ -212,8 +219,7 @@ class AdminController extends Controller
 
     public function destroyDivision(DivisionUnit $division): RedirectResponse
     {
-        // Optional: Prevent deletion if users are assigned
-        if ($division->users()->count() > 0) {
+        if ($division->users()->exists()) {
             return back()->withErrors(['error' => 'Cannot delete division with assigned users.']);
         }
 

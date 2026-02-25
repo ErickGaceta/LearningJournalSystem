@@ -18,43 +18,38 @@ class UserController extends Controller
     public function dashboard()
     {
         $user = Auth::user();
-        $users = User::where('user_type', 'user')->get();
 
-        $myAssignments = Assignment::where('user_id', $user->id)
-            ->with('module')
-            ->latest()
-            ->paginate(10);
+        $assignmentCounts = Assignment::where('user_id', $user->id)
+            ->selectRaw("
+            COUNT(*) as total,
+            SUM(CASE WHEN EXISTS (
+                SELECT 1 FROM training_module
+                WHERE training_module.id = assignments.module_id
+                AND training_module.dateend >= NOW()
+            ) THEN 1 ELSE 0 END) as active,
+            SUM(CASE WHEN EXISTS (
+                SELECT 1 FROM training_module
+                WHERE training_module.id = assignments.module_id
+                AND training_module.dateend < NOW()
+            ) THEN 1 ELSE 0 END) as completed
+        ")
+            ->first();
 
-        $datestart = TrainingModule::get('datestart');
-        $dateend = TrainingModule::get('dateend');
-        $interval = $datestart->diff($dateend);
-
-        $trainingModule = TrainingModule::all();
-
-        $activeAssignments = Assignment::where('user_id', $user->id)
-            ->whereHas('module', fn($q) => $q->where('dateend', '>=', now()))
-            ->count();
-
-        $completedAssignments = Assignment::where('user_id', $user->id)
-            ->whereHas('module', fn($q) => $q->where('dateend', '<', now()))
-            ->count();
-
-        $userTrainings = Assignment::where('user_id', Auth::id());
+        $activeAssignments    = $assignmentCounts->active ?? 0;
+        $completedAssignments = $assignmentCounts->completed ?? 0;
 
         $myDocuments = Document::where('user_id', $user->id)->count();
 
         $trainings = Assignment::where('user_id', $user->id)
-            ->with('module')
+            ->with('module:id,title,datestart,dateend')
             ->latest()
             ->paginate(15);
 
         return view('pages.user.dashboard', compact(
-            'myAssignments',
             'activeAssignments',
             'completedAssignments',
             'myDocuments',
             'user',
-            'userTrainings',
             'trainings',
         ));
     }
@@ -64,12 +59,14 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        $trainings = Assignment::with(['module.documents' => function ($q) {
-            $q->where('user_id', Auth::id());
-        }])->where('user_id', Auth::id())->latest()->get();
+        $trainings = Assignment::where('user_id', $user->id)
+            ->with(['module.documents' => fn($q) => $q->where('user_id', $user->id)])
+            ->latest()
+            ->get();
 
         return view('pages.user.trainings.index', compact('trainings', 'user'));
     }
+
     // ========== Profile Management ==========
     public function editProfile()
     {

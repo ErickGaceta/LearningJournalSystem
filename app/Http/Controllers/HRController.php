@@ -15,17 +15,19 @@ class HRController extends Controller
     {
         $now = now();
 
-        $modules = TrainingModule::with('assignments')->latest()->get();
+        $totalModules = TrainingModule::count();
 
-        $totalModules = $modules->count();
+        $activeTraining = TrainingModule::where('datestart', '<=', $now)
+            ->where('dateend', '>=', $now)
+            ->count();
 
-        $activeTraining = $modules->filter(
-            fn($m) => $now->between($m->datestart, $m->dateend)
-        )->count();
+        $usersInTraining = Assignment::whereHas(
+            'module',
+            fn($q) =>
+            $q->where('datestart', '<=', $now)->where('dateend', '>=', $now)
+        )->distinct('user_id')->count('user_id');
 
-        $usersInTraining = Assignment::whereHas('module', function ($q) use ($now) {
-            $q->where('datestart', '<=', $now)->where('dateend', '>=', $now);
-        })->distinct('user_id')->count('user_id');
+        $modules = TrainingModule::withCount('assignments')->latest()->get();
 
         return view('pages.hr.dashboard', compact(
             'modules',
@@ -43,20 +45,28 @@ class HRController extends Controller
         $trainingModules = TrainingModule::withCount('assignments')
             ->with('assignments:id,module_id,user_id,employee_name')
             ->when($search, function ($query) use ($search) {
-                $query->where('title', 'like', "%{$search}%")
-                    ->orWhere('venue', 'like', "%{$search}%")
-                    ->orWhere('conductedby', 'like', "%{$search}%")
-                    ->orWhereHas('assignments', function ($q) use ($search) {
-                        $q->where('employee_name', 'like', "%{$search}%");
-                    });
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                        ->orWhere('venue', 'like', "%{$search}%")
+                        ->orWhere('conductedby', 'like', "%{$search}%")
+                        ->orWhereHas(
+                            'assignments',
+                            fn($q) =>
+                            $q->where('employee_name', 'like', "%{$search}%")
+                        );
+                });
             })
             ->latest()
             ->paginate(15)
             ->withQueryString();
 
-        $assignments = Assignment::with('module')->get();
+        $moduleIds = $trainingModules->pluck('id');
+        $assignments = Assignment::with('module:id,title')
+            ->whereIn('module_id', $moduleIds)
+            ->get();
 
         $users = User::where('user_type', 'user')
+            ->select('id', 'first_name', 'last_name')
             ->orderBy('last_name')
             ->get();
 
@@ -118,17 +128,35 @@ class HRController extends Controller
 
         $module = TrainingModule::findOrFail($validated['module_id']);
 
-        foreach ($validated['user_ids'] as $userId) {
-            $user = User::findOrFail($userId);
+        $users = User::whereIn('id', $validated['user_ids'])
+            ->select('id', 'first_name', 'last_name')
+            ->get()
+            ->keyBy('id');
 
-            Assignment::firstOrCreate(
-                ['user_id' => $userId, 'module_id' => $module->id],
-                [
-                    'employee_name'   => $user->full_name,
-                    'training_module' => $module->title,
-                    'status'          => 'assigned',
-                ]
-            );
+        $existing = Assignment::where('module_id', $module->id)
+            ->whereIn('user_id', $validated['user_ids'])
+            ->pluck('user_id')
+            ->flip();
+
+        $inserts = [];
+        $now = now();
+
+        foreach ($validated['user_ids'] as $userId) {
+            if ($existing->has($userId)) continue;
+
+            $inserts[] = [
+                'user_id'         => $userId,
+                'module_id'       => $module->id,
+                'employee_name'   => $users[$userId]->full_name,
+                'training_module' => $module->title,
+                'status'          => 'assigned',
+                'created_at'      => $now,
+                'updated_at'      => $now,
+            ];
+        }
+
+        if (!empty($inserts)) {
+            Assignment::insert($inserts);
         }
 
         return redirect()->route('hr.modules.index')
