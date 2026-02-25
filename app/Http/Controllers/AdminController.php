@@ -89,6 +89,19 @@ class AdminController extends Controller
             ->with('success', "User created! Temporary password: {$generatedPassword}");
     }
 
+    public function resetPassword(User $user): RedirectResponse
+    {
+        $temporaryPassword = Str::password(12);
+
+        $user->update([
+            'password'   => $temporaryPassword,
+            'last_login' => null,
+        ]);
+
+        return redirect()->route('admin.users.index')
+            ->with('success', "Password reset for {$user->first_name} {$user->last_name}. Temporary password: {$temporaryPassword}");
+    }
+
     public function updateUser(Request $request, User $user): RedirectResponse
     {
         $validated = $request->validate([
