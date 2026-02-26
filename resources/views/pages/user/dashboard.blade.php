@@ -22,11 +22,17 @@
         </div>
 
         @php
-            $statusBadge = function (bool $isPending, bool $isOngoing): array {
-                if ($isPending) return ['color' => 'amber', 'label' => 'Pending'];
-                if ($isOngoing) return ['color' => 'lime',  'label' => 'Ongoing'];
-                return                 ['color' => 'zinc',  'label' => 'Completed'];
-            };
+            $now = now();
+            $rows = $trainings->map(fn($tr) => [
+                'title' => $tr->module->title,
+                'start' => $tr->module->datestart,
+                'end'   => $tr->module->dateend,
+                'badge' => $now->lt($tr->module->datestart)
+                    ? ['color' => 'amber', 'label' => 'Pending']
+                    : ($now->between($tr->module->datestart, $tr->module->dateend)
+                        ? ['color' => 'lime',  'label' => 'Ongoing']
+                        : ['color' => 'zinc',  'label' => 'Completed']),
+            ]);
         @endphp
 
         {{-- Desktop --}}
@@ -39,20 +45,14 @@
                 </flux:table.columns>
 
                 <flux:table.rows>
-                    @forelse($trainings as $tr)
-                        @php
-                            $now   = now();
-                            $start = $tr->module->datestart;
-                            $end   = $tr->module->dateend;
-                            $badge = $statusBadge($now->lt($start), $now->between($start, $end));
-                        @endphp
+                    @forelse($rows as $r)
                         <flux:table.row>
-                            <flux:table.cell>{{ $tr->module->title }}</flux:table.cell>
+                            <flux:table.cell>{{ $r['title'] }}</flux:table.cell>
                             <flux:table.cell align="center" class="whitespace-nowrap">
-                                {{ $start->format('M d, Y') }} — {{ $end->format('M d, Y') }}
+                                {{ $r['start']->format('M d, Y') }} — {{ $r['end']->format('M d, Y') }}
                             </flux:table.cell>
                             <flux:table.cell align="center">
-                                <flux:badge color="{{ $badge['color'] }}" size="sm">{{ $badge['label'] }}</flux:badge>
+                                <flux:badge color="{{ $r['badge']['color'] }}" size="sm">{{ $r['badge']['label'] }}</flux:badge>
                             </flux:table.cell>
                         </flux:table.row>
                     @empty
@@ -68,24 +68,18 @@
 
         {{-- Mobile --}}
         <div class="lg:hidden space-y-4">
-            @forelse($trainings as $tr)
-                @php
-                    $now   = now();
-                    $start = $tr->module->datestart;
-                    $end   = $tr->module->dateend;
-                    $badge = $statusBadge($now->lt($start), $now->between($start, $end));
-                @endphp
+            @forelse($rows as $r)
                 <flux:card class="p-4 bg-transparent">
                     <div class="flex flex-col gap-2">
                         <div class="flex justify-between items-center">
-                            <span class="text-sm font-semibold">{{ $tr->module->title }}</span>
-                            <flux:badge color="{{ $badge['color'] }}" size="sm">{{ $badge['label'] }}</flux:badge>
+                            <span class="text-sm font-semibold">{{ $r['title'] }}</span>
+                            <flux:badge color="{{ $r['badge']['color'] }}" size="sm">{{ $r['badge']['label'] }}</flux:badge>
                         </div>
 
                         <flux:separator />
 
                         <div class="text-sm text-neutral-500 flex gap-2">
-                            Dates: <flux:text variant="subtle">{{ $start->format('M d, Y') }} — {{ $end->format('M d, Y') }}</flux:text>
+                            Dates: <flux:text variant="subtle">{{ $r['start']->format('M d, Y') }} — {{ $r['end']->format('M d, Y') }}</flux:text>
                         </div>
                     </div>
                 </flux:card>
