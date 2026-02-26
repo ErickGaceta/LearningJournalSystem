@@ -21,6 +21,20 @@
             </flux:card>
         </div>
 
+        @php
+            $now = now();
+            $rows = $trainings->map(fn($tr) => [
+                'title' => $tr->module->title,
+                'start' => $tr->module->datestart,
+                'end'   => $tr->module->dateend,
+                'badge' => $now->lt($tr->module->datestart)
+                    ? ['color' => 'amber', 'label' => 'Pending']
+                    : ($now->between($tr->module->datestart, $tr->module->dateend)
+                        ? ['color' => 'lime',  'label' => 'Ongoing']
+                        : ['color' => 'zinc',  'label' => 'Completed']),
+            ]);
+        @endphp
+
         {{-- Desktop --}}
         <div class="hidden lg:block">
             <flux:table>
@@ -31,35 +45,22 @@
                 </flux:table.columns>
 
                 <flux:table.rows>
-                    @forelse($trainings as $tr)
-                    @php
-                        $now = now();
-                        $start = $tr->module->datestart;
-                        $end = $tr->module->dateend;
-                        $doc = $tr->module->documents->first();
-                        $isCompleted = $now->gt($end);
-                    @endphp
-                    <flux:table.row>
-                        <flux:table.cell>{{ $tr->module->title }}</flux:table.cell>
-                        <flux:table.cell align="center" class="whitespace-nowrap">
-                            {{ $start->format('M d, Y') }} — {{ $end->format('M d, Y') }}
-                        </flux:table.cell>
-                        <flux:table.cell align="center">
-                            @if ($now->lt($start))
-                                <flux:badge color="amber" size="sm">Pending</flux:badge>
-                            @elseif ($now->between($start, $end))
-                                <flux:badge color="lime" size="sm">Ongoing</flux:badge>
-                            @else
-                                <flux:badge color="zinc" size="sm">Completed</flux:badge>
-                            @endif
-                        </flux:table.cell>
-                    </flux:table.row>
+                    @forelse($rows as $r)
+                        <flux:table.row>
+                            <flux:table.cell>{{ $r['title'] }}</flux:table.cell>
+                            <flux:table.cell align="center" class="whitespace-nowrap">
+                                {{ $r['start']->format('M d, Y') }} — {{ $r['end']->format('M d, Y') }}
+                            </flux:table.cell>
+                            <flux:table.cell align="center">
+                                <flux:badge color="{{ $r['badge']['color'] }}" size="sm">{{ $r['badge']['label'] }}</flux:badge>
+                            </flux:table.cell>
+                        </flux:table.row>
                     @empty
-                    <flux:table.row>
-                        <flux:table.cell colspan="4" class="text-center py-8 text-neutral-500">
-                            No trainings assigned yet
-                        </flux:table.cell>
-                    </flux:table.row>
+                        <flux:table.row>
+                            <flux:table.cell colspan="4" class="text-center py-8 text-neutral-500">
+                                No trainings assigned yet
+                            </flux:table.cell>
+                        </flux:table.row>
                     @endforelse
                 </flux:table.rows>
             </flux:table>
@@ -67,39 +68,25 @@
 
         {{-- Mobile --}}
         <div class="lg:hidden space-y-4">
-            @forelse($trainings as $tr)
-            @php
-                $now = now();
-                $start = $tr->module->datestart;
-                $end = $tr->module->dateend;
-                $doc = $tr->module->documents->first();
-                $isCompleted = $now->gt($end);
-            @endphp
-            <flux:card class="p-4 bg-transparent">
-                <div class="flex flex-col gap-2">
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm font-semibold">{{ $tr->module->title }}</span>
-                        @if ($now->lt($start))
-                            <flux:badge color="amber" size="sm">Pending</flux:badge>
-                        @elseif ($now->between($start, $end))
-                            <flux:badge color="lime" size="sm">Ongoing</flux:badge>
-                        @else
-                            <flux:badge color="zinc" size="sm">Completed</flux:badge>
-                        @endif
-                    </div>
+            @forelse($rows as $r)
+                <flux:card class="p-4 bg-transparent">
+                    <div class="flex flex-col gap-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-semibold">{{ $r['title'] }}</span>
+                            <flux:badge color="{{ $r['badge']['color'] }}" size="sm">{{ $r['badge']['label'] }}</flux:badge>
+                        </div>
 
-                    <flux:separator />
+                        <flux:separator />
 
-                    <div class="text-sm text-neutral-500 flex gap-2">
-                        Dates: <flux:text variant="subtle">{{ $start->format('M d, Y') }} — {{ $end->format('M d, Y') }}</flux:text>
+                        <div class="text-sm text-neutral-500 flex gap-2">
+                            Dates: <flux:text variant="subtle">{{ $r['start']->format('M d, Y') }} — {{ $r['end']->format('M d, Y') }}</flux:text>
+                        </div>
                     </div>
-                </div>
-            </flux:card>
+                </flux:card>
             @empty
-            <div class="text-center py-8 text-neutral-500">No trainings assigned yet</div>
+                <div class="text-center py-8 text-neutral-500">No trainings assigned yet</div>
             @endforelse
         </div>
 
     </div>
-
 </x-layouts::app>
