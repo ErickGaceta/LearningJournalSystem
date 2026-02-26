@@ -61,7 +61,7 @@
                         :current="request()->routeIs('admin.divisions.*')"
                         wire:navigate
                         class="font-semibold">
-                        {{ __('Divisions') }}
+                        {{ __('Divisions/ Units') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
                 @endif
@@ -87,6 +87,15 @@
                         wire:navigate
                         class="font-semibold">
                         {{ __('Training & Assignments') }}
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item
+                        icon="academic-cap"
+                        :href="route('hr.monitoring.index')"
+                        :current="request()->routeIs('hr.monitoring.*')"
+                        wire:navigate
+                        class="font-semibold">
+                        {{ __('Monitoring') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
                 @endif

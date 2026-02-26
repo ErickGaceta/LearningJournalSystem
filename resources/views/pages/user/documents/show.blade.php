@@ -136,8 +136,8 @@
                     </flux:modal>
                 </div>
             </div>
-            <div class="absolute top-0 right-0">
-                <flux:button
+            <div class="w-fit md:relative sm:absolute top-0 right-0">
+                <flux:button class="w-fit"
                     href="{{ route('user.documents.index') }}"
                     variant="ghost"
                     icon="arrow-left"

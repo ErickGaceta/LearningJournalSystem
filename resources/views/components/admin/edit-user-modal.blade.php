@@ -11,7 +11,7 @@ $selectClass = 'w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg
 <flux:modal name="shared-edit-user" style="width: 75vw; max-width: 75vw;">
     <div x-data="{ editing: false }" x-on:flux-modal.opened.window="editing = false" class="w-full">
 
-        <form :action="`{{ rtrim(route('admin.users.update', '_placeholder_'), '_placeholder_') }}${selectedUser?.id}`" method="POST" class="flex flex-col gap-0 w-full">
+        <form :action="'{{ route('admin.users.update', '_placeholder_') }}'.replace('_placeholder_', selectedUser?.id)" method="POST" class="flex flex-col gap-0 w-full">
             @csrf
 
             <div class="p-6 bg-white dark:bg-neutral-800 space-y-4 w-full">
@@ -149,8 +149,10 @@ $selectClass = 'w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg
                 </flux:modal.close>
             </div>
         </form>
-        
-        <form :action="`{{ route('admin.users.resetPassword', ['user' => 'USER_ID']) }}` .replace('USER_ID', selectedUser.id)" method="POST">
+
+        <form
+            :action="'{{ route('admin.users.resetPassword', '_placeholder_') }}'.replace('_placeholder_', selectedUser?.id)"
+            method="POST">
             @csrf
             <flux:button type="submit" variant="ghost" size="sm" icon="key"
                 onclick="return confirm('Generate a new temporary password for this user?')"

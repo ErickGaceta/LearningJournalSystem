@@ -12,7 +12,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentPrintController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ChangePasswordController;
-use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\MonitoringController;
 
 // ========== Guest Routes (No Auth Required) ==========
 Route::get('/', fn() => redirect()->route('login'))->name('home');
@@ -81,6 +81,9 @@ Route::middleware(['auth'])->prefix('hr')->name('hr.')->group(function () {
     // Assignment Management
     Route::post('/assignments', [HRController::class, 'storeAssignment'])->name('assignments.store');
     Route::delete('/assignments/{assignment}', [HRController::class, 'destroyAssignment'])->name('assignments.destroy');
+
+    // Monitoring Routes
+    Route::put('/monitoring', [HRController::class, 'monitoringIndex'])->name('monitoring.index');
 });
 
 // ========== User Routes ==========

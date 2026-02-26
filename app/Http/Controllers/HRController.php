@@ -163,6 +163,10 @@ class HRController extends Controller
             ->with('success', 'Training assigned successfully.');
     }
 
+    public function monitoringIndex(){
+        return view('pages.hr.monitoring.index');
+    }
+
     public function destroyAssignment(Assignment $assignment): RedirectResponse
     {
         $assignment->delete();
