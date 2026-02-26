@@ -101,10 +101,7 @@
                     @endforelse
                 </flux:table.rows>
             </flux:table>
-
-            <div class="mt-4">
-                {{ $positions->links() }}
-            </div>
+            <x-pagination :paginator="$positions" />
         </div>
     </div>
 

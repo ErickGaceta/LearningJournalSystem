@@ -3,8 +3,7 @@
     $positionOptions = $positions->map(fn($p) => "<option value=\"{$p->id}\">{$p->positions}</option>")->implode('');
     $divisionOptions = $divisions->map(fn($d) => "<option value=\"{$d->id}\">{$d->division_units}</option>")->implode('');
 
-    $tableStyle = 'py-2 px-3 border-r border-zinc-900 dark:border-zinc-700 font-extralight text-zinc-600 dark:text-zinc-400';
-    $cellStyle = 'font-weight: 200;';
+    $tableStyle = 'text-sm py-2 px-3 border-r border-zinc-900 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400';
     $selectClass = 'w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-700 text-black dark:text-white px-3 py-1.5 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 disabled:opacity-50 disabled:bg-zinc-50 dark:disabled:bg-zinc-900';
     @endphp
     <div
@@ -183,14 +182,13 @@
                     </tr>
                     @endforelse
                 </tbody>
-                <x-pagination :paginator="$users" />
             </table>
+            <x-pagination :paginator="$users" />
         </div>
 
         {{-- ── Modals — rendered exactly once each ── --}}
         <x-admin.create-user-modal :positions="$positions" :divisions="$divisions" />
         <x-admin.edit-user-modal :positions="$positions" :divisions="$divisions" />
         <x-admin.delete-user-modal />
-
     </div>
 </x-layouts::app>

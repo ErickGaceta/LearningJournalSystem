@@ -4,9 +4,9 @@
 <div class="flex items-center justify-between px-4 py-3 border-t border-zinc-200 dark:border-zinc-700">
     {{-- Results count --}}
     <div class="text-xs text-zinc-600 dark:text-zinc-400">
-        Showing <span class="font-xs text-zinc-900 dark:text-zinc-100">{{ $paginator->firstItem() }}</span>
-        to <span class="font-xs text-zinc-900 dark:text-zinc-100">{{ $paginator->lastItem() }}</span>
-        of <span class="font-xs text-zinc-900 dark:text-zinc-100">{{ $paginator->total() }}</span> results
+        Showing <span class="font-xs text-black dark:text-white">{{ $paginator->firstItem() }}</span>
+        to <span class="font-xs text-black dark:text-white">{{ $paginator->lastItem() }}</span>
+        of <span class="font-xs text-black dark:text-white">{{ $paginator->total() }}</span> results
     </div>
 
     {{-- Pagination controls --}}

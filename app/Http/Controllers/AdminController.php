@@ -53,7 +53,7 @@ class AdminController extends Controller
         $users = User::whereIn('user_type', ['user', 'hr'])
             ->with(['position:id,positions', 'divisionUnit:id,division_units'])
             ->latest()
-            ->paginate(20);
+            ->paginate(15);
 
         $positions = Position::orderBy('positions')->get();
         $divisions = DivisionUnit::orderBy('division_units')->get();
