@@ -9,7 +9,10 @@ class Position extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['positions'];
+    protected $fillable = [
+        'positions',
+        'is_archived',
+        ];
 
     public function users()
     {

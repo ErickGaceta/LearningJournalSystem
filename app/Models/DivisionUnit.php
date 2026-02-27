@@ -9,7 +9,10 @@ class DivisionUnit extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['division_units'];
+    protected $fillable = [
+        'division_units',
+        'is_archived',
+        ];
 
     public function users()
     {

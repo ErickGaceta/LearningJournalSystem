@@ -109,86 +109,166 @@
         </div>
 
         <div>
-            <table class="font-bold text-black dark:text-white w-full table-auto">
-                <thead class="border-b border-zinc-900 dark:border-zinc-700">
-                    <th class="pb-2">Employee ID</th>
-                    <th class="pb-2">Full Name</th>
-                    <th class="pb-2">Position</th>
-                    <th class="pb-2">Division/ Unit</th>
-                    <th class="pb-2">Employee Type</th>
-                    <th class="pb-2">Email</th>
-                    <th class="pb-2">Role</th>
-                    <th class="pb-2">Actions</th>
-                </thead>
+            <div>
+                <div class="tab overflow-hidden">
+                    <flux:button size="sm" class="tablinks active" onclick="openUsers(event, 'Active')">Active Users</flux:button>
+                    <flux:button size="sm" class="tablinks" onclick="openUsers(event, 'Archived')">Archived Users</flux:button>
+                </div>
+                <div id="Active" class="tabcontent">
+                    <table class="font-bold text-black dark:text-white w-full table-auto">
+                        <thead class="border-b border-zinc-900 dark:border-zinc-700">
+                            <th class="pb-2">Employee ID</th>
+                            <th class="pb-2">Full Name</th>
+                            <th class="pb-2">Position</th>
+                            <th class="pb-2">Division/ Unit</th>
+                            <th class="pb-2">Employee Type</th>
+                            <th class="pb-2">Email</th>
+                            <th class="pb-2">Role</th>
+                            <th class="pb-2">Actions</th>
+                        </thead>
 
-                <tbody>
-                    @forelse($users as $user)
-                    <tr class="bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-500 dark:hover:bg-zinc-600">
-                        <td class="{{ $tableStyle }}">{{ $user->employee_id }}</td>
-                        <td class="{{ $tableStyle }}">{{ $user->first_name . ' ' . $user->middle_name . ' ' . $user->last_name }}</td>
-                        <td class="{{ $tableStyle }}">{{ $user->position->positions }}</td>
-                        <td class="{{ $tableStyle }}">{{ $user->divisionUnit->division_units }}</td>
-                        <td class="{{ $tableStyle }}">{{ $user->employee_type }}</td>
-                        <td class="{{ $tableStyle }}">{{ $user->email }}</td>
-                        <td class="{{ $tableStyle }}">{{ $user->user_type === 'hr' ? 'HR' : ucfirst($user->user_type) }}</td>
-                        <td class="py-2 px-3 flex items-end justify-end font-extralight">
-                            {{-- Plain buttons: no flux:button sub-component chain per row --}}
-                            <div class="flex items-center gap-1">
-                                <div @click="selectedUser = {{ Js::from([
-                                    'id'            => $user->id,
-                                    'first_name'    => $user->first_name,
-                                    'middle_name'   => $user->middle_name,
-                                    'last_name'     => $user->last_name,
-                                    'username'      => $user->username,
-                                    'email'         => $user->email,
-                                    'gender'        => $user->gender,
-                                    'position_id'   => $user->id_positions,
-                                    'division_id'   => $user->id_division_units,
-                                    'employee_id'   => $user->employee_id,
-                                    'employee_type' => $user->employee_type,
-                                    'user_type'     => $user->user_type,
-                                    'is_active'     => (bool) $user->is_active,
-                                ]) }}">
-                                    <flux:modal.trigger name="shared-edit-user">
-                                        <button type="button" title="View / Edit"
-                                            class="p-1.5 rounded-md text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-700 dark:hover:text-zinc-200 transition">
-                                            <x-icon.eye class="size-4 text-gray-500 hover:text-gray-700" />
-                                        </button>
-                                    </flux:modal.trigger>
-                                </div>
+                        <tbody>
+                            @forelse($usersActive as $user)
+                            <tr class="bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-500 dark:hover:bg-zinc-600">
+                                <td class="{{ $tableStyle }}">{{ $user->employee_id }}</td>
+                                <td class="{{ $tableStyle }}">{{ $user->first_name . ' ' . $user->middle_name . ' ' . $user->last_name }}</td>
+                                <td class="{{ $tableStyle }}">{{ $user->position->positions }}</td>
+                                <td class="{{ $tableStyle }}">{{ $user->divisionUnit->division_units }}</td>
+                                <td class="{{ $tableStyle }}">{{ $user->employee_type }}</td>
+                                <td class="{{ $tableStyle }}">{{ $user->email }}</td>
+                                <td class="{{ $tableStyle }}">{{ $user->user_type === 'hr' ? 'HR' : ucfirst($user->user_type) }}</td>
+                                <td class="py-2 px-3 flex items-end justify-end font-extralight">
+                                    {{-- Plain buttons: no flux:button sub-component chain per row --}}
+                                    <div class="flex items-center gap-1">
+                                        <div @click="selectedUser = {{ Js::from([
+                                            'id'            => $user->id,
+                                            'first_name'    => $user->first_name,
+                                            'middle_name'   => $user->middle_name,
+                                            'last_name'     => $user->last_name,
+                                            'username'      => $user->username,
+                                            'email'         => $user->email,
+                                            'gender'        => $user->gender,
+                                            'position_id'   => $user->id_positions,
+                                            'division_id'   => $user->id_division_units,
+                                            'employee_id'   => $user->employee_id,
+                                            'employee_type' => $user->employee_type,
+                                            'user_type'     => $user->user_type,
+                                            'is_active'     => (bool) $user->is_active,
+                                        ]) }}">
+                                            <flux:modal.trigger name="shared-edit-user">
+                                                <button type="button" title="View / Edit"
+                                                    class="p-1.5 rounded-md text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-700 dark:hover:text-zinc-200 transition">
+                                                    <x-icon.eye class="size-4 text-gray-500 hover:text-gray-700" />
+                                                </button>
+                                            </flux:modal.trigger>
+                                        </div>
 
-                                <div @click="selectedUser = {{ Js::from([
-                                    'id'          => $user->id,
-                                    'first_name'  => $user->first_name,
-                                    'middle_name' => $user->middle_name,
-                                    'last_name'   => $user->last_name,
-                                    'email'       => $user->email,
-                                ]) }}">
-                                    <flux:modal.trigger name="shared-delete-user">
-                                        <button type="button" title="Delete"
-                                            class="p-1.5 rounded-md text-zinc-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                            </svg>
-                                        </button>
-                                    </flux:modal.trigger>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr class="py-2">
-                        <td>No users in the database</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-            <x-pagination :paginator="$users" />
+                                        <div @click="selectedUser = {{ Js::from([
+                                            'id'          => $user->id,
+                                            'first_name'  => $user->first_name,
+                                            'middle_name' => $user->middle_name,
+                                            'last_name'   => $user->last_name,
+                                            'email'       => $user->email,
+                                        ]) }}">
+                                            <flux:modal.trigger name="shared-user-action">
+                                                <button type="button" title="Archive"
+                                                    class="p-1.5 rounded-md text-zinc-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                    </svg>
+                                                </button>
+                                            </flux:modal.trigger>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr class="py-2">
+                                <td>No users in the database</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                    <x-pagination :paginator="$usersActive" />
+                </div>
+                <div id="Archived" class="tabcontent" style="display: none;">
+                    <table class="font-bold text-black dark:text-white w-full table-auto">
+                        <thead class="border-b border-zinc-900 dark:border-zinc-700">
+                            <th class="pb-2">Employee ID</th>
+                            <th class="pb-2">Full Name</th>
+                            <th class="pb-2">Position</th>
+                            <th class="pb-2">Division/ Unit</th>
+                            <th class="pb-2">Employee Type</th>
+                            <th class="pb-2">Email</th>
+                            <th class="pb-2">Role</th>
+                            <th class="pb-2">Actions</th>
+                        </thead>
+
+                        <tbody>
+                            @forelse($usersArchived as $user)
+                            <tr class="bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-500 dark:hover:bg-zinc-600">
+                                <td class="{{ $tableStyle }}">{{ $user->employee_id }}</td>
+                                <td class="{{ $tableStyle }}">{{ $user->first_name . ' ' . $user->middle_name . ' ' . $user->last_name }}</td>
+                                <td class="{{ $tableStyle }}">{{ $user->position->positions }}</td>
+                                <td class="{{ $tableStyle }}">{{ $user->divisionUnit->division_units }}</td>
+                                <td class="{{ $tableStyle }}">{{ $user->employee_type }}</td>
+                                <td class="{{ $tableStyle }}">{{ $user->email }}</td>
+                                <td class="{{ $tableStyle }}">{{ $user->user_type === 'hr' ? 'HR' : ucfirst($user->user_type) }}</td>
+                                <td class="py-2 px-3 flex items-end justify-end font-extralight">
+                                    <div @click="selectedUser = {{ Js::from([
+                                        'id'          => $user->id,
+                                        'first_name'  => $user->first_name,
+                                        'middle_name' => $user->middle_name,
+                                        'last_name'   => $user->last_name,
+                                        'email'       => $user->email,
+                                    ]) }}">
+                                        <flux:modal.trigger name="shared-restore-user">
+                                            <button type="button" title="Restore"
+                                                class="p-1.5 rounded-md text-zinc-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-950/30 transition">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                                </svg>
+                                            </button>
+                                        </flux:modal.trigger>
+                                    </div>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr class="py-2">
+                                <td>No users in the database</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                    <x-pagination :paginator="$usersArchived" />
+                </div>
+            </div>
+
         </div>
 
         {{-- ── Modals — rendered exactly once each ── --}}
         <x-admin.create-user-modal :positions="$positions" :divisions="$divisions" />
         <x-admin.edit-user-modal :positions="$positions" :divisions="$divisions" />
-        <x-admin.delete-user-modal />
+        <x-admin.user-action />
+        <x-admin.restore-user />
     </div>
+
+    <script>
+        function openUsers(evt, userStatus) {
+            var i, tabcontent, tablinks;
+
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            document.getElementById(userStatus).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
 </x-layouts::app>

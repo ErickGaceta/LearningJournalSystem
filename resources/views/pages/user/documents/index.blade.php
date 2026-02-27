@@ -70,7 +70,7 @@
                         <flux:table.column>Date Start - Date End</flux:table.column>
                         <flux:table.column>Hours</flux:table.column>
                         <flux:table.column>Created</flux:table.column>
-                        <flux:table.column align="center">Printed / Date</flux:table.column>
+                        <flux:table.column align="center">Prepared / Date</flux:table.column>
                         <flux:table.column>Actions</flux:table.column>
                     </flux:table.columns>
 

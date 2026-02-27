@@ -20,6 +20,7 @@ class TrainingModule extends Model
         'venue',
         'conductedby',
         'registration_fee',
+        'is_archived',
     ];
 
     protected $casts = [
