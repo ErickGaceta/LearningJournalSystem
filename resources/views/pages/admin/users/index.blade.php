@@ -10,41 +10,6 @@
         class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl"
         x-data="{ selectedUser: null }">
 
-        {{-- ── Success banner ── --}}
-        @if(session('success'))
-        <div class="rounded-lg border {{ str_contains(session('success'), 'Temporary password') ? 'bg-green-50 border-green-300' : 'bg-blue-50 border-blue-300' }} p-4">
-            <div class="flex items-start gap-3">
-                <flux:icon.check-circle class="size-5 text-green-600 mt-0.5" />
-                <div class="flex-1">
-                    <p class="font-medium text-green-900">{{ session('success') }}</p>
-
-                    @if(str_contains(session('success'), 'Temporary password'))
-                    @php
-                    preg_match('/Temporary password: (.+)$/', session('success'), $matches);
-                    $password = $matches[1] ?? '';
-                    @endphp
-                    @if($password)
-                    <div class="mt-3 p-3 bg-white border border-green-200 rounded-md">
-                        <p class="text-xs font-semibold text-gray-700 mb-1">Temporary Password (save this!):</p>
-                        <div class="flex items-center gap-2">
-                            <code class="flex-1 text-lg font-mono text-green-800 select-all">{{ $password }}</code>
-                            <flux:button size="sm" variant="ghost"
-                                onclick="navigator.clipboard.writeText('{{ $password }}'); this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy',2000)">
-                                Copy
-                            </flux:button>
-                        </div>
-                        <p class="text-xs text-gray-600 mt-2">⚠️ This password will not be shown again. The user must change it on first login.</p>
-                    </div>
-                    @endif
-                    @endif
-                </div>
-                <button type="button" onclick="this.closest('div').parentElement.remove()" class="text-gray-400 hover:text-gray-600">
-                    <flux:icon.x-mark class="size-5" />
-                </button>
-            </div>
-        </div>
-        @endif
-
         {{-- ── Admin Profiles ── --}}
         <flux:heading size="xl">Admin Profiles</flux:heading>
 
