@@ -53,7 +53,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/users', [AdminController::class, 'storeUser'])->name('users.store');
     Route::post('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
     Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('users.destroy');
-    Route::patch('/users/{user}', [AdminController::class, 'archiveUser'])->name('users.archive');
+    Route::patch('/users/{user}/archive', [AdminController::class, 'archiveUser'])->name('users.archive');
+    Route::patch('/users/{user}/restore', [AdminController::class, 'restoreUser'])->name('users.restore');
     Route::post('/users/{user}/reset-password', [AdminController::class, 'resetPassword'])->name('users.resetPassword');
 
     // Position Management

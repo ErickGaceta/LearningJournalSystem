@@ -50,16 +50,22 @@ class AdminController extends Controller
             ->with(['position:id,positions', 'divisionUnit:id,division_units'])
             ->get();
 
-        $users = User::whereIn('user_type', ['user', 'hr'])
+        $usersActive = User::whereIn('user_type', ['user', 'hr'])
             ->with(['position:id,positions', 'divisionUnit:id,division_units'])
             ->where('is_archived', 0)
+            ->latest()
+            ->paginate(15);
+
+        $usersArchived = User::whereIn('user_type', ['user', 'hr'])
+            ->with(['position:id,positions', 'divisionUnit:id,division_units'])
+            ->where('is_archived', 1)
             ->latest()
             ->paginate(15);
 
         $positions = Position::orderBy('positions')->get();
         $divisions = DivisionUnit::orderBy('division_units')->get();
 
-        return view('pages.admin.users.index', compact('users', 'admins', 'positions', 'divisions'));
+        return view('pages.admin.users.index', compact('usersActive', 'usersArchived', 'admins', 'positions', 'divisions'));
     }
 
     public function storeUser(Request $request): RedirectResponse
@@ -144,6 +150,19 @@ class AdminController extends Controller
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User archived successfully.');
+    }
+
+    public function restoreUser(User $user): RedirectResponse
+    {
+        if ($user->id === Auth::id()) {
+            return back()->withErrors(['error' => 'Failed to restore.']);
+        }
+
+        $user->is_archived = 0;
+        $user->save();
+
+        return redirect()->route('admin.users.index')
+            ->with('success', 'User restored from archive.');
     }
 
     public function destroyUser(User $user): RedirectResponse
