@@ -52,6 +52,7 @@ class AdminController extends Controller
 
         $users = User::whereIn('user_type', ['user', 'hr'])
             ->with(['position:id,positions', 'divisionUnit:id,division_units'])
+            ->where('is_archived', 0)
             ->latest()
             ->paginate(15);
 
@@ -120,7 +121,6 @@ class AdminController extends Controller
             'user_type' => ['required', 'in:hr,user'],
         ]);
 
-        // Remove password if empty (let 'hashed' cast handle hashing if provided)
         if (empty($validated['password'])) {
             unset($validated['password']);
         }
@@ -131,6 +131,19 @@ class AdminController extends Controller
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User updated successfully.');
+    }
+
+    public function archiveUser(User $user): RedirectResponse
+    {
+        if ($user->id === Auth::id()) {
+            return back()->withErrors(['error' => 'You cannot archive your own account.']);
+        }
+
+        $user->is_archived = 1;
+        $user->save();
+
+        return redirect()->route('admin.users.index')
+            ->with('success', 'User archived successfully.');
     }
 
     public function destroyUser(User $user): RedirectResponse
