@@ -23,6 +23,7 @@ class Document extends Model
         'printCount',
         'isPrinted',    
         'module_id',
+        'is_archived',
     ];
 
     protected $casts = [
