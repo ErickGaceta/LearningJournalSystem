@@ -85,7 +85,7 @@ Route::middleware(['auth'])->prefix('hr')->name('hr.')->group(function () {
     Route::delete('/assignments/{assignment}', [HRController::class, 'destroyAssignment'])->name('assignments.destroy');
 
     // Monitoring Routes
-    Route::put('/monitoring', [HRController::class, 'monitoringIndex'])->name('monitoring.index');
+    Route::get('/monitoring', [HRController::class, 'monitoringIndex'])->name('monitoring.index');
 });
 
 // ========== User Routes ==========
