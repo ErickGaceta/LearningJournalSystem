@@ -22,7 +22,7 @@
             <flux:input
                 name="login"
                 :label="__('Username/Email address')"
-                :value="old('email')"
+                :value="old('login')"
                 required
                 autofocus
                 placeholder="email@example.com" />
