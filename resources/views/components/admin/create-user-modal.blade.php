@@ -54,10 +54,16 @@
                     <flux:heading size="sm">Others</flux:heading>
                     <flux:input name="employee_id" label="Employee ID" value="{{ old('employee_id') }}" required />
                     <flux:input name="employee_type" label="Employee Type" value="{{ old('employee_type') }}" required />
+                    <flux:select name="employee_type" label="Employee Type" required>
+                        <flux:select.option value="">Select type...</flux:select.option>
+                        <flux:select.option value="permanent" :selected="old('employee_type') == 'permanent'">Permanent</flux:select.option>
+                        <flux:select.option value="cos" :selected="old('employee_type') == 'cos'">COS</flux:select.option>
+                    </flux:select>
                     <flux:select name="user_type" label="User Role" required>
                         <flux:select.option value="">Select role...</flux:select.option>
                         <flux:select.option value="user" :selected="old('user_type') == 'user'">User</flux:select.option>
                         <flux:select.option value="hr" :selected="old('user_type') == 'hr'">HR</flux:select.option>
+                        <flux:select.option value="secretary" :selected="old('user_type') == 'secretary'">Secretary</flux:select.option>
                     </flux:select>
                     <flux:checkbox name="is_active" label="Active" value="1" checked />
                 </div>

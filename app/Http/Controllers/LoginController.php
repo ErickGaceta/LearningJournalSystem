@@ -79,6 +79,7 @@ class LoginController extends Controller
         return match ($userType) {
             'admin' => redirect()->route('admin.dashboard'),
             'hr'    => redirect()->route('hr.dashboard'),
+            'secretary'    => redirect()->route('hr.dashboard'),
             default => redirect()->route('user.dashboard'),
         };
     }
