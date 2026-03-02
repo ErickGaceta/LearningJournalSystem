@@ -53,7 +53,6 @@
                 <div class="flex flex-col gap-3">
                     <flux:heading size="sm">Others</flux:heading>
                     <flux:input name="employee_id" label="Employee ID" value="{{ old('employee_id') }}" required />
-                    <flux:input name="employee_type" label="Employee Type" value="{{ old('employee_type') }}" required />
                     <flux:select name="employee_type" label="Employee Type" required>
                         <flux:select.option value="">Select type...</flux:select.option>
                         <flux:select.option value="permanent" :selected="old('employee_type') == 'permanent'">Permanent</flux:select.option>

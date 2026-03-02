@@ -99,7 +99,7 @@
                                 <td class="{{ $tableStyle }}">{{ $user->first_name . ' ' . $user->middle_name . ' ' . $user->last_name }}</td>
                                 <td class="{{ $tableStyle }}">{{ $user->position->positions }}</td>
                                 <td class="{{ $tableStyle }}">{{ $user->divisionUnit->division_units }}</td>
-                                <td class="{{ $tableStyle }}">{{ $user->employee_type }}</td>
+                                <td class="{{ $tableStyle }}">{{ ucfirst($user->employee_type) }}</td>
                                 <td class="{{ $tableStyle }}">{{ $user->email }}</td>
                                 <td class="{{ $tableStyle }}">{{ $user->user_type === 'hr' ? 'HR' : ucfirst($user->user_type) }}</td>
                                 <td class="py-2 px-3 flex items-end justify-end font-extralight">

@@ -50,13 +50,13 @@ class AdminController extends Controller
             ->with(['position:id,positions', 'divisionUnit:id,division_units'])
             ->get();
 
-        $usersActive = User::whereIn('user_type', ['user', 'hr'])
+        $usersActive = User::whereIn('user_type', ['user', 'hr', 'secretary'])
             ->with(['position:id,positions', 'divisionUnit:id,division_units'])
             ->where('is_archived', 0)
             ->latest()
             ->paginate(15);
 
-        $usersArchived = User::whereIn('user_type', ['user', 'hr'])
+        $usersArchived = User::whereIn('user_type', ['user', 'hr', 'secretary'])
             ->with(['position:id,positions', 'divisionUnit:id,division_units'])
             ->where('is_archived', 1)
             ->latest()
@@ -82,13 +82,14 @@ class AdminController extends Controller
             'username' => ['required', 'string', 'max:255', 'unique:users'],
             'email' => ['required', 'email', 'max:255', 'unique:users'],
             'is_active' => ['nullable', 'boolean'],
-            'user_type' => ['required', 'in:hr,user'],
+            'user_type' => ['required', 'string', 'max:191'],
         ]);
 
         $generatedPassword = Str::password(12); // More secure, mixed case + symbols
 
         $validated['password'] = $generatedPassword;
         $validated['is_active'] = $request->boolean('is_active');
+        $validated['is_archived'] = 0;
 
         $user = User::create($validated);
 
@@ -124,7 +125,7 @@ class AdminController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'password' => ['nullable', 'confirmed', Password::defaults()],
             'is_active' => ['nullable', 'boolean'],
-            'user_type' => ['required', 'in:hr,user'],
+            'user_type' => ['required', 'string', 'max:191'],
         ]);
 
         if (empty($validated['password'])) {
