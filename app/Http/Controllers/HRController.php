@@ -165,10 +165,18 @@ class HRController extends Controller
 
     public function monitoringIndex(){
         return view('pages.hr.monitoring.index');
+
+         $assignments = Assignment::with('module:id,title')
+            ->whereIn('module_id', $moduleIds)
+            ->get();
+
+
+        return view('pages.hr.modules.index', compact('trainingModules', 'users', 'assignments'));
     }
 
     public function destroyAssignment(Assignment $assignment): RedirectResponse
     {
+
         $assignment->delete();
 
         return redirect()->route('hr.modules.index')
