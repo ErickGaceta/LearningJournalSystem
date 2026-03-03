@@ -21,9 +21,13 @@ class Document extends Model
         'appreciation',
         'printedAt',
         'printCount',
-        'isPrinted',    
+        'isPrinted',
         'module_id',
         'is_archived',
+    ];
+
+    protected $attributes = [
+        'is_archived' => false,
     ];
 
     protected $casts = [
@@ -31,7 +35,8 @@ class Document extends Model
         'isPrinted' => 'integer',
     ];
 
-    protected static function boot() {
+    protected static function boot()
+    {
         parent::boot();
 
         static::creating(function ($document) {

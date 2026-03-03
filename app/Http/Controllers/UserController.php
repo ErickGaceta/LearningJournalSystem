@@ -10,6 +10,9 @@ use App\Models\TrainingModule;
 use App\Models\Position;
 use App\Models\DivisionUnit;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use App\Models\Signature;
+use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 
 class UserController extends Controller
@@ -57,6 +60,39 @@ class UserController extends Controller
         ));
     }
 
+    public function uploadSignature(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'signature_base64' => ['required', 'string'],
+        ]);
+
+        $user = Auth::user();
+
+        // Delete old file
+        $existing = Signature::where('employee_id', $user->id)->first();
+        if ($existing && file_exists(public_path($existing->signature_path))) {
+            unlink(public_path($existing->signature_path));
+        }
+
+        $base64   = $request->input('signature_base64');
+        $data     = base64_decode(explode(',', $base64)[1]);
+        $folder   = public_path('signatures/' . $user->id);
+        $filename = 'signatures/' . $user->id . '/' . str($user->first_name)->slug() . '-signature.png';
+
+        if (!file_exists($folder)) {
+            mkdir($folder, 0755, true);
+        }
+
+        file_put_contents(public_path($filename), $data);
+
+        Signature::updateOrCreate(
+            ['employee_id' => $user->id],
+            ['signature_path' => $filename]
+        );
+
+        return back()->with('success', 'Signature uploaded successfully!');
+    }
+
     // ========== Track Training ==========
     public function myTrainings()
     {
@@ -94,24 +130,20 @@ class UserController extends Controller
             'password' => ['nullable', 'min:8', 'confirmed'],
         ]);
 
-        // Check current password if trying to change password
         if ($request->filled('current_password')) {
             if (!Hash::check($request->current_password, $user->password)) {
                 return back()->withErrors(['current_password' => 'Current password is incorrect']);
             }
         }
 
-        $user->first_name = $validated['first_name'];
-        $user->middle_name = $validated['middle_name'];
-        $user->last_name = $validated['last_name'];
-        $user->gender = $validated['gender'];
-        $user->email = $validated['email'];
-
-        if ($request->filled('password')) {
-            $user->password = Hash::make($validated['password']);
-        }
-
-        $user->save();
+        User::find($user->id)->update([
+            'first_name' => $validated['first_name'],
+            'middle_name' => $validated['middle_name'],
+            'last_name' => $validated['last_name'],
+            'gender' => $validated['gender'],
+            'email' => $validated['email'],
+            'password' => $request->filled('password') ? Hash::make($validated['password']) : $user->password,
+        ]);
 
         return back()->with('success', 'Profile updated successfully!');
     }

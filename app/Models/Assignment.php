@@ -20,7 +20,7 @@ class Assignment extends Model
         'status',
         'is_archived',
     ];
-    
+
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -34,5 +34,24 @@ class Assignment extends Model
     public function module(): BelongsTo
     {
         return $this->belongsTo(TrainingModule::class, 'module_id');
+    }
+
+    public function getStatusBadgeAttribute(): array
+    {
+        if (!$this->module) {
+            return ['color' => 'zinc', 'label' => 'Unknown'];
+        }
+
+        $now = now();
+
+        if ($this->module->dateend < $now) {
+            return ['color' => 'green', 'label' => 'Completed'];
+        }
+
+        if ($this->module->datestart <= $now && $this->module->dateend >= $now) {
+            return ['color' => 'blue', 'label' => 'Ongoing'];
+        }
+
+        return ['color' => 'yellow', 'label' => 'Upcoming'];
     }
 }

@@ -74,6 +74,7 @@
         line-height: 0.6;
         display: block;
     }
+
     .head-body {
         margin: 0;
         padding: 0;
@@ -118,6 +119,32 @@
 
 <div class="spacer"></div>
 
-<div class="signature" style="line-height: 1; margin-right: 0;">
-    <img src="{{ public_path('documents/signature.png') }}" alt="">
+<div style="line-height: 0.3;text-align: center; width: 300px;">
+    <table>
+        <tr>
+            <td style="width: 70%; border: none;"></td>
+            <td style="width: 30%; padding: 0; text-align: center; border: none;">
+                @if($document->user->signature)
+                @php
+                $sigPath = public_path($document->user->signature->signature_path);
+                $sigBase64 = base64_encode(file_get_contents($sigPath));
+                @endphp
+                <img src="data:image/png;base64,{{ $sigBase64 }}"
+                    style="height: 50px; object-fit: contain; display: block;" />
+                @endif
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 70%; border: none;"></td>
+            <td style="width: 30%; border: none; padding: 0; text-align: center; margin: 0; border-bottom: 1px solid #000;">
+                <div class="text"><strong>{{ strtoupper($document->user->first_name) }} {{ $document->user->middle_name ? strtoupper(substr($document->user->middle_name, 0, 1)) . '.' : '' }} {{ strtoupper($document->user->last_name) }}</strong></div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 70%; border: none;"></td>
+            <td style="width: 30%; border: none; padding: 0; text-align: center; margin: 0;">
+                <div class="text">Signature</div>
+            </td>
+        </tr>
+    </table>
 </div>
