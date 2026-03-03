@@ -58,8 +58,28 @@
             </flux:card>
         </div>
 
-        <flux:button>Switch to Archived Documents</flux:button>
-        <flux:button>Switch to Active Documents</flux:button>
+        <div class="flex justify-between items-center">
+            <flux:heading size="xl">
+                {{ $showArchived ? 'Archived Journals' : 'My Learning Journals' }}
+            </flux:heading>
+            @if($showArchived)
+            <flux:button
+                :href="route('user.documents.index')"
+                icon="inbox"
+                variant="primary"
+                color="teal">
+                Active Documents
+            </flux:button>
+            @else
+            <flux:button
+                :href="route('user.documents.index', ['archived' => true])"
+                icon="archive-box"
+                variant="primary"
+                color="amber">
+                Archived Documents
+            </flux:button>
+            @endif
+        </div>
 
         @if($documents->count() > 0)
 
@@ -73,7 +93,9 @@
                         <flux:table.column>Date Start - Date End</flux:table.column>
                         <flux:table.column>Hours</flux:table.column>
                         <flux:table.column>Created</flux:table.column>
+                        @if(!$showArchived)
                         <flux:table.column align="center">Prepared / Date</flux:table.column>
+                        @endif
                         <flux:table.column>Actions</flux:table.column>
                     </flux:table.columns>
 
@@ -115,6 +137,7 @@
                                 </span>
                             </flux:table.cell>
 
+                            @if(!$showArchived)
                             <flux:table.cell align="center">
                                 <div class="flex items-center align-center justify-center gap-1 text-sm">
                                     @if($document->isPrinted === 1)
@@ -122,22 +145,28 @@
                                     @else
                                     <flux:icon.x-mark class="text-red-500" />
                                     @endif
-
-                                    {{ $document->printedAt
-                            ? $document->printedAt->format('M d, Y')
-                            : 'Not Yet Printed' }}
+                                    {{ $document->printedAt ? $document->printedAt->format('M d, Y') : 'Not Yet Printed' }}
                                 </div>
                                 <flux:text class="text-xs text-center">Print Count: {{ $document->printCount }}</flux:text>
                             </flux:table.cell>
+                            @endif
 
                             <flux:table.cell class="text-right">
                                 <div class="flex justify-end gap-2">
+                                    @if($showArchived)
+                                    <form action="{{ route('user.documents.restore', $document) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                                        <flux:button type="submit" variant="ghost" size="sm" icon="arrow-uturn-left" />
+                                    </form>
+                                    @else
                                     <flux:button
                                         :href="route('user.documents.show', $document)"
                                         variant="ghost"
                                         size="sm"
                                         icon="eye"
                                         wire:navigate />
+                                    @endif
                                 </div>
                             </flux:table.cell>
 
@@ -148,7 +177,7 @@
 
             </div>
         </div>
- <!-- Mobile View -->
+        <!-- Mobile View -->
         <div class="lg:hidden space-y-4">
             @foreach($documents as $document)
             <flux:card class="p-4 bg-transparent">
@@ -157,12 +186,20 @@
                         <flux:heading>
                             {{ $document->module->title }}
                         </flux:heading>
+                        @if($showArchived)
+                        <form action="{{ route('user.documents.restore', $document) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <flux:button type="submit" variant="ghost" size="sm" icon="arrow-uturn-left" />
+                        </form>
+                        @else
                         <flux:button
                             :href="route('user.documents.show', $document)"
                             variant="ghost"
                             size="sm"
                             icon="eye"
                             wire:navigate />
+                        @endif
                     </div>
 
                     <flux:separator />
@@ -184,6 +221,7 @@
                         Created: <flux:text variant="subtle"> {{ $document->created_at->diffForHumans() }}</flux:text>
                     </div>
 
+                    @if(!$showArchived)
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2 text-sm">
                             @if($document->isPrinted === 1)
@@ -195,6 +233,7 @@
                         </div>
                         <flux:text class="text-xs text-right">Print Count: {{ $document->printCount }}</flux:text>
                     </div>
+                    @endif
                 </div>
             </flux:card>
             @endforeach
@@ -208,8 +247,12 @@
                 <div class="bg-neutral-100 dark:bg-neutral-800 w-20 h-20 rounded-full flex items-center justify-center mb-6">
                     <flux:icon.document class="size-10 text-neutral-400" />
                 </div>
-                <h3 class="text-xl font-semibold text-heading mb-3">No Learning Journals Yet</h3>
-                <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-6">Create your first journal to get started</p>
+                <h3 class="text-xl font-semibold text-heading mb-3">
+                    {{ $showArchived ? 'No Archived Journals' : 'No Learning Journals Yet' }}
+                </h3>
+                <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-6">
+                    {{ $showArchived ? 'Archived journals will appear here' : 'Create your first journal to get started' }}
+                </p>
             </div>
         </div>
 

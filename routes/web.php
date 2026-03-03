@@ -111,6 +111,7 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
 
     // Document Print
     Route::get('/documents/{document}/preview', [DocumentPrintController::class, 'previewPdf'])->name('documents.preview');
+    Route::patch('/documents/{document}/restore', [DocumentController::class, 'restore'])->name('documents.restore');
 });
 
 require __DIR__ . '/settings.php';
