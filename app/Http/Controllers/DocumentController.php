@@ -114,23 +114,27 @@ class DocumentController extends Controller
             ->with('success', 'Document updated successfully!');
     }
 
-    public function destroy(Document $document)
+        public function archive(Document $document): RedirectResponse
     {
-        try {
-            if ($document->user_id !== Auth::id()) {
-                abort(403);
-            }
-
-            $documentTitle = $document->title;
-            $document->delete();
-
-            return redirect()
-                ->route('user.documents.index')
-                ->with('success', "Document '{$documentTitle}' has been successfully deleted.");
-        } catch (\Exception $e) {
-            return redirect()
-                ->back()
-                ->with('error', 'An error occurred while deleting the document. Please try again.');
+        // Ensure the user owns this document
+        if ($document->user_id !== auth()->id()) {
+            abort(403);
         }
+
+        $document->update(['archived_at' => now()]);
+
+        return redirect()
+            ->route('user.documents.index')
+            ->with('success', 'Learning journal archived successfully.');
+    }
+    
+        public function archiveIndex(): View
+    {
+        $documents = Document::where('user_id', auth()->id())
+            ->whereNull('archived_at')          // <-- add this line
+            ->latest()
+            ->get();
+
+        return view('user.documents.index', compact('documents'));
     }
 }
