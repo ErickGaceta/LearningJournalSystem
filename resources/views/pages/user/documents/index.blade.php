@@ -58,6 +58,9 @@
             </flux:card>
         </div>
 
+        <flux:button>Switch to Archived Documents</flux:button>
+        <flux:button>Switch to Active Documents</flux:button>
+
         @if($documents->count() > 0)
 
         <!-- Documents Table -->
