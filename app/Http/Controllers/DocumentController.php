@@ -6,7 +6,9 @@ use App\Models\Assignment;
 use App\Models\Document;
 use App\Models\TrainingModule;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class DocumentController extends Controller
 {
@@ -18,6 +20,7 @@ class DocumentController extends Controller
         // Base document query with eager loading
         $documents = Document::with('module')
             ->where('user_id', $userId)
+            ->where('isArchived', 0) 
             ->when($request->filled('search'), function ($q) use ($request) {
                 $search = $request->search;
                 $q->where(function ($q) use ($search) {
@@ -114,24 +117,23 @@ class DocumentController extends Controller
             ->with('success', 'Document updated successfully!');
     }
 
-        public function archive(Document $document): RedirectResponse
+    public function archive(Document $document): RedirectResponse
     {
-        // Ensure the user owns this document
-        if ($document->user_id !== auth()->id()) {
+        if ($document->user_id !== Auth::id()) {
             abort(403);
         }
 
-        $document->update(['archived_at' => now()]);
+        $document->update(['isArchived' => true]);
 
         return redirect()
             ->route('user.documents.index')
             ->with('success', 'Learning journal archived successfully.');
     }
-    
-        public function archiveIndex(): View
+
+    public function archiveIndex(): View
     {
-        $documents = Document::where('user_id', auth()->id())
-            ->whereNull('archived_at')          // <-- add this line
+        $documents = Document::where('user_id', Auth::id())
+            ->where('isArchived', false)
             ->latest()
             ->get();
 
