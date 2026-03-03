@@ -105,7 +105,7 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::post('/documents/{assignment}', [DocumentController::class, 'store'])->name('documents.store');
     Route::get('/documents/{document}', [DocumentController::class, 'show'])->name('documents.show');
     Route::put('/documents/{document}', [DocumentController::class, 'update'])->name('documents.update');
-    Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
+    Route::patch('/documents/{document}/archive', [DocumentController::class, 'archive'])->name('documents.archive');
 
     Route::post('/signature', [UserController::class, 'uploadSignature'])->name('signature.save');
 

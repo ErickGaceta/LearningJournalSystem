@@ -33,19 +33,21 @@
             <div class="flex flex-wrap gap-2 lg:flex-nowrap">
                 <!-- Toggle Edit / Cancel -->
                 <div x-data="{ open: false }" class="flex gap-4 align-end justify-end items-end w-full">
+                    {{-- Archive Button (desktop) --}}
                     <div class="hidden lg:flex">
                         <flux:button
                             x-on:click="open = true"
-                            icon="trash"
-                            variant="danger">
-                            Delete
+                            icon="archive-box"
+                            variant="filled" class="bg-amber-500 hover:bg-amber-600 text-white dark:bg-amber-500 dark:hover:bg-amber-600">
+                            Archive
                         </flux:button>
                     </div>
+                    {{-- Archive Button (mobile) --}}
                     <div class="flex lg:hidden">
                         <flux:button
                             x-on:click="open = true"
-                            icon="trash"
-                            variant="danger">
+                            icon="archive-box"
+                            variant="filled" class="bg-amber-500 hover:bg-amber-600 text-white dark:bg-amber-500 dark:hover:bg-amber-600">
                         </flux:button>
                     </div>
 
@@ -98,17 +100,18 @@
                         </flux:button>
                     </div>
 
+                    {{-- Archive Confirmation Modal --}}
                     <flux:modal x-model="open" class="min-w-88">
-                        <form action="{{ route('user.documents.destroy', $document) }}" method="POST">
+                        <form action="{{ route('user.documents.archive', $document) }}" method="POST">
                             @csrf
-                            @method('DELETE')
+                            @method('PATCH')
 
                             <div class="flex">
                                 <div class="flex-1">
-                                    <flux:heading size="lg">Are you sure?</flux:heading>
+                                    <flux:heading size="lg">Archive this journal?</flux:heading>
                                     <flux:text class="mt-2">
-                                        This learning journal will be deleted permanently.<br>
-                                        This action cannot be undone.
+                                        This learning journal will be archived and hidden from your active records.<br>
+                                        You can restore it later from your archived documents.
                                     </flux:text>
                                 </div>
                                 <div class="-mx-2 -mt-2">
@@ -127,8 +130,8 @@
                                     variant="ghost">
                                     Cancel
                                 </flux:button>
-                                <flux:button type="submit" variant="danger">
-                                    Delete
+                                <flux:button type="submit" variant="filled" class="bg-amber-500 hover:bg-amber-600 text-white dark:bg-amber-500 dark:hover:bg-amber-600">
+                                    Archive
                                 </flux:button>
                             </div>
 

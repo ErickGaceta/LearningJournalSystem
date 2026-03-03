@@ -36,7 +36,7 @@ return new class extends Migration
             $table->integer('isPrinted');
             $table->integer('printCount')->nullable();
             $table->foreignId('module_id')->constrained('training_module')->onDelete('cascade');
-            $table->date('printedAt')->nullable();
+            $table->date('printedAt')->nullable();$table->int('isArchived');
             $table->timestamps();
         });
     }
