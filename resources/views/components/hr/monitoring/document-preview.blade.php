@@ -16,7 +16,7 @@
     {{-- PDF iframe --}}
     <iframe
         src="{{ route('hr.monitoring.document.preview', $document) }}"
-        style="width: 100%; height: {{ $height }}; border: none; display: block;"
+        @style(["width: 100%", "height: {$height}", "border: none", "display: block"])
         loading="lazy"
         title="Learning Journal Preview">
         <p class="p-4 text-zinc-400 text-sm">

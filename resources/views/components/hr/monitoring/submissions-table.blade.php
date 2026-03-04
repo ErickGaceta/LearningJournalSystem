@@ -16,7 +16,6 @@
             <flux:table.column>Date Submitted</flux:table.column>
             <flux:table.column>Printed On</flux:table.column>
             <flux:table.column></flux:table.column>
-            <flux:table.column></flux:table.column>
         </flux:table.columns>
 
         <flux:table.rows>
@@ -92,16 +91,16 @@
                             <flux:button size="sm" variant="ghost" icon:trailing="ellipsis-horizontal"></flux:button>
                             <flux:menu>
                                 <flux:menu.item
-                                    icon="eye"
+                                    icon="bolt"
                                     x-data
                                     x-on:click="$dispatch('open-document-preview', { id: {{ $doc->id }} })">
-                                    View Document
+                                    Generate Certificate
                                 </flux:menu.item>
                                 <flux:menu.item
-                                    icon="printer"
+                                    icon="eye"
                                     :href="route('hr.monitoring.document.preview', $doc)"
                                     target="_blank">
-                                    Print / Export PDF
+                                    View PDF
                                 </flux:menu.item>
                             </flux:menu>
                         </flux:dropdown>
@@ -113,7 +112,7 @@
             </flux:table.row>
             @empty
             <flux:table.row>
-                <flux:table.cell colspan="7" class="text-center py-6">
+                <flux:table.cell colspan="8" class="text-center py-6">
                     <flux:text class="text-zinc-500">No users assigned to this training.</flux:text>
                 </flux:table.cell>
             </flux:table.row>

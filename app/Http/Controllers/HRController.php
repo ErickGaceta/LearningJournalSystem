@@ -215,18 +215,8 @@ class HRController extends Controller
         return view('pages.hr.monitoring.index', compact('quarters', 'year', 'availableYears'));
     }
 
-    public function destroyAssignment(Assignment $assignment): RedirectResponse
-    {
-
-        $assignment->delete();
-
-        return redirect()->route('hr.modules.index')
-            ->with('success', 'Assignment removed successfully.');
-    }
-
     public function previewDocument(Document $document): \Illuminate\Http\Response
     {
-        // Eager-load everything the template needs
         $document->load([
             'user.position',
             'user.divisionUnit',
@@ -234,35 +224,57 @@ class HRController extends Controller
             'module',
         ]);
 
-        $html = view('pdf.document', compact('document'))->render();
+        $user   = $document->user;
+        $module = $document->module;
+        $date   = now()->format('Y-m-d');
 
-        $pdf = new \TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+        $html = view('pages.user.documents.print', compact('document', 'user', 'module', 'date'))->render();
 
-        $pdf->SetProtection(
-            permissions: [],
-            user_pass: '',
-            owner_pass: env('PDF_OWNER_PASSWORD', 'changeme'),
+        $pdf = new \App\Pdf\LearningJournalPDF(
+            PDF_PAGE_ORIENTATION,
+            PDF_UNIT,
+            PDF_PAGE_FORMAT,
+            true,
+            'UTF-8',
+            false
         );
 
+        // ── Read-only: view only, no printing/copying/editing ──
+        $pdf->SetProtection([], '', env('PDF_OWNER_PASSWORD', 'changeme'), 0);
+
         $pdf->SetCreator(config('app.name'));
-        $pdf->SetAuthor($document->user->full_name);
-        $pdf->SetTitle($document->module->title . ' — Learning Journal');
+        $pdf->SetAuthor($document->fullname);
+        $pdf->SetTitle(($module?->title ?? 'Learning Journal') . ' - ' . $date);
         $pdf->SetSubject('Learning Journal');
         $pdf->SetKeywords('');
 
-        $pdf->SetMargins(15, 15, 15);
-        $pdf->SetAutoPageBreak(true, 15);
-        $pdf->setPrintHeader(false);
-        $pdf->setPrintFooter(false);
+        $pdf->setHeaderImagePath(public_path('documents/header.PNG'));
+        $pdf->setFooterImagePath(public_path('documents/footer.PNG'));
+
+        $pdf->setPrintHeader(true);
+        $pdf->setPrintFooter(true);
+
+        $pdf->SetMargins(10, 30, 10);
+        $pdf->SetHeaderMargin(0);
+        $pdf->SetFooterMargin(25);
+        $pdf->SetAutoPageBreak(true, 30);
+
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        $pdf->SetFont('dejavusans', '', 10);
 
         $pdf->AddPage();
         $pdf->writeHTML($html, true, false, true, false, '');
 
-        $raw = $pdf->Output('learning-journal.pdf', 'S');
+        // No print count update — HR preview is read-only and non-destructive
 
-        return response($raw, 200)
+        $filename = ($module?->title ?? 'Learning Journal')
+            . ' - ' . $date
+            . ' - ' . $document->fullname
+            . '.pdf';
+
+        return response($pdf->Output($filename, 'S'), 200)
             ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="learning-journal.pdf"')
+            ->header('Content-Disposition', 'inline; filename="' . $filename . '"')
             ->header('Cache-Control', 'no-store, no-cache');
     }
 }
