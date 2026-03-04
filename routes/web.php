@@ -86,6 +86,7 @@ Route::middleware(['auth'])->prefix('hr')->name('hr.')->group(function () {
 
     // Monitoring Routes
     Route::get('/monitoring', [HRController::class, 'monitoringIndex'])->name('monitoring.index');
+    Route::get('/monitoring/documents/{document}/preview', [HRController::class, 'previewDocument'])->name('monitoring.document.preview');
 });
 
 // ========== User Routes ==========

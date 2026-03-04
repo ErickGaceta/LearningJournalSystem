@@ -8,13 +8,15 @@
 
     <flux:table>
         <flux:table.columns>
-            <flux:table.column>#</flux:table.column>
+            <flux:table.column align="center">#</flux:table.column>
             <flux:table.column>Employee</flux:table.column>
             <flux:table.column>Position</flux:table.column>
             <flux:table.column align="center">Document</flux:table.column>
             <flux:table.column align="center">Printed</flux:table.column>
             <flux:table.column>Date Submitted</flux:table.column>
             <flux:table.column>Printed On</flux:table.column>
+            <flux:table.column></flux:table.column>
+            <flux:table.column></flux:table.column>
         </flux:table.columns>
 
         <flux:table.rows>
@@ -26,7 +28,7 @@
             @endphp
             <flux:table.row :key="'asgn-'.$assignment->id">
 
-                <flux:table.cell>
+                <flux:table.cell align="center">
                     <span class="text-sm text-zinc-500">{{ $ai + 1 }}</span>
                 </flux:table.cell>
 
@@ -81,6 +83,30 @@
                         </flux:text>
                     @else
                         <span class="text-sm">—</span>
+                    @endif
+                </flux:table.cell>
+
+                <flux:table.cell align="center">
+                    @if($hasDoc)
+                        <flux:dropdown>
+                            <flux:button size="sm" variant="ghost" icon:trailing="ellipsis-horizontal"></flux:button>
+                            <flux:menu>
+                                <flux:menu.item
+                                    icon="eye"
+                                    x-data
+                                    x-on:click="$dispatch('open-document-preview', { id: {{ $doc->id }} })">
+                                    View Document
+                                </flux:menu.item>
+                                <flux:menu.item
+                                    icon="printer"
+                                    :href="route('hr.monitoring.document.preview', $doc)"
+                                    target="_blank">
+                                    Print / Export PDF
+                                </flux:menu.item>
+                            </flux:menu>
+                        </flux:dropdown>
+                    @else
+                        <span class="text-zinc-600 text-sm">—</span>
                     @endif
                 </flux:table.cell>
 

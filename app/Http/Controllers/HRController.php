@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use App\Models\TrainingModule;
 use App\Models\Assignment;
+use App\Models\Document;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -221,5 +222,47 @@ class HRController extends Controller
 
         return redirect()->route('hr.modules.index')
             ->with('success', 'Assignment removed successfully.');
+    }
+
+    public function previewDocument(Document $document): \Illuminate\Http\Response
+    {
+        // Eager-load everything the template needs
+        $document->load([
+            'user.position',
+            'user.divisionUnit',
+            'user.signature',
+            'module',
+        ]);
+
+        $html = view('pdf.document', compact('document'))->render();
+
+        $pdf = new \TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+
+        $pdf->SetProtection(
+            permissions: [],
+            user_pass: '',
+            owner_pass: env('PDF_OWNER_PASSWORD', 'changeme'),
+        );
+
+        $pdf->SetCreator(config('app.name'));
+        $pdf->SetAuthor($document->user->full_name);
+        $pdf->SetTitle($document->module->title . ' — Learning Journal');
+        $pdf->SetSubject('Learning Journal');
+        $pdf->SetKeywords('');
+
+        $pdf->SetMargins(15, 15, 15);
+        $pdf->SetAutoPageBreak(true, 15);
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+
+        $pdf->AddPage();
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        $raw = $pdf->Output('learning-journal.pdf', 'S');
+
+        return response($raw, 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="learning-journal.pdf"')
+            ->header('Cache-Control', 'no-store, no-cache');
     }
 }
