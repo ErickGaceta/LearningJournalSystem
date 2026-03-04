@@ -168,40 +168,47 @@ class HRController extends Controller
     {
         $search = $request->get('search');
         $year   = $request->get('year', now()->year);
+        $now    = now();
 
-        $query = \App\Models\Document::with(['user.position', 'user.divisionUnit', 'module'])
-            ->whereYear('created_at', $year)
-            ->where('isArchived', false)
-            ->when($search, function ($q) use ($search) {
-                $q->where(function ($q) use ($search) {
-                    $q->where('fullname', 'like', "%{$search}%")
-                        ->orWhereHas('module', fn($q) => $q->where('title', 'like', "%{$search}%"))
-                        ->orWhereHas(
-                            'user',
-                            fn($q) =>
-                            $q->where('first_name', 'like', "%{$search}%")
-                                ->orWhere('last_name',  'like', "%{$search}%")
-                        );
-                });
+        $allModules = TrainingModule::with([
+            'assignments.user.position',
+            'documents',
+        ])
+            ->whereYear('datestart', $year)
+            ->when($search, fn($q) => $q->where(function ($q) use ($search) {
+                $q->where('title',       'like', "%{$search}%")
+                    ->orWhere('venue',       'like', "%{$search}%")
+                    ->orWhere('conductedby', 'like', "%{$search}%")
+                    ->orWhereHas(
+                        'assignments',
+                        fn($q) =>
+                        $q->where('employee_name', 'like', "%{$search}%")
+                    );
+            }))
+            ->orderBy('datestart')
+            ->get()
+            ->each(function ($module) use ($now) {
+                $module->status = match (true) {
+                    $module->datestart > $now => 'upcoming',
+                    $module->dateend   < $now => 'completed',
+                    default                   => 'ongoing',
+                };
+                $module->documentsByUser = $module->documents->keyBy('user_id');
             });
 
-        $allDocuments = $query->orderBy('created_at', 'desc')->get();
-
-        // Group into quarters by created_at month
         $quarters = [
-            1 => ['label' => 'Quarter 1', 'range' => 'Jan – Mar', 'months' => [1, 2, 3],   'documents' => collect()],
-            2 => ['label' => 'Quarter 2', 'range' => 'Apr – Jun', 'months' => [4, 5, 6],   'documents' => collect()],
-            3 => ['label' => 'Quarter 3', 'range' => 'Jul – Sep', 'months' => [7, 8, 9],   'documents' => collect()],
-            4 => ['label' => 'Quarter 4', 'range' => 'Oct – Dec', 'months' => [10, 11, 12], 'documents' => collect()],
+            1 => ['label' => 'Quarter 1', 'range' => 'Jan - Mar', 'modules' => collect()],
+            2 => ['label' => 'Quarter 2', 'range' => 'Apr - Jun', 'modules' => collect()],
+            3 => ['label' => 'Quarter 3', 'range' => 'Jul - Sep', 'modules' => collect()],
+            4 => ['label' => 'Quarter 4', 'range' => 'Oct - Dec', 'modules' => collect()],
         ];
 
-        foreach ($allDocuments as $document) {
-            $month = $document->created_at->month;
-            $quarter = (int) ceil($month / 3);
-            $quarters[$quarter]['documents']->push($document);
+        foreach ($allModules as $module) {
+            $q = (int) ceil($module->datestart->month / 3);
+            $quarters[$q]['modules']->push($module);
         }
 
-        $oldestYear = \App\Models\Document::min(DB::raw('YEAR(created_at)')) ?? now()->year;
+        $oldestYear     = TrainingModule::min(DB::raw('YEAR(datestart)')) ?? now()->year;
         $availableYears = range(now()->year, $oldestYear);
 
         return view('pages.hr.monitoring.index', compact('quarters', 'year', 'availableYears'));
