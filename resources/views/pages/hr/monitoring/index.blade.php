@@ -36,9 +36,7 @@
 
         <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
             <flux:card>
-                <flux:heading size="sm">
-                    Quater 1
-                    <flux:text size="sm">(Jan-March)</flux:text>
+                <flux:heading size="lg" class="flex">Quater 1<flux:text size="sm">(Jan-Mar)</flux:text>
                 </flux:heading>
                 <flux:text class="mt-2 mb-4">
 
@@ -46,9 +44,7 @@
             </flux:card>
 
             <flux:card>
-                <flux:heading size="sm">
-                    Quater 2
-                    <flux:text size="sm">(April-June)</flux:text>
+                <flux:heading size="lg" class="flex">Quater 2<flux:text size="sm">(April-June)</flux:text>
                 </flux:heading>
                 <flux:text class="mt-2 mb-4">
 
@@ -56,9 +52,7 @@
             </flux:card>
 
             <flux:card>
-                <flux:heading size="sm">
-                    Quater 3
-                    <flux:text size="sm">(July-Sept)</flux:text>
+                <flux:heading size="lg" class="flex">Quater 3<flux:text size="sm">(July-Sept)</flux:text>
                 </flux:heading>
                 <flux:text class="mt-2 mb-4">
 
@@ -66,9 +60,7 @@
             </flux:card>
 
             <flux:card>
-                <flux:heading size="sm">
-                    Quater 4
-                    <flux:text size="sm">(Oct-Dec)</flux:text>
+                    <flux:heading size="lg" class="flex">Quater 4<flux:text size="sm">(Oct-Dec)</flux:text>
                 </flux:heading>
                 <flux:text class="mt-2 mb-4">
 
