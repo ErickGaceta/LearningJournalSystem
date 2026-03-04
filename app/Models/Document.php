@@ -23,11 +23,11 @@ class Document extends Model
         'printCount',
         'isPrinted',
         'module_id',
-        'is_archived',
+        'isArchived',
     ];
 
     protected $attributes = [
-        'is_archived' => false,
+        'isArchived' => false,
     ];
 
     protected $casts = [

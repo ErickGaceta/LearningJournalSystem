@@ -36,7 +36,7 @@ class DocumentController extends Controller
         $documentCount = $documents->total();
 
         $totalHours = Assignment::where('user_id', $userId)
-            ->join('training_module', 'assignme nts.module_id', '=', 'training_module.id')
+            ->join('training_module', 'assignments.module_id', '=', 'training_module.id')
             ->sum('training_module.hours');
 
         $totalYearlyDocument = Document::where('user_id', $userId)
