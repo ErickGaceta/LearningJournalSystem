@@ -1,15 +1,5 @@
 <x-layouts::app :title="__('All Documents')">
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
-        @if(session('success'))
-        <div class="bg-green-500/10 border border-green-500/20 text-green-400 px-4 py-3 rounded-xl text-sm">
-            <div class="flex items-center">
-                <svg class="w-3 h-3 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                </svg>
-                {{ session('success') }}
-            </div>
-        </div>
-        @endif
 
         <!-- Search Bar -->
         <div class="relative overflow-hidden">
@@ -58,6 +48,29 @@
             </flux:card>
         </div>
 
+        <div class="flex justify-between items-center">
+            <flux:heading size="xl">
+                {{ $showArchived ? 'Archived Journals' : 'My Learning Journals' }}
+            </flux:heading>
+            @if($showArchived)
+            <flux:button
+                :href="route('user.documents.index')"
+                icon="inbox"
+                variant="primary"
+                color="teal">
+                Active Documents
+            </flux:button>
+            @else
+            <flux:button
+                :href="route('user.documents.index', ['archived' => true])"
+                icon="archive-box"
+                variant="primary"
+                color="amber">
+                Archived Documents
+            </flux:button>
+            @endif
+        </div>
+
         @if($documents->count() > 0)
 
         <!-- Documents Table -->
@@ -70,7 +83,9 @@
                         <flux:table.column>Date Start - Date End</flux:table.column>
                         <flux:table.column>Hours</flux:table.column>
                         <flux:table.column>Created</flux:table.column>
+                        @if(!$showArchived)
                         <flux:table.column align="center">Prepared / Date</flux:table.column>
+                        @endif
                         <flux:table.column>Actions</flux:table.column>
                     </flux:table.columns>
 
@@ -112,6 +127,7 @@
                                 </span>
                             </flux:table.cell>
 
+                            @if(!$showArchived)
                             <flux:table.cell align="center">
                                 <div class="flex items-center align-center justify-center gap-1 text-sm">
                                     @if($document->isPrinted === 1)
@@ -119,22 +135,28 @@
                                     @else
                                     <flux:icon.x-mark class="text-red-500" />
                                     @endif
-
-                                    {{ $document->printedAt
-                            ? $document->printedAt->format('M d, Y')
-                            : 'Not Yet Printed' }}
+                                    {{ $document->printedAt ? $document->printedAt->format('M d, Y') : 'Not Yet Printed' }}
                                 </div>
                                 <flux:text class="text-xs text-center">Print Count: {{ $document->printCount }}</flux:text>
                             </flux:table.cell>
+                            @endif
 
                             <flux:table.cell class="text-right">
                                 <div class="flex justify-end gap-2">
+                                    @if($showArchived)
+                                    <form action="{{ route('user.documents.restore', $document) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                                        <flux:button type="submit" variant="ghost" size="sm" icon="arrow-uturn-left" />
+                                    </form>
+                                    @else
                                     <flux:button
                                         :href="route('user.documents.show', $document)"
                                         variant="ghost"
                                         size="sm"
                                         icon="eye"
                                         wire:navigate />
+                                    @endif
                                 </div>
                             </flux:table.cell>
 
@@ -145,7 +167,7 @@
 
             </div>
         </div>
- <!-- Mobile View -->
+        <!-- Mobile View -->
         <div class="lg:hidden space-y-4">
             @foreach($documents as $document)
             <flux:card class="p-4 bg-transparent">
@@ -154,12 +176,20 @@
                         <flux:heading>
                             {{ $document->module->title }}
                         </flux:heading>
+                        @if($showArchived)
+                        <form action="{{ route('user.documents.restore', $document) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <flux:button type="submit" variant="ghost" size="sm" icon="arrow-uturn-left" />
+                        </form>
+                        @else
                         <flux:button
                             :href="route('user.documents.show', $document)"
                             variant="ghost"
                             size="sm"
                             icon="eye"
                             wire:navigate />
+                        @endif
                     </div>
 
                     <flux:separator />
@@ -181,6 +211,7 @@
                         Created: <flux:text variant="subtle"> {{ $document->created_at->diffForHumans() }}</flux:text>
                     </div>
 
+                    @if(!$showArchived)
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2 text-sm">
                             @if($document->isPrinted === 1)
@@ -192,6 +223,7 @@
                         </div>
                         <flux:text class="text-xs text-right">Print Count: {{ $document->printCount }}</flux:text>
                     </div>
+                    @endif
                 </div>
             </flux:card>
             @endforeach
@@ -205,8 +237,12 @@
                 <div class="bg-neutral-100 dark:bg-neutral-800 w-20 h-20 rounded-full flex items-center justify-center mb-6">
                     <flux:icon.document class="size-10 text-neutral-400" />
                 </div>
-                <h3 class="text-xl font-semibold text-heading mb-3">No Learning Journals Yet</h3>
-                <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-6">Create your first journal to get started</p>
+                <h3 class="text-xl font-semibold text-heading mb-3">
+                    {{ $showArchived ? 'No Archived Journals' : 'No Learning Journals Yet' }}
+                </h3>
+                <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-6">
+                    {{ $showArchived ? 'Archived journals will appear here' : 'Create your first journal to get started' }}
+                </p>
             </div>
         </div>
 

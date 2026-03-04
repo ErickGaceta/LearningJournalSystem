@@ -16,11 +16,11 @@ class DocumentController extends Controller
     {
         $userId = Auth::id();
         $year = now()->year;
+        $showArchived = $request->boolean('archived');
 
-        // Base document query with eager loading
         $documents = Document::with('module')
             ->where('user_id', $userId)
-            ->where('isArchived', 0) 
+            ->where('isArchived', $showArchived)
             ->when($request->filled('search'), function ($q) use ($request) {
                 $search = $request->search;
                 $q->where(function ($q) use ($search) {
@@ -33,7 +33,6 @@ class DocumentController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        // Total counts and hours, done efficiently
         $documentCount = $documents->total();
 
         $totalHours = Assignment::where('user_id', $userId)
@@ -49,7 +48,8 @@ class DocumentController extends Controller
             'documentCount',
             'totalHours',
             'totalYearlyDocument',
-            'year'
+            'year',
+            'showArchived'
         ));
     }
 
@@ -96,6 +96,19 @@ class DocumentController extends Controller
         return view('pages.user.documents.show', compact('document'));
     }
 
+    public function restore(Document $document): RedirectResponse
+    {
+        if ($document->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $document->update(['isArchived' => false]);
+
+        return redirect()
+            ->route('user.documents.index', ['archived' => true])
+            ->with('success', 'Learning journal restored successfully.');
+    }
+
     public function update(Request $request, Document $document)
     {
         if ($document->user_id !== Auth::id()) {
@@ -133,10 +146,10 @@ class DocumentController extends Controller
     public function archiveIndex(): View
     {
         $documents = Document::where('user_id', Auth::id())
-            ->where('isArchived', false)
+            ->where('isArchived', true)
             ->latest()
             ->get();
 
-        return view('user.documents.index', compact('documents'));
+        return view('pages.user.documents.index', compact('documents'));
     }
 }

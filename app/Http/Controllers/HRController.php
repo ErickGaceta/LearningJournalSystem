@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use App\Models\TrainingModule;
 use App\Models\Assignment;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class HRController extends Controller
 {
@@ -163,15 +164,47 @@ class HRController extends Controller
             ->with('success', 'Training assigned successfully.');
     }
 
-    public function monitoringIndex(){
-        return view('pages.hr.monitoring.index');
+    public function monitoringIndex(Request $request)
+    {
+        $search = $request->get('search');
+        $year   = $request->get('year', now()->year);
 
-         $assignments = Assignment::with('module:id,title')
-            ->whereIn('module_id', $moduleIds)
-            ->get();
+        $query = \App\Models\Document::with(['user.position', 'user.divisionUnit', 'module'])
+            ->whereYear('created_at', $year)
+            ->where('isArchived', false)
+            ->when($search, function ($q) use ($search) {
+                $q->where(function ($q) use ($search) {
+                    $q->where('fullname', 'like', "%{$search}%")
+                        ->orWhereHas('module', fn($q) => $q->where('title', 'like', "%{$search}%"))
+                        ->orWhereHas(
+                            'user',
+                            fn($q) =>
+                            $q->where('first_name', 'like', "%{$search}%")
+                                ->orWhere('last_name',  'like', "%{$search}%")
+                        );
+                });
+            });
 
+        $allDocuments = $query->orderBy('created_at', 'desc')->get();
 
-        return view('pages.hr.modules.index', compact('trainingModules', 'users', 'assignments'));
+        // Group into quarters by created_at month
+        $quarters = [
+            1 => ['label' => 'Quarter 1', 'range' => 'Jan – Mar', 'months' => [1, 2, 3],   'documents' => collect()],
+            2 => ['label' => 'Quarter 2', 'range' => 'Apr – Jun', 'months' => [4, 5, 6],   'documents' => collect()],
+            3 => ['label' => 'Quarter 3', 'range' => 'Jul – Sep', 'months' => [7, 8, 9],   'documents' => collect()],
+            4 => ['label' => 'Quarter 4', 'range' => 'Oct – Dec', 'months' => [10, 11, 12], 'documents' => collect()],
+        ];
+
+        foreach ($allDocuments as $document) {
+            $month = $document->created_at->month;
+            $quarter = (int) ceil($month / 3);
+            $quarters[$quarter]['documents']->push($document);
+        }
+
+        $oldestYear = \App\Models\Document::min(DB::raw('YEAR(created_at)')) ?? now()->year;
+        $availableYears = range(now()->year, $oldestYear);
+
+        return view('pages.hr.monitoring.index', compact('quarters', 'year', 'availableYears'));
     }
 
     public function destroyAssignment(Assignment $assignment): RedirectResponse

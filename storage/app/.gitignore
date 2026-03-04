@@ -1,6 +1,0 @@
-*
-!private/
-!public/
-!.gitignore
-!templates/
-!templates/*
