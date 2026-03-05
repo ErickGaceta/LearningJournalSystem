@@ -48,14 +48,39 @@
             </flux:card>
         </div>
 
-        <div class="flex flex-col w-full gap-2">
-            <div class="flex justify-end">
-                <flux:modal.trigger name="create-module">
-                    <flux:button size="sm" icon="folder-plus" variant="primary" color="teal">
-                        Create New Training
-                    </flux:button>
-                </flux:modal.trigger>
-            </div>
+        <div class="flex justify-between items-center">
+    <div class="flex items-center gap-2">
+        <flux:heading size="xl">
+            {{ $showArchived ? 'Archived Training Modules' : 'Training Modules and Assignments' }}
+        </flux:heading>
+    </div>
+
+    <div class="flex items-center gap-2">
+        @if($showArchived)
+        <flux:button
+            :href="route('hr.modules.index')"
+            icon="inbox"
+            variant="primary"
+            color="teal">
+            Active Modules
+        </flux:button>
+        @else
+        <flux:modal.trigger name="create-module">
+            <flux:button size="sm" icon="folder-plus" variant="primary" color="teal">
+                Create New Training
+            </flux:button>
+        </flux:modal.trigger>
+
+        <flux:button
+            :href="route('hr.modules.index', ['archived' => true])"
+            icon="archive-box"
+            variant="primary"
+            color="amber">
+            Archived Modules
+        </flux:button>
+        @endif
+    </div>
+</div>
 
             <!-- Desktop Table -->
             <div class="hidden lg:block">
