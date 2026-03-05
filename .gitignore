@@ -10,4 +10,4 @@ yarn-error.log
 vendor
 node_modules
 .database/seeders
-storage/
+storage/framework/cache/*
