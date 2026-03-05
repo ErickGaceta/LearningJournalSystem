@@ -17,7 +17,7 @@
 <div class="overflow-x-auto">
     <flux:table x-data="{ expanded: {} }">
         <flux:table.columns>
-            <flux:table.column align="center">#</flux:table.column>
+            <flux:table.column align="end">#</flux:table.column>
             <flux:table.column>Training Title</flux:table.column>
             <flux:table.column>Venue</flux:table.column>
             <flux:table.column>Date Start - Date End</flux:table.column>
@@ -62,7 +62,7 @@
                 class="{{ $isCompleted ? 'cursor-pointer' : '' }}"
                 x-on:click="{{ $isCompleted ? 'expanded['.$module->id.'] = !expanded['.$module->id.']' : '' }}">
 
-                <flux:table.cell align="center">
+                <flux:table.cell align="end">
                     <span class="text-sm text-zinc-500">{{ $mi + 1 }}</span>
                 </flux:table.cell>
 

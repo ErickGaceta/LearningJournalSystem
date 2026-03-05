@@ -21,9 +21,9 @@
         <flux:table.rows>
             @forelse($module->assignments as $ai => $assignment)
             @php
-                $doc     = $module->documentsByUser->get($assignment->user_id);
-                $hasDoc  = $doc !== null;
-                $printed = $hasDoc && $doc->isPrinted === 1;
+            $doc = $module->documentsByUser->get($assignment->user_id);
+            $hasDoc = $doc !== null;
+            $printed = $hasDoc && $doc->isPrinted === 1;
             @endphp
             <flux:table.row :key="'asgn-'.$assignment->id">
 
@@ -43,28 +43,28 @@
 
                 <flux:table.cell align="center">
                     @if($hasDoc)
-                        <div class="flex items-center justify-center gap-1">
-                            <flux:icon.check class="text-green-500 w-4 h-4" />
-                            <flux:badge color="green" size="sm">Submitted</flux:badge>
-                        </div>
+                    <div class="flex items-center justify-center gap-1">
+                        <flux:icon.check class="text-green-500 w-4 h-4" />
+                        <flux:badge color="green" size="sm">Submitted</flux:badge>
+                    </div>
                     @else
-                        <div class="flex items-center justify-center gap-1">
-                            <flux:icon.x-mark class="text-red-500 w-4 h-4" />
-                            <flux:badge color="red" size="sm">No Document</flux:badge>
-                        </div>
+                    <div class="flex items-center justify-center gap-1">
+                        <flux:icon.x-mark class="text-red-500 w-4 h-4" />
+                        <flux:badge color="red" size="sm">No Document</flux:badge>
+                    </div>
                     @endif
                 </flux:table.cell>
 
                 <flux:table.cell align="center">
                     @if(!$hasDoc)
-                        <span class="text-zinc-600 text-sm">—</span>
+                    <span class="text-zinc-600 text-sm">—</span>
                     @elseif($printed)
-                        <div class="flex items-center justify-center gap-1">
-                            <flux:icon.check class="text-green-500 w-4 h-4" />
-                            <flux:badge color="green" size="sm">Printed</flux:badge>
-                        </div>
+                    <div class="flex items-center justify-center gap-1">
+                        <flux:icon.check class="text-green-500 w-4 h-4" />
+                        <flux:badge color="green" size="sm">Printed</flux:badge>
+                    </div>
                     @else
-                        <flux:badge color="zinc" size="sm">Pending</flux:badge>
+                    <flux:badge color="zinc" size="sm">Pending</flux:badge>
                     @endif
                 </flux:table.cell>
 
@@ -76,36 +76,36 @@
 
                 <flux:table.cell>
                     @if($hasDoc && $printed && $doc->printedAt)
-                        <span class="text-sm">{{ $doc->printedAt->format('M d, Y') }}</span>
-                        <flux:text size="xs" class="text-zinc-500">
-                            ({{ $doc->printCount }} {{ Str::plural('time', $doc->printCount) }})
-                        </flux:text>
+                    <span class="text-sm">{{ $doc->printedAt->format('M d, Y') }}</span>
+                    <flux:text size="xs" class="text-zinc-500">
+                        ({{ $doc->printCount }} {{ Str::plural('time', $doc->printCount) }})
+                    </flux:text>
                     @else
-                        <span class="text-sm">—</span>
+                    <span class="text-sm">—</span>
                     @endif
                 </flux:table.cell>
 
                 <flux:table.cell align="center">
                     @if($hasDoc)
-                        <flux:dropdown>
-                            <flux:button size="sm" variant="ghost" icon:trailing="ellipsis-horizontal"></flux:button>
-                            <flux:menu>
-                                <flux:menu.item
-                                    icon="bolt"
-                                    x-data
-                                    x-on:click="$dispatch('open-document-preview', { id: {{ $doc->id }} })">
-                                    Generate Certificate
-                                </flux:menu.item>
-                                <flux:menu.item
-                                    icon="eye"
-                                    :href="route('hr.monitoring.document.preview', $doc)"
-                                    target="_blank">
-                                    View PDF
-                                </flux:menu.item>
-                            </flux:menu>
-                        </flux:dropdown>
+                    <flux:dropdown>
+                        <flux:button size="sm" variant="ghost" icon:trailing="ellipsis-horizontal"></flux:button>
+                        <flux:menu>
+                            <flux:menu.item
+                                icon="bolt"
+                                x-data
+                                x-on:click="$dispatch('open-document-preview', { id: {{ $doc->id }} })">
+                                Generate Certificate
+                            </flux:menu.item>
+                            <flux:menu.item
+                                icon="eye"
+                                x-data
+                                x-on:click="$dispatch('open-document-preview', { id: {{ $doc->id }}, toolbar: '0' })">
+                                View PDF
+                            </flux:menu.item>
+                        </flux:menu>
+                    </flux:dropdown>
                     @else
-                        <span class="text-zinc-600 text-sm">—</span>
+                    <span class="text-zinc-600 text-sm">—</span>
                     @endif
                 </flux:table.cell>
 

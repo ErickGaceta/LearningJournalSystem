@@ -164,7 +164,6 @@
                         @endforeach
                     </flux:table.rows>
                 </flux:table>
-
             </div>
         </div>
         <!-- Mobile View -->

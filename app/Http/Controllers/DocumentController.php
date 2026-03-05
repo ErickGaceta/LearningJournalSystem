@@ -152,4 +152,20 @@ class DocumentController extends Controller
 
         return view('pages.user.documents.index', compact('documents'));
     }
+
+    public function preview(Document $document)
+    {
+        if ($document->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $document->load(['module', 'user.divisionUnit', 'user.position']);
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pages.user.documents.pdf', compact('document'));
+
+        return response($pdf->output(), 200, [
+            'Content-Type'        => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="learning-journal-' . $document->id . '.pdf"',
+        ]);
+    }
 }
