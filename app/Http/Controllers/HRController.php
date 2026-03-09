@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use App\Models\TrainingModule;
 use App\Models\Assignment;
 use App\Models\Document;
@@ -41,39 +42,39 @@ class HRController extends Controller
 
     // ========== Training Module Management ==========
     public function modulesIndex(Request $request)
-    {
-        $search = $request->get('search');
+{
+    $search = $request->get('search');
+    $showArchived = false; // ← add this
 
-        $trainingModules = TrainingModule::withCount('assignments')
-            ->with('assignments:id,module_id,user_id,employee_name')
-            ->when($search, function ($query) use ($search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('title', 'like', "%{$search}%")
-                        ->orWhere('venue', 'like', "%{$search}%")
-                        ->orWhere('conductedby', 'like', "%{$search}%")
-                        ->orWhereHas(
-                            'assignments',
-                            fn($q) =>
-                            $q->where('employee_name', 'like', "%{$search}%")
-                        );
-                });
-            })
-            ->latest()
-            ->paginate(15)
-            ->withQueryString();
+    $trainingModules = TrainingModule::withCount('assignments')
+        ->with('assignments:id,module_id,user_id,employee_name')
+        ->when($search, function ($query) use ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('venue', 'like', "%{$search}%")
+                    ->orWhere('conductedby', 'like', "%{$search}%")
+                    ->orWhereHas(
+                        'assignments',
+                        fn($q) => $q->where('employee_name', 'like', "%{$search}%")
+                    );
+            });
+        })
+        ->latest()
+        ->paginate(15)
+        ->withQueryString();
 
-        $moduleIds = $trainingModules->pluck('id');
-        $assignments = Assignment::with('module:id,title')
-            ->whereIn('module_id', $moduleIds)
-            ->get();
+    $moduleIds = $trainingModules->pluck('id');
+    $assignments = Assignment::with('module:id,title')
+        ->whereIn('module_id', $moduleIds)
+        ->get();
 
-        $users = User::where('user_type', 'user')
-            ->select('id', 'first_name', 'last_name')
-            ->orderBy('last_name')
-            ->get();
+    $users = User::where('user_type', 'user')
+        ->select('id', 'first_name', 'last_name')
+        ->orderBy('last_name')
+        ->get();
 
-        return view('pages.hr.modules.index', compact('trainingModules', 'users', 'assignments'));
-    }
+    return view('pages.hr.modules.index', compact('trainingModules', 'users', 'assignments', 'showArchived')); // ← pass it
+}
 
     public function storeModule(Request $request): RedirectResponse
     {
@@ -165,57 +166,51 @@ class HRController extends Controller
             ->with('success', 'Training assigned successfully.');
     }
 
-    public function monitoringIndex(Request $request)
+    // ========== Document Archive Management ==========
+    public function archiveDocument(Document $document): RedirectResponse
     {
-        $search = $request->get('search');
-        $year   = $request->get('year', now()->year);
-        $now    = now();
+        $document->update(['isArchived' => true]);
 
-        $allModules = TrainingModule::with([
-            'assignments.user.position',
-            'documents',
-        ])
-            ->whereYear('datestart', $year)
-            ->when($search, fn($q) => $q->where(function ($q) use ($search) {
-                $q->where('title',       'like', "%{$search}%")
-                    ->orWhere('venue',       'like', "%{$search}%")
-                    ->orWhere('conductedby', 'like', "%{$search}%")
-                    ->orWhereHas(
-                        'assignments',
-                        fn($q) =>
-                        $q->where('employee_name', 'like', "%{$search}%")
-                    );
-            }))
-            ->orderBy('datestart')
-            ->get()
-            ->each(function ($module) use ($now) {
-                $module->status = match (true) {
-                    $module->datestart > $now => 'upcoming',
-                    $module->dateend   < $now => 'completed',
-                    default                   => 'ongoing',
-                };
-                $module->documentsByUser = $module->documents->keyBy('user_id');
-            });
-
-        $quarters = [
-            1 => ['label' => 'Quarter 1', 'range' => 'Jan - Mar', 'modules' => collect()],
-            2 => ['label' => 'Quarter 2', 'range' => 'Apr - Jun', 'modules' => collect()],
-            3 => ['label' => 'Quarter 3', 'range' => 'Jul - Sep', 'modules' => collect()],
-            4 => ['label' => 'Quarter 4', 'range' => 'Oct - Dec', 'modules' => collect()],
-        ];
-
-        foreach ($allModules as $module) {
-            $q = (int) ceil($module->datestart->month / 3);
-            $quarters[$q]['modules']->push($module);
-        }
-
-        $oldestYear     = TrainingModule::min(DB::raw('YEAR(datestart)')) ?? now()->year;
-        $availableYears = range(now()->year, $oldestYear);
-
-        return view('pages.hr.monitoring.index', compact('quarters', 'year', 'availableYears'));
+        return redirect()
+            ->route('hr.modules.index')
+            ->with('success', 'Learning journal archived successfully.');
     }
 
-    public function previewDocument(Document $document): \Illuminate\Http\Response
+    public function archiveIndex(Request $request): View
+    {
+        $showArchived = $request->boolean('archived');
+
+        $documents = Document::with(['user', 'module'])
+            ->where('isArchived', $showArchived)
+            ->latest()
+            ->get();
+
+        return view('pages.hr.modules.index', compact('documents', 'showArchived'));
+    }
+
+    // ========== Monitoring ==========
+   public function modulesArchive(Request $request): View
+{
+    $showArchived = true;
+
+    $trainingModules = TrainingModule::withCount('assignments')
+        ->with('assignments:id,module_id,user_id,employee_name')
+        ->onlyTrashed() // or whatever your archive logic is
+        ->latest()
+        ->paginate(15);
+
+    $moduleIds = $trainingModules->pluck('id');
+    $assignments = Assignment::with('module:id,title')
+        ->whereIn('module_id', $moduleIds)
+        ->get();
+
+    $users = User::where('user_type', 'user')
+        ->select('id', 'first_name', 'last_name')
+        ->orderBy('last_name')
+        ->get();
+
+    return view('pages.hr.modules.index', compact('trainingModules', 'users', 'assignments', 'showArchived'));
+}    public function previewDocument(Document $document): \Illuminate\Http\Response
     {
         $document->load([
             'user.position',
@@ -239,7 +234,6 @@ class HRController extends Controller
             false
         );
 
-        // ── Read-only: view only, no printing/copying/editing ──
         $pdf->SetProtection([], '', env('PDF_OWNER_PASSWORD', 'changeme'), 0);
 
         $pdf->SetCreator(config('app.name'));
@@ -264,8 +258,6 @@ class HRController extends Controller
 
         $pdf->AddPage();
         $pdf->writeHTML($html, true, false, true, false, '');
-
-        // No print count update — HR preview is read-only and non-destructive
 
         $filename = ($module?->title ?? 'Learning Journal')
             . ' - ' . $date

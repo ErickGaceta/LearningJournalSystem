@@ -5,9 +5,7 @@
 // Inside your existing HR route group, e.g.:
 // Route::prefix('hr')->middleware(['auth', 'role:hr'])->group(function () {
 
-    Route::prefix('monitoring/certificates')
-        ->name('hr.monitoring.certificates.')
-        ->group(function () {
+    Route::prefix('monitoring/certificates')->name('hr.monitoring.certificates.')->group(function () {
 
             // Preview (loaded in iframe)
             Route::get('{training}/{employee}',
