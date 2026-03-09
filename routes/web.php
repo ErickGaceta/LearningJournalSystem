@@ -88,6 +88,14 @@ Route::middleware(['auth'])->prefix('hr')->name('hr.')->group(function () {
     // Monitoring Routes
     Route::get('/monitoring', [HRController::class, 'monitoringIndex'])->name('monitoring.index');
     Route::get('/monitoring/documents/{document}/preview', [HRController::class, 'previewDocument'])->name('monitoring.document.preview');
+     Route::prefix('monitoring/certificates')->name('hr.monitoring.certificates.')->group(function () {
+
+    // Preview (loaded in iframe)
+    Route::get('{training}/{employee}',[App\Http\Controllers\HR\CertificateController::class, 'preview'])->name('preview');
+
+    // PDF download
+    Route::get('{training}/{employee}/download',[App\Http\Controllers\HR\CertificateController::class, 'download'])->name('download');
+        });
 });
 
 // ========== User Routes ==========
