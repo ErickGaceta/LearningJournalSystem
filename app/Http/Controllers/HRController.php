@@ -210,7 +210,8 @@ class HRController extends Controller
         ->get();
 
     return view('pages.hr.modules.index', compact('trainingModules', 'users', 'assignments', 'showArchived'));
-}    public function previewDocument(Document $document): \Illuminate\Http\Response
+}
+  public function previewDocument(Document $document): \Illuminate\Http\Response
     {
         $document->load([
             'user.position',
