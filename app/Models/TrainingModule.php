@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class TrainingModule extends Model
 {
     use HasFactory;
+    protected $attributes = [
+        'is_archived' => false,
+    ];
 
     protected $table = 'training_module';
 

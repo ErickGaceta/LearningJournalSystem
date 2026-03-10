@@ -26,7 +26,8 @@
                 <x-hr.monitoring.quarter-panel
                     :num="$num"
                     :quarter="$quarter"
-                    :color="$quarterColors[$num]"
+                    :color="$quarterColors[$num]".
+
                     :year="$year" />
             @endforeach
         </div>

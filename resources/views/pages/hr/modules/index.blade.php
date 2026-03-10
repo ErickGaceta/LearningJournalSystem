@@ -58,7 +58,7 @@
     <div class="flex items-center gap-2">
         @if($showArchived)
         <flux:button
-            :href="route('hr.modules.index')"
+            :href="route('hr.modules.archive')"
             icon="inbox"
             variant="primary"
             color="teal">
