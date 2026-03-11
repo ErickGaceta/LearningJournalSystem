@@ -13,6 +13,7 @@ use App\Http\Controllers\DocumentPrintController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\MonitoringController;
+use App\Http\Controllers\CertificateController;
 
 // ========== Guest Routes (No Auth Required) ==========
 Route::get('/', fn() => redirect()->route('login'))->name('home');
@@ -32,7 +33,7 @@ Route::middleware('auth')->group(function () {
 
     // Dashboard redirect — move match() to LoginController::redirectByUserType()
     Route::get('/dashboard', function () {
-        return match(Auth::user()->user_type) {
+        return match (Auth::user()->user_type) {
             'admin' => redirect()->route('admin.dashboard'),
             'hr'    => redirect()->route('hr.dashboard'),
             default => redirect()->route('user.dashboard'),
@@ -51,11 +52,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // User Management
     Route::get('/users', [AdminController::class, 'usersIndex'])->name('users.index');
     Route::post('/users', [AdminController::class, 'storeUser'])->name('users.store');
-    Route::post('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
     Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('users.destroy');
+    Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
     Route::patch('/users/{user}/archive', [AdminController::class, 'archiveUser'])->name('users.archive');
     Route::patch('/users/{user}/restore', [AdminController::class, 'restoreUser'])->name('users.restore');
-    Route::post('/users/{user}/reset-password', [AdminController::class, 'resetPassword'])->name('users.resetPassword');
+    Route::post('/users/{user}/reset-password', [AdminController::class, 'resetPassword'])->name('users.reset-password');
 
     // Position Management
     Route::get('/positions', [AdminController::class, 'positionsIndex'])->name('positions.index');
@@ -88,14 +89,16 @@ Route::middleware(['auth'])->prefix('hr')->name('hr.')->group(function () {
     // Monitoring Routes
     Route::get('/monitoring', [HRController::class, 'monitoringIndex'])->name('monitoring.index');
     Route::get('/monitoring/documents/{document}/preview', [HRController::class, 'previewDocument'])->name('monitoring.document.preview');
-     Route::prefix('monitoring/certificates')->name('hr.monitoring.certificates.')->group(function () {
+    Route::post('/documents/{document}/archive', [HRController::class, 'archiveDocument'])->name('documents.archive');
+    Route::get('/documents/{document}/preview', [HRController::class, 'previewDocument'])->name('documents.preview');
+    Route::prefix('monitoring/certificates')->name('hr.monitoring.certificates.')->group(function () {
 
-    // Preview (loaded in iframe)
-    Route::get('{training}/{employee}',[App\Http\Controllers\HR\CertificateController::class, 'preview'])->name('preview');
+        // Preview (loaded in iframe)
+        Route::get('{training}/{employee}', [CertificateController::class, 'preview'])->name('preview');
 
-    // PDF download
-    Route::get('{training}/{employee}/download',[App\Http\Controllers\HR\CertificateController::class, 'download'])->name('download');
-        });
+        // PDF download
+        Route::get('{training}/{employee}/download', [CertificateController::class, 'download'])->name('download');
+    });
 });
 
 // ========== User Routes ==========

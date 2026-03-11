@@ -44,7 +44,7 @@ class HRController extends Controller
     public function modulesIndex(Request $request)
     {
         $search = $request->get('search');
-        $showArchived = false; // ← add this
+        $showArchived = false;
 
         $trainingModules = TrainingModule::withCount('assignments')
             ->with('assignments:id,module_id,user_id,employee_name')
@@ -64,16 +64,17 @@ class HRController extends Controller
             ->withQueryString();
 
         $moduleIds = $trainingModules->pluck('id');
+        $modules = TrainingModule::whereIn('id', $moduleIds)->get()->keyBy('id');
         $assignments = Assignment::with('module:id,title')
             ->whereIn('module_id', $moduleIds)
             ->get();
 
         $users = User::where('user_type', 'user')
-            ->select('id', 'first_name', 'last_name')
+            ->select('id', 'first_name', 'last_name', 'user_type')
             ->orderBy('last_name')
             ->get();
 
-        return view('pages.hr.modules.index', compact('trainingModules', 'users', 'assignments', 'showArchived')); // ← pass it
+        return view('pages.hr.modules.index', compact('trainingModules', 'users', 'assignments', 'showArchived', 'modules')); // ← pass it
     }
 
     public function storeModule(Request $request): RedirectResponse
