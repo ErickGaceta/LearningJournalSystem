@@ -65,16 +65,17 @@ class HRController extends Controller
             ->withQueryString();
 
         $moduleIds = $trainingModules->pluck('id');
+        $modules = TrainingModule::whereIn('id', $moduleIds)->get()->keyBy('id');
         $assignments = Assignment::with('module:id,title')
             ->whereIn('module_id', $moduleIds)
             ->get();
 
         $users = User::where('user_type', 'user')
-            ->select('id', 'first_name', 'last_name')
+            ->select('id', 'first_name', 'last_name', 'user_type')
             ->orderBy('last_name')
             ->get();
 
-        return view('pages.hr.modules.index', compact('trainingModules', 'users', 'assignments', 'showArchived'));
+        return view('pages.hr.modules.index', compact('trainingModules', 'users', 'assignments', 'showArchived')); // ← pass it
     }
 
     public function storeModule(Request $request): RedirectResponse

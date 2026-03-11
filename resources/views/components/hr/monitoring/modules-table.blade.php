@@ -1,9 +1,3 @@
-{{--
-    Component: hr.monitoring.modules-table
-    Path:      resources/views/components/hr/monitoring/modules-table.blade.php
-    Usage:     <x-hr.monitoring.modules-table :modules="$quarter['modules']" :quarter-color="$quarterColors[$num]" />
---}}
-
 @props(['modules', 'quarterColor'])
 
 @php

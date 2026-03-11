@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\HR;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Training;         
 use App\Models\TrainingEmployee;
+use App\Models\TrainingModule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
@@ -39,7 +40,7 @@ class CertificateController extends Controller
     private function resolveData(int $trainingId, int $employeeId): array
     {
         
-        $training = Training::with('employees')->findOrFail($trainingId);
+        $training = TrainingModule::with('employees')->findOrFail($trainingId);
         $employee = $training->employees()->findOrFail($employeeId);
 
         return [
