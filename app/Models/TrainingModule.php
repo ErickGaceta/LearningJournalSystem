@@ -24,6 +24,7 @@ class TrainingModule extends Model
         'conductedby',
         'registration_fee',
         'is_archived',
+        'archived_at',
     ];
 
     protected $casts = [
@@ -51,5 +52,10 @@ class TrainingModule extends Model
     public function getDateRangeAttribute(): string
     {
         return $this->datestart->format('M d, Y') . ' - ' . $this->dateend->format('M d, Y');
+    }
+
+    public function scopeArchived($query)  { return $query->whereNotNull('archived_at'); 
+    }
+    public function scopeNotArchived($query) { return $query->whereNull('archived_at'); 
     }
 }

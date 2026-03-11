@@ -44,10 +44,11 @@ class HRController extends Controller
     public function modulesIndex(Request $request)
     {
         $search = $request->get('search');
-        $showArchived = false; // ← add this
+        $showArchived = false;
 
         $trainingModules = TrainingModule::withCount('assignments')
             ->with('assignments:id,module_id,user_id,employee_name')
+            ->notArchived()
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('title', 'like', "%{$search}%")
@@ -73,7 +74,7 @@ class HRController extends Controller
             ->orderBy('last_name')
             ->get();
 
-        return view('pages.hr.modules.index', compact('trainingModules', 'users', 'assignments', 'showArchived')); // ← pass it
+        return view('pages.hr.modules.index', compact('trainingModules', 'users', 'assignments', 'showArchived'));
     }
 
     public function storeModule(Request $request): RedirectResponse
@@ -110,6 +111,14 @@ class HRController extends Controller
 
         return redirect()->route('hr.modules.index')
             ->with('success', 'Training module updated successfully.');
+    }
+
+    public function archiveModule(TrainingModule $module): RedirectResponse
+    {
+        $module->update(['archived_at' => now()]);
+
+        return redirect()->route('hr.modules.index')
+            ->with('success', 'Training module archived successfully.');
     }
 
     public function destroyModule(TrainingModule $module): RedirectResponse
@@ -195,7 +204,7 @@ class HRController extends Controller
 
         $trainingModules = TrainingModule::withCount('assignments')
             ->with('assignments:id,module_id,user_id,employee_name')
-            ->onlyTrashed() // or whatever your archive logic is
+            ->archived()
             ->latest()
             ->paginate(15);
 
