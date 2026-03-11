@@ -77,7 +77,8 @@ Route::middleware(['auth'])->prefix('hr')->name('hr.')->group(function () {
 
     // Training Module Management
     Route::get('/modules', [HRController::class, 'modulesIndex'])->name('modules.index');
-    Route::get('/modules/archived', [HRController::class, 'modulesArchive'])->name('modules.archive'); // ← fixed path
+    Route::get('/modules/archived', [HRController::class, 'modulesArchive'])->name('modules.archive');
+    Route::patch('modules/{module}/archive', [ModuleController::class, 'archive'])->name('hr.modules.archive'); // ← fixed path
     Route::post('/modules', [HRController::class, 'storeModule'])->name('modules.store');
     Route::put('/modules/{module}', [HRController::class, 'updateModule'])->name('modules.update');
     Route::delete('/modules/{module}', [HRController::class, 'destroyModule'])->name('modules.destroy');
