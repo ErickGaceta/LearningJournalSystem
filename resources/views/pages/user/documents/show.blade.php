@@ -8,7 +8,7 @@
             </div>
             <div class="flex flex-wrap gap-2 lg:flex-nowrap">
                 <!-- Toggle Edit / Cancel -->
-                <div x-data="{ open: false }" class="flex gap-4 align-end justify-end items-end w-full">
+                <div class="flex gap-4 align-end justify-end items-end w-full">
                     {{-- Archive Button (desktop) --}}
                     <div class="hidden lg:flex">
                         <flux:button
@@ -22,7 +22,7 @@
                     {{-- Archive Button (mobile) --}}
                     <div class="flex lg:hidden">
                         <flux:button
-                            x-on:click="open = true"
+                            x-on:click="$flux.modal('archive-document-{{ $document->id }}').show()"
                             icon="archive-box"
                             variant="filled" class="bg-amber-500 hover:bg-amber-600 text-white dark:bg-amber-500 dark:hover:bg-amber-600">
                         </flux:button>
@@ -75,11 +75,6 @@
                             Cancel
                         </flux:button>
                     </div>
-
-                    {{-- Archive Confirmation Modal --}}
-                    <x-user.documents.archive-document
-                        :action="route('user.documents.archive', $document)"
-                        modal-name="archive-document-{{ $document->id }}" />
                 </div>
             </div>
             <div class="w-fit md:relative sm:absolute top-0 right-0">
@@ -95,6 +90,10 @@
 
         <x-user.documents.journal-form :document="$document" />
     </div>
+
+    <x-user.documents.archive-document
+        :action="route('user.documents.archive', $document)"
+        modal-name="archive-document-{{ $document->id }}" />
 
     <x-pdf-preview-modal :url="url('user/documents')" event="open-document-preview" />
 </x-layouts::app>

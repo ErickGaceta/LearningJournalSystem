@@ -1,7 +1,6 @@
 @props(['document'])
 
-<form action="{{ route('user.documents.update', $document) }}" method="POST" class="space-y-4" x-data="{ submitted: false }"
-    @submit="submitted = true"> 
+<form action="{{ route('user.documents.update', $document) }}" method="POST" class="space-y-4">
     @csrf
     @method('PUT')
 
@@ -138,7 +137,7 @@
 
     <!-- Save Button -->
     <div class="flex justify-end" x-show="editing">
-        <flux:button icon="arrow-up-on-square" type="submit" x-bind:disabled="submitted" variant="primary" color="sky">
+        <flux:button icon="arrow-up-on-square" type="submit" variant="primary" color="sky">
             Save Changes
         </flux:button>
     </div>
