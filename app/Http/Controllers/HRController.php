@@ -130,6 +130,12 @@ class HRController extends Controller
             ->with('success', 'Training module deleted successfully.');
     }
 
+    public function restoreModule(Module $module)
+    {
+        $module->update(['archived_at' => null]); // or whatever your archive field is
+        return back()->with('success', 'Module restored successfully.');
+    }
+
     // ========== Assignment Management ==========
     public function storeAssignment(Request $request): RedirectResponse
     {
