@@ -126,7 +126,7 @@
             <td style="width: 30%; padding: 0; text-align: center; border: none;">
                 @if($document->user->signature)
                 @php
-                $sigPath = public_path($document->user->signature->signature_path);
+                $sigPath = \Illuminate\Support\Facades\Storage::disk('public')->path($document->user->signature->signature_path);
                 $sigBase64 = base64_encode(file_get_contents($sigPath));
                 @endphp
                 <img src="data:image/png;base64,{{ $sigBase64 }}"
