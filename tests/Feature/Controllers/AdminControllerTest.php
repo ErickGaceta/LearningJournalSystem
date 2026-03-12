@@ -285,7 +285,7 @@ class AdminControllerTest extends TestCase
         $user = User::factory()->create(['user_type' => 'user', 'is_archived' => 0]);
 
         $response = $this->actingAs($this->admin)
-            ->post(route('admin.users.archive', $user));
+            ->patch(route('admin.users.archive', $user));
 
         $response->assertRedirect(route('admin.users.index'));
         $this->assertDatabaseHas('users', ['id' => $user->id, 'is_archived' => 1]);
@@ -294,7 +294,7 @@ class AdminControllerTest extends TestCase
     public function test_admin_cannot_archive_own_account(): void
     {
         $response = $this->actingAs($this->admin)
-            ->post(route('admin.users.archive', $this->admin));
+            ->patch(route('admin.users.archive', $this->admin));
 
         $response->assertSessionHasErrors(['error']);
         $this->assertDatabaseHas('users', ['id' => $this->admin->id, 'is_archived' => 0]);
@@ -305,7 +305,7 @@ class AdminControllerTest extends TestCase
         $user = User::factory()->create(['user_type' => 'user', 'is_archived' => 1]);
 
         $response = $this->actingAs($this->admin)
-            ->post(route('admin.users.restore', $user));
+            ->patch(route('admin.users.restore', $user));
 
         $response->assertRedirect(route('admin.users.index'));
         $this->assertDatabaseHas('users', ['id' => $user->id, 'is_archived' => 0]);
