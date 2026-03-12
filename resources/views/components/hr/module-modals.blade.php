@@ -72,23 +72,52 @@ $alreadyAssigned = $module->assignments->pluck('user_id')->toArray();
 
 {{-- Delete Modal --}}
 <flux:modal name="delete-module-{{ $module->id }}" class="max-w-md">
+    <form action="{{ route('hr.modules.archive', $module) }}" method="POST">
+        @csrf
+        @method('PATCH')
+
+<div class="p-6 space-y-4 bg-white dark:bg-neutral-800">
+        <flux:heading size="lg" class="text-center">Manage User</flux:heading>
+
+        <div class="rounded-lg p-4 shadow-sm text-center">
+            <flux:text size="sm">You are managing:</flux:text>
+            <flux:text size="lg" class="font-semibold mt-2"
+                x-text="selectedUser
+                    ? [selectedUser.first_name, selectedUser.middle_name, selectedUser.last_name].filter(Boolean).join(' ')
+                    : ''">
+            </flux:text>
+            <flux:text size="sm" variant="subtle" x-text="selectedUser?.email"></flux:text>
+        </div>
+
+        <!-- Archive -->
+
+<div class="bg-red-50 dark:bg-red-950/30 rounded-lg p-4">
+            <div class="flex flex-col items-center gap-2">
+                <flux:icon.archive-box class="w-5 h-5 text-red-500 dark:text-red-400" />
+                <flux:text size="sm" class="text-center">
+                    <strong class="text-red-500">Archive:</strong>
+                    This user will no longer be able to log in. This action can be undone at the Archive Tab.
+                </flux:text>
+                <form
+                    :action="`{{ url('hr/module/index') }}/${selectedUser?.id}/archive`"
+                    method="POST"
+                    class="w-full"
+                >
+                    @csrf
+                    @method('PATCH')
+                    <flux:button type="submit" variant="filled" color="red" size="sm" class="w-full">
+                        Archive Training
+                    </flux:button>
+                </form>
+            </div>
+        </div>
+
+ <!-- Delete -->
     <form action="{{ route('hr.modules.destroy', $module) }}" method="POST">
         @csrf
         @method('DELETE')
 
-        <div class="p-2 bg-white dark:bg-neutral-800">
-            <div class="flex items-center justify-center w-16 h-16 mx-auto rounded-full shadow-lg">
-                <flux:icon.exclamation-triangle class="w-8 h-8 text-red-500" />
-            </div>
-        </div>
 
-        <div class="p-6 space-y-4 bg-white dark:bg-neutral-800">
-            <flux:heading size="lg" class="text-center">Delete Training Module?</flux:heading>
-
-            <div class="rounded-lg p-4 shadow-sm text-center">
-                <flux:text size="sm">You are about to delete:</flux:text>
-                <flux:text size="lg" class="font-semibold mt-2">{{ $module->title }}</flux:text>
-            </div>
 
             <div class="bg-red-50 dark:bg-red-950/30 rounded-lg p-4">
                 <div class="flex flex-col items-center gap-2">
@@ -96,6 +125,17 @@ $alreadyAssigned = $module->assignments->pluck('user_id')->toArray();
                     <flux:text size="sm" class="text-center">
                         <strong class="text-red-500">Warning:</strong> This cannot be undone. All associated assignments will also be deleted.
                     </flux:text>
+                     <form
+                    :action="`{{ url('hr/module/index') }}/${selectedUser?.id}/archive`"
+                    method="POST"
+                    class="w-full"
+                >
+                    @csrf
+                    @method('PATCH')
+                    <flux:button type="submit" variant="filled" color="red" size="sm" class="w-full">
+                         Delete Permanently
+                    </flux:button>
+                </form>
                 </div>
             </div>
         </div>
@@ -104,9 +144,7 @@ $alreadyAssigned = $module->assignments->pluck('user_id')->toArray();
             <flux:modal.close>
                 <flux:button variant="ghost" size="sm" class="flex-1">Cancel</flux:button>
             </flux:modal.close>
-            <flux:button type="submit" variant="primary" color="red" size="sm" class="flex-1">
-                Delete Permanently
-            </flux:button>
         </div>
     </form>
 </flux:modal>
+
