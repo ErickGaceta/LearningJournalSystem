@@ -78,7 +78,7 @@ Route::middleware(['auth'])->prefix('hr')->name('hr.')->group(function () {
    // Training Module Management
     Route::get('/modules', [HRController::class, 'modulesIndex'])->name('modules.index');
     Route::get('/modules/archived', [HRController::class, 'modulesArchived'])->name('modules.archived'); // ← renamed to avoid conflict
-    Route::patch('/modules/{module}/archive', [HRController::class, 'archiveModule'])->name('modules.archive_action');
+    Route::patch('/modules/{module}/archive', [HRController::class, 'archiveModule'])->name('modules.archive');
     Route::post('/modules', [HRController::class, 'storeModule'])->name('modules.store');
     Route::put('/modules/{module}', [HRController::class, 'updateModule'])->name('modules.update');
     Route::delete('/modules/{module}', [HRController::class, 'destroyModule'])->name('modules.destroy');
@@ -101,6 +101,8 @@ Route::middleware(['auth'])->prefix('hr')->name('hr.')->group(function () {
         // PDF download
         Route::get('{training}/{employee}/download', [CertificateController::class, 'download'])->name('download');
     });
+
+    Route::post('modules/{module}/notify', [HRController::class, 'notify'])->name('modules.notify');
 });
 
 // ========== User Routes ==========

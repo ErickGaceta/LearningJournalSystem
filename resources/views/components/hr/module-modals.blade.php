@@ -72,7 +72,7 @@ $alreadyAssigned = $module->assignments->pluck('user_id')->toArray();
 
 {{-- Archive Modal --}}
 <flux:modal name="archive-module-{{ $module->id }}" class="max-w-md">
-    <form action="{{ route('hr.modules.archive_action', $module) }}" method="POST">
+    <form action="{{ route('hr.modules.archive', $module) }}" method="POST">
         @csrf
         @method('PATCH')
 
@@ -129,7 +129,7 @@ $alreadyAssigned = $module->assignments->pluck('user_id')->toArray();
                     <strong class="text-amber-500">Archive:</strong>
                     This module will be hidden from active use. This action can be undone at the Archive Tab.
                 </flux:text>
-                <form action="{{ route('hr.modules.archive_action', $module) }}" method="POST" class="w-full">
+                <form action="{{ route('hr.modules.archive', $module) }}" method="POST" class="w-full">
                     @csrf
                     @method('PATCH')
                     <flux:button type="submit" variant="filled" color="amber" size="sm" class="w-full">

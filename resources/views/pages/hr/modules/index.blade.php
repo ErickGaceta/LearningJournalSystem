@@ -56,28 +56,35 @@
             </div>
 
             <div class="flex items-center gap-2">
-                @if($showArchived)
-                <flux:button
-                    :href="route('hr.modules.archive')"
-                    icon="inbox"
-                    variant="primary"
-                    color="teal">
-                    Active Modules
-                </flux:button>
-                @else
+                {{-- Tab Switcher --}}
+                <div class="flex items-center rounded-lg border border-neutral-200 dark:border-neutral-700 overflow-hidden">
+                    <flux:button
+                        :href="route('hr.modules.index')"
+                        variant="{{ !$showArchived ? 'primary' : 'ghost' }}"
+                        color="{{ !$showArchived ? 'teal' : 'zinc' }}"
+                        icon="inbox"
+                        size="sm"
+                        class="rounded-none border-0">
+                        Active
+                    </flux:button>
+                    <flux:button
+                        :href="route('hr.modules.archived')"
+                        variant="{{ $showArchived ? 'primary' : 'ghost' }}"
+                        color="{{ $showArchived ? 'amber' : 'zinc' }}"
+                        icon="archive-box"
+                        size="sm"
+                        class="rounded-none border-0">
+                        Archived
+                    </flux:button>
+                </div>
+
+                {{-- Create button only on active tab --}}
+                @if(!$showArchived)
                 <flux:modal.trigger name="create-module">
                     <flux:button size="sm" icon="folder-plus" variant="primary" color="teal">
                         Create New Training
                     </flux:button>
                 </flux:modal.trigger>
-
-                <flux:button
-                    :href="route('hr.modules.index', ['archived' => true])"
-                    icon="archive-box"
-                    variant="primary"
-                    color="amber">
-                    Archived Modules
-                </flux:button>
                 @endif
             </div>
         </div>

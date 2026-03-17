@@ -1,11 +1,11 @@
 @props(['modules', 'quarterColor'])
 
 @php
-    $statusConfig = [
-        'upcoming'  => ['color' => 'zinc',   'label' => 'Upcoming'],
-        'ongoing'   => ['color' => 'yellow', 'label' => 'Ongoing'],
-        'completed' => ['color' => 'green',  'label' => 'Completed'],
-    ];
+$statusConfig = [
+'upcoming' => ['color' => 'zinc', 'label' => 'Upcoming'],
+'ongoing' => ['color' => 'yellow', 'label' => 'Ongoing'],
+'completed' => ['color' => 'green', 'label' => 'Completed'],
+];
 @endphp
 
 <div class="overflow-x-auto">
@@ -19,35 +19,36 @@
             <flux:table.column>Conducted By</flux:table.column>
             <flux:table.column align="center">Assigned</flux:table.column>
             <flux:table.column align="center">Status</flux:table.column>
+            <flux:table.column align="center">Notify</flux:table.column>
             <flux:table.column></flux:table.column>
         </flux:table.columns>
 
         <flux:table.rows>
             @foreach($modules as $mi => $module)
             @php
-                $assignmentCount = $module->assignments->count();
-                $documentCount   = $module->documents->count();
-                $isCompleted     = $module->status === 'completed';
-                $sc              = $statusConfig[$module->status];
+            $assignmentCount = $module->assignments->count();
+            $documentCount = $module->documents->count();
+            $isCompleted = $module->status === 'completed';
+            $sc = $statusConfig[$module->status];
 
-                $pct = $assignmentCount > 0
-                    ? round(($documentCount / $assignmentCount) * 100)
-                    : 0;
-                $barWidth = match(true) {
-                    $pct >= 100 => 'w-full',
-                    $pct >= 92  => 'w-11/12',
-                    $pct >= 83  => 'w-5/6',
-                    $pct >= 75  => 'w-3/4',
-                    $pct >= 67  => 'w-2/3',
-                    $pct >= 58  => 'w-7/12',
-                    $pct >= 50  => 'w-1/2',
-                    $pct >= 42  => 'w-5/12',
-                    $pct >= 33  => 'w-1/3',
-                    $pct >= 25  => 'w-1/4',
-                    $pct >= 17  => 'w-1/6',
-                    $pct >= 8   => 'w-1/12',
-                    default     => 'w-0',
-                };
+            $pct = $assignmentCount > 0
+            ? round(($documentCount / $assignmentCount) * 100)
+            : 0;
+            $barWidth = match(true) {
+            $pct >= 100 => 'w-full',
+            $pct >= 92 => 'w-11/12',
+            $pct >= 83 => 'w-5/6',
+            $pct >= 75 => 'w-3/4',
+            $pct >= 67 => 'w-2/3',
+            $pct >= 58 => 'w-7/12',
+            $pct >= 50 => 'w-1/2',
+            $pct >= 42 => 'w-5/12',
+            $pct >= 33 => 'w-1/3',
+            $pct >= 25 => 'w-1/4',
+            $pct >= 17 => 'w-1/6',
+            $pct >= 8 => 'w-1/12',
+            default => 'w-0',
+            };
             @endphp
 
             {{-- Module row --}}
@@ -63,9 +64,9 @@
                 <flux:table.cell>
                     <span class="text-sm font-medium">{{ $module->title }}</span>
                     @if($isCompleted)
-                        <flux:text size="xs" class="text-zinc-500 mt-0.5">
-                            {{ $documentCount }} / {{ $assignmentCount }} submitted
-                        </flux:text>
+                    <flux:text size="xs" class="text-zinc-500 mt-0.5">
+                        {{ $documentCount }} / {{ $assignmentCount }} submitted
+                    </flux:text>
                     @endif
                 </flux:table.cell>
 
@@ -99,14 +100,35 @@
                     </flux:badge>
                 </flux:table.cell>
 
+                <flux:table.cell align="center">
+                    @if($isCompleted)
+                    <form action="{{ route('hr.modules.notify', $module) }}" method="POST"
+                        x-data="{ sent: false }"
+                        @submit.prevent="
+                            sent = true;
+                            $el.submit();
+                        ">
+                        @csrf
+                        <flux:button
+                            type="submit"
+                            size="sm"
+                            icon="envelope"
+                            variant="ghost"
+                            x-bind:disabled="sent"
+                            x-tooltip="'Notify unsubmitted users'">
+                        </flux:button>
+                    </form>
+                    @endif
+                </flux:table.cell>
+
                 <flux:table.cell align="start">
                     @if($isCompleted)
-                        <svg class="w-3 h-3 text-zinc-900 dark:text-zinc-300 mx-auto"
-                             style="transition: transform 200ms"
-                             :style="expanded[{{ $module->id }}] ? 'transform: rotate(90deg)' : 'transform: rotate(0deg)'"
-                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
+                    <svg class="w-3 h-3 text-zinc-900 dark:text-zinc-300 mx-auto"
+                        style="transition: transform 200ms"
+                        :style="expanded[{{ $module->id }}] ? 'transform: rotate(90deg)' : 'transform: rotate(0deg)'"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
                     @endif
                 </flux:table.cell>
 
