@@ -151,7 +151,7 @@ $selectClass = 'w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg
         </form>
 
         <form
-            :action="'{{ route('admin.users.reset-password', '_placeholder_') }}'.replace('_placeholder_', selectedUser?.id)"
+            :action="'{{ url('admin/users') }}/' + selectedUser?.id + '/reset-password'"
             method="POST">
             @csrf
             <flux:button type="submit" variant="ghost" size="sm" icon="key"
