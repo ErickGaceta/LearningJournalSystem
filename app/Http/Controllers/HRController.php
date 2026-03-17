@@ -359,13 +359,8 @@ class HRController extends Controller
                 ->where('isArchived', false)
                 ->exists();
 
-            if (!$hasSubmitted && $assignment->user?->email) {
-                \Illuminate\Support\Facades\Mail::to($assignment->user->email)
-                    ->send(new \App\Mail\NotifMail(
-                        mailSubject: 'Reminder: Submit Your Learning Journal',
-                        body: $assignment->user->first_name,
-                        module: $module,
-                    ));
+            if (!$hasSubmitted && $assignment->user) {
+                $assignment->user->notify(new \App\Notifications\ModuleSubmissionReminder($module));
                 $notified++;
                 sleep(1);
             }

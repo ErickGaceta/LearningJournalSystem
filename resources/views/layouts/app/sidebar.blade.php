@@ -130,9 +130,22 @@
                     </flux:sidebar.item>
                 </flux:sidebar.group>
                 @endif
-
-                <flux:separator class="my-4" />
             </flux:sidebar.nav>
+
+            @if(auth()->user()->user_type === 'user')
+            <div x-data="{ open: false }" class="relative hidden lg:block px-4 py-3 border-t border-zinc-200 dark:border-zinc-700">
+                <button @click="open = !open" class="relative flex items-center gap-2 w-full text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100">
+                    <flux:icon.bell class="w-5 h-5" />
+                    <span>Notifications</span>
+                    @if(auth()->user()->unreadNotifications->count() > 0)
+                    <span class="ml-auto w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                        {{ auth()->user()->unreadNotifications->count() }}
+                    </span>
+                    @endif
+                </button>
+                @include('partials.notification-dropdown')
+            </div>
+            @endif
 
             <flux:spacer />
 
@@ -156,11 +169,23 @@
             {{-- MOBILE HEADER --}}
             <flux:header sticky container class="lg:hidden border-b bg-zinc-200 dark:bg-zinc-700 border-zinc-200 dark:border-zinc-700">
                 <flux:sidebar.toggle icon="bars-2" inset="left" />
+                @if(auth()->user()->user_type === 'user')
+                <div x-data="{ open: false }" class="relative w-max">
+                    <button @click="open = !open" class="relative p-2">
+                        <flux:icon.bell class="w-5 h-5" />
+                        @if(auth()->user()->unreadNotifications->count() > 0)
+                        <span class="absolute top-1 left-1 w-6 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                            {{ auth()->user()->unreadNotifications->count() }}
+                        </span>
+                        @endif
+                    </button>
+                    @include('partials.notification-dropdown')
+                </div>
+                @endif
                 <flux:heading size="lg" class="ml-3">
                     {{ config('app.name') }}
                 </flux:heading>
                 <flux:spacer />
-                {{-- dropdown unchanged --}}
             </flux:header>
 
             {{-- PAGE CONTENT --}}
