@@ -49,182 +49,189 @@
         </div>
 
         <div class="flex justify-between items-center">
-    <div class="flex items-center gap-2">
-        <flux:heading size="xl">
-            {{ $showArchived ? 'Archived Training Modules' : 'Training Modules and Assignments' }}
-        </flux:heading>
-    </div>
+            <div class="flex items-center gap-2">
+                <flux:heading size="xl">
+                    {{ $showArchived ? 'Archived Training Modules' : 'Training Modules and Assignments' }}
+                </flux:heading>
+            </div>
 
-    <div class="flex items-center gap-2">
-        @if($showArchived)
-        <flux:button
-            :href="route('hr.modules.archive')"
-            icon="inbox"
-            variant="primary"
-            color="teal">
-            Active Modules
-        </flux:button>
-        @else
-        <flux:modal.trigger name="create-module">
-            <flux:button size="sm" icon="folder-plus" variant="primary" color="teal">
-                Create New Training
-            </flux:button>
-        </flux:modal.trigger>
+            <div class="flex items-center gap-2">
+                {{-- Tab Switcher --}}
+                <div class="flex items-center rounded-lg border border-neutral-200 dark:border-neutral-700 overflow-hidden">
+                    <flux:button
+                        :href="route('hr.modules.index')"
+                        variant="{{ !$showArchived ? 'primary' : 'ghost' }}"
+                        color="{{ !$showArchived ? 'teal' : 'zinc' }}"
+                        icon="inbox"
+                        size="sm"
+                        class="rounded-none border-0">
+                        Active
+                    </flux:button>
+                    <flux:button
+                        :href="route('hr.modules.archived')"
+                        variant="{{ $showArchived ? 'primary' : 'ghost' }}"
+                        color="{{ $showArchived ? 'amber' : 'zinc' }}"
+                        icon="archive-box"
+                        size="sm"
+                        class="rounded-none border-0">
+                        Archived
+                    </flux:button>
+                </div>
 
-        <flux:button
-            :href="route('hr.modules.index', ['archived' => true])"
-            icon="archive-box"
-            variant="primary"
-            color="amber">
-            Archived Modules
-        </flux:button>
-        @endif
-    </div>
-</div>
-
-            <!-- Desktop Table -->
-            <div class="hidden lg:block">
-                <flux:table :paginate="$trainingModules">
-                    <flux:table.columns>
-                        <flux:table.column>Module Title</flux:table.column>
-                        <flux:table.column>Training Hours</flux:table.column>
-                        <flux:table.column>Start - End</flux:table.column>
-                        <flux:table.column>Venue</flux:table.column>
-                        <flux:table.column>Sponsor / Conductor</flux:table.column>
-                        <flux:table.column>Registration Fee</flux:table.column>
-                        <flux:table.column>Assignees</flux:table.column>
-                        <flux:table.column>Actions</flux:table.column>
-                    </flux:table.columns>
-
-                    <flux:table.rows>
-                        @forelse($trainingModules as $tm)
-                        <flux:table.row>
-                            <flux:table.cell>{{ $tm->title }}</flux:table.cell>
-                            <flux:table.cell>{{ $tm->hours }} hrs</flux:table.cell>
-                            <flux:table.cell class="whitespace-nowrap">
-                                {{ $tm->datestart->format('M d, Y') }} — {{ $tm->dateend->format('M d, Y') }}
-                            </flux:table.cell>
-                            <flux:table.cell>{{ $tm->venue }}</flux:table.cell>
-                            <flux:table.cell>{{ $tm->conductedby }}</flux:table.cell>
-                            <flux:table.cell>{{ $tm->registration_fee ?: '—' }}</flux:table.cell>
-                            <flux:table.cell>
-                                @if($tm->assignments->isEmpty())
-                                <flux:text variant="subtle" size="sm">—</flux:text>
-                                @else
-                                <div class="flex flex-wrap gap-1">
-                                    @foreach($tm->assignments as $assignment)
-                                    <flux:modal.trigger name="unassign-{{ $assignment->id }}">
-                                        <flux:badge
-                                            color="zinc"
-                                            size="sm"
-                                            icon-trailing="x-mark"
-                                            class="cursor-pointer hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors">
-                                            {{ $assignment->employee_name }}
-                                        </flux:badge>
-                                    </flux:modal.trigger>
-                                    @endforeach
-                                </div>
-                                @endif
-                            </flux:table.cell>
-
-                            <flux:table.cell align="right">
-                                <div class="flex items-center justify-end gap-1">
-                                    <!-- Assign -->
-                                    <flux:modal.trigger name="assign-module-{{ $tm->id }}">
-                                        <flux:button size="sm" color="teal" variant="ghost" icon="user-plus" square />
-                                    </flux:modal.trigger>
-
-                                    <!-- Edit -->
-                                    <flux:modal.trigger name="edit-module-{{ $tm->id }}">
-                                        <flux:button size="sm" color="sky" variant="ghost" icon="eye" square />
-                                    </flux:modal.trigger>
-
-                                    <!-- Delete -->
-                                    <flux:modal.trigger name="delete-module-{{ $tm->id }}">
-                                        <flux:button variant="ghost" size="sm" icon="trash" square />
-                                    </flux:modal.trigger>
-
-                                </div>
-                            </flux:table.cell>
-                        </flux:table.row>
-                        @empty
-                        <flux:table.row>
-                            <flux:table.cell colspan="8" class="text-center py-8 text-neutral-500">
-                                No training modules yet.
-                            </flux:table.cell>
-                        </flux:table.row>
-                        @endforelse
-                    </flux:table.rows>
-                </flux:table>
+                {{-- Create button only on active tab --}}
+                @if(!$showArchived)
+                <flux:modal.trigger name="create-module">
+                    <flux:button size="sm" icon="folder-plus" variant="primary" color="teal">
+                        Create New Training
+                    </flux:button>
+                </flux:modal.trigger>
+                @endif
             </div>
         </div>
 
-        <!-- Mobile Cards -->
-        <div class="lg:hidden space-y-4">
-            @forelse($trainingModules as $tm)
-            <flux:card class="p-4 bg-transparent">
-                <div class="flex flex-col gap-2">
-                    <div class="flex justify-between items-center">
-                        <flux:heading>{{ $tm->title }}</flux:heading>
-                        <div class="flex gap-2">
-                            <flux:modal.trigger name="assign-module-{{ $tm->id }}">
-                                <flux:button size="sm" color="teal" variant="ghost" icon="user-plus" square />
-                            </flux:modal.trigger>
-                            <flux:modal.trigger name="edit-module-{{ $tm->id }}">
-                                <flux:button size="sm" color="sky" variant="ghost" icon="eye" square />
-                            </flux:modal.trigger>
-                            <flux:modal.trigger name="delete-module-{{ $tm->id }}">
-                                <flux:button variant="ghost" size="sm" icon="trash" square />
-                            </flux:modal.trigger>
-                        </div>
-                    </div>
+        <!-- Desktop Table -->
+        <div class="hidden lg:block">
+            <flux:table :paginate="$trainingModules">
+                <flux:table.columns>
+                    <flux:table.column>Module Title</flux:table.column>
+                    <flux:table.column>Training Hours</flux:table.column>
+                    <flux:table.column>Start - End</flux:table.column>
+                    <flux:table.column>Venue</flux:table.column>
+                    <flux:table.column>Sponsor / Conductor</flux:table.column>
+                    <flux:table.column>Registration Fee</flux:table.column>
+                    <flux:table.column>Assignees</flux:table.column>
+                    <flux:table.column>Actions</flux:table.column>
+                </flux:table.columns>
 
-                    <flux:separator />
-
-                    <div class="flex gap-2 text-sm text-neutral-500">
-                        Venue: <flux:text variant="subtle">{{ $tm->venue }}</flux:text>
-                    </div>
-                    <div class="flex gap-2 text-sm text-neutral-500">
-                        Conducted by: <flux:text variant="subtle">{{ $tm->conductedby }}</flux:text>
-                    </div>
-                    <div class="flex gap-2 text-sm text-neutral-500">
-                        Fee: <flux:text variant="subtle">{{ $tm->registration_fee ?: '—' }}</flux:text>
-                    </div>
-                    <div class="flex gap-2 text-sm text-neutral-500">
-                        Duration: <flux:text variant="subtle">
+                <flux:table.rows>
+                    @forelse($trainingModules as $tm)
+                    <flux:table.row>
+                        <flux:table.cell>{{ $tm->title }}</flux:table.cell>
+                        <flux:table.cell>{{ $tm->hours }} hrs</flux:table.cell>
+                        <flux:table.cell class="whitespace-nowrap">
                             {{ $tm->datestart->format('M d, Y') }} — {{ $tm->dateend->format('M d, Y') }}
-                        </flux:text>
-                    </div>
-                    <div class="flex gap-2 text-sm text-neutral-500">
-                        Hours: <flux:text variant="subtle">{{ $tm->hours }} hrs</flux:text>
-                    </div>
-                    <div class="flex gap-2 text-sm text-neutral-500">
-                        Assignees:
+                        </flux:table.cell>
+                        <flux:table.cell>{{ $tm->venue }}</flux:table.cell>
+                        <flux:table.cell>{{ $tm->conductedby }}</flux:table.cell>
+                        <flux:table.cell>{{ $tm->registration_fee ?: '—' }}</flux:table.cell>
+                        <flux:table.cell>
+                            @if($tm->assignments->isEmpty())
+                            <flux:text variant="subtle" size="sm">—</flux:text>
+                            @else
+                            <div class="flex flex-wrap gap-1">
+                                @foreach($tm->assignments as $assignment)
+                                <flux:modal.trigger name="unassign-{{ $assignment->id }}">
+                                    <flux:badge
+                                        color="zinc"
+                                        size="sm"
+                                        icon-trailing="x-mark"
+                                        class="cursor-pointer hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors">
+                                        {{ $assignment->employee_name }}
+                                    </flux:badge>
+                                </flux:modal.trigger>
+                                @endforeach
+                            </div>
+                            @endif
+                        </flux:table.cell>
 
-                        @if($tm->assignments->isEmpty())
-                        <flux:text variant="subtle" size="sm">—</flux:text>
-                        @else
-                        <div class="flex flex-wrap gap-1">
-                            @foreach($tm->assignments as $assignment)
-                            <flux:modal.trigger name="unassign-{{ $assignment->id }}">
-                                <flux:badge
-                                    color="zinc"
-                                    size="sm"
-                                    icon-trailing="x-mark"
-                                    class="cursor-pointer hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors">
-                                    {{ $assignment->employee_name }}
-                                </flux:badge>
-                            </flux:modal.trigger>
-                            @endforeach
-                        </div>
-                        @endif
+                        <flux:table.cell align="right">
+                            <div class="flex items-center justify-end gap-1">
+                                <!-- Assign -->
+                                <flux:modal.trigger name="assign-module-{{ $tm->id }}">
+                                    <flux:button size="sm" color="teal" variant="ghost" icon="user-plus" square />
+                                </flux:modal.trigger>
+
+                                <!-- Edit -->
+                                <flux:modal.trigger name="edit-module-{{ $tm->id }}">
+                                    <flux:button size="sm" color="sky" variant="ghost" icon="eye" square />
+                                </flux:modal.trigger>
+
+                                <!-- Delete -->
+                                <flux:modal.trigger name="delete-module-{{ $tm->id }}">
+                                    <flux:button variant="ghost" size="sm" icon="trash" square />
+                                </flux:modal.trigger>
+
+                            </div>
+                        </flux:table.cell>
+                    </flux:table.row>
+                    @empty
+                    <flux:table.row>
+                        <flux:table.cell colspan="8" class="text-center py-8 text-neutral-500">
+                            No training modules yet.
+                        </flux:table.cell>
+                    </flux:table.row>
+                    @endforelse
+                </flux:table.rows>
+            </flux:table>
+        </div>
+    </div>
+
+    <!-- Mobile Cards -->
+    <div class="lg:hidden space-y-4">
+        @forelse($trainingModules as $tm)
+        <flux:card class="p-4 bg-transparent">
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between items-center">
+                    <flux:heading>{{ $tm->title }}</flux:heading>
+                    <div class="flex gap-2">
+                        <flux:modal.trigger name="assign-module-{{ $tm->id }}">
+                            <flux:button size="sm" color="teal" variant="ghost" icon="user-plus" square />
+                        </flux:modal.trigger>
+                        <flux:modal.trigger name="edit-module-{{ $tm->id }}">
+                            <flux:button size="sm" color="sky" variant="ghost" icon="eye" square />
+                        </flux:modal.trigger>
+                        <flux:modal.trigger name="delete-module-{{ $tm->id }}">
+                            <flux:button variant="ghost" size="sm" icon="trash" square />
+                        </flux:modal.trigger>
                     </div>
                 </div>
-            </flux:card>
-            @empty
-            <div class="text-center py-8 text-neutral-500">No training modules yet.</div>
-            @endforelse
-        </div>
+
+                <flux:separator />
+
+                <div class="flex gap-2 text-sm text-neutral-500">
+                    Venue: <flux:text variant="subtle">{{ $tm->venue }}</flux:text>
+                </div>
+                <div class="flex gap-2 text-sm text-neutral-500">
+                    Conducted by: <flux:text variant="subtle">{{ $tm->conductedby }}</flux:text>
+                </div>
+                <div class="flex gap-2 text-sm text-neutral-500">
+                    Fee: <flux:text variant="subtle">{{ $tm->registration_fee ?: '—' }}</flux:text>
+                </div>
+                <div class="flex gap-2 text-sm text-neutral-500">
+                    Duration: <flux:text variant="subtle">
+                        {{ $tm->datestart->format('M d, Y') }} — {{ $tm->dateend->format('M d, Y') }}
+                    </flux:text>
+                </div>
+                <div class="flex gap-2 text-sm text-neutral-500">
+                    Hours: <flux:text variant="subtle">{{ $tm->hours }} hrs</flux:text>
+                </div>
+                <div class="flex gap-2 text-sm text-neutral-500">
+                    Assignees:
+
+                    @if($tm->assignments->isEmpty())
+                    <flux:text variant="subtle" size="sm">—</flux:text>
+                    @else
+                    <div class="flex flex-wrap gap-1">
+                        @foreach($tm->assignments as $assignment)
+                        <flux:modal.trigger name="unassign-{{ $assignment->id }}">
+                            <flux:badge
+                                color="zinc"
+                                size="sm"
+                                icon-trailing="x-mark"
+                                class="cursor-pointer hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors">
+                                {{ $assignment->employee_name }}
+                            </flux:badge>
+                        </flux:modal.trigger>
+                        @endforeach
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </flux:card>
+        @empty
+        <div class="text-center py-8 text-neutral-500">No training modules yet.</div>
+        @endforelse
+    </div>
     </div>
 
     <x-hr.create-module-modal />

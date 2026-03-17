@@ -130,6 +130,20 @@ class HRController extends Controller
             ->with('success', 'Training module deleted successfully.');
     }
 
+    public function destroyAssignment(Assignment $assignment): RedirectResponse
+    {
+        $assignment->delete();
+
+        return redirect()->route('hr.modules.index')
+            ->with('success', 'Assignment removed successfully.');
+    }
+
+    public function restoreModule(TrainingModule $module)
+    {
+        $module->update(['archived_at' => null]); // or whatever your archive field is
+        return back()->with('success', 'Module restored successfully.');
+    }
+
     // ========== Assignment Management ==========
     public function storeAssignment(Request $request): RedirectResponse
     {
@@ -199,7 +213,7 @@ class HRController extends Controller
     }
 
     // ========== Monitoring ==========
-    public function modulesArchive(Request $request): View
+    public function modulesArchived(Request $request): View
     {
         $showArchived = true;
 
@@ -330,5 +344,33 @@ class HRController extends Controller
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'inline; filename="' . $filename . '"')
             ->header('Cache-Control', 'no-store, no-cache');
+    }
+
+
+    public function notify(TrainingModule $module)
+    {
+        $notified = 0;
+
+        $assignments = $module->assignments()->with('user')->get();
+
+        foreach ($assignments as $assignment) {
+            $hasSubmitted = \App\Models\Document::where('user_id', $assignment->user_id)
+                ->where('module_id', $module->id)
+                ->where('isArchived', false)
+                ->exists();
+
+            if (!$hasSubmitted && $assignment->user?->email) {
+                \Illuminate\Support\Facades\Mail::to($assignment->user->email)
+                    ->send(new \App\Mail\NotifMail(
+                        mailSubject: 'Reminder: Submit Your Learning Journal',
+                        body: $assignment->user->first_name,
+                        module: $module,
+                    ));
+                $notified++;
+                sleep(1);
+            }
+        }
+
+        return back()->with('success', "Notified {$notified} user(s) who have not yet submitted.");
     }
 }

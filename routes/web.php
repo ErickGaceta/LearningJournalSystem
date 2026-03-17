@@ -75,13 +75,14 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 Route::middleware(['auth'])->prefix('hr')->name('hr.')->group(function () {
     Route::get('/dashboard', [HRController::class, 'dashboard'])->name('dashboard');
 
-    // Training Module Management
+   // Training Module Management
     Route::get('/modules', [HRController::class, 'modulesIndex'])->name('modules.index');
-    Route::get('/modules/archived', [HRController::class, 'modulesArchive'])->name('modules.archive');
-    Route::patch('modules/{module}/archive', [ModuleController::class, 'archive'])->name('hr.modules.archive'); // ← fixed path
+    Route::get('/modules/archived', [HRController::class, 'modulesArchived'])->name('modules.archived'); // ← renamed to avoid conflict
+    Route::patch('/modules/{module}/archive', [HRController::class, 'archiveModule'])->name('modules.archive');
     Route::post('/modules', [HRController::class, 'storeModule'])->name('modules.store');
     Route::put('/modules/{module}', [HRController::class, 'updateModule'])->name('modules.update');
     Route::delete('/modules/{module}', [HRController::class, 'destroyModule'])->name('modules.destroy');
+    Route::patch('/modules/{module}/restore', [HRController::class, 'restoreModule'])->name('modules.restore');
 
     // Assignment Management
     Route::post('/assignments', [HRController::class, 'storeAssignment'])->name('assignments.store');
@@ -92,7 +93,7 @@ Route::middleware(['auth'])->prefix('hr')->name('hr.')->group(function () {
     Route::get('/monitoring/documents/{document}/preview', [HRController::class, 'previewDocument'])->name('monitoring.document.preview');
     Route::post('/documents/{document}/archive', [HRController::class, 'archiveDocument'])->name('documents.archive');
     Route::get('/documents/{document}/preview', [HRController::class, 'previewDocument'])->name('documents.preview');
-    Route::prefix('monitoring/certificates')->name('hr.monitoring.certificates.')->group(function () {
+    Route::prefix('monitoring/certificates')->name('monitoring.certificates.')->group(function () {
 
         // Preview (loaded in iframe)
         Route::get('{training}/{employee}', [CertificateController::class, 'preview'])->name('preview');
@@ -100,6 +101,8 @@ Route::middleware(['auth'])->prefix('hr')->name('hr.')->group(function () {
         // PDF download
         Route::get('{training}/{employee}/download', [CertificateController::class, 'download'])->name('download');
     });
+
+    Route::post('modules/{module}/notify', [HRController::class, 'notify'])->name('modules.notify');
 });
 
 // ========== User Routes ==========

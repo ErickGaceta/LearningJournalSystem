@@ -32,15 +32,15 @@ $alreadyAssigned = $module->assignments->pluck('user_id')->toArray();
                         <flux:checkbox.group>
                             <flux:checkbox.all label="Select all" />
                             @foreach($users as $user)
-                            @php $isAssigned = in_array($user->id, $alreadyAssigned); @endphp
-                            <div x-show="search === '' || '{{ strtolower($user->full_name) }}'.includes(search.toLowerCase())">
-                                <flux:checkbox
-                                    name="user_ids[]"
-                                    value="{{ $user->id }}"
-                                    :label="$user->full_name . ($isAssigned ? ' ✓' : '')"
-                                    :checked="$isAssigned"
-                                    :disabled="$isAssigned" />
-                            </div>
+                                @php $isAssigned = in_array($user->id, $alreadyAssigned); @endphp
+                                <div x-show="search === '' || '{{ strtolower($user->full_name) }}'.includes(search.toLowerCase())">
+                                    <flux:checkbox
+                                        name="user_ids[]"
+                                        value="{{ $user->id }}"
+                                        :label="$user->full_name . ($isAssigned ? ' ✓' : '')"
+                                        :checked="$isAssigned"
+                                        :disabled="$isAssigned" />
+                                </div>
                             @endforeach
                         </flux:checkbox.group>
                     </div>
@@ -53,9 +53,9 @@ $alreadyAssigned = $module->assignments->pluck('user_id')->toArray();
             </div>
 
             @if($module->assignments_count > 0)
-            <flux:text size="sm" variant="subtle">
-                {{ $module->assignments_count }} {{ Str::plural('employee', $module->assignments_count) }} already assigned.
-            </flux:text>
+                <flux:text size="sm" variant="subtle">
+                    {{ $module->assignments_count }} {{ Str::plural('employee', $module->assignments_count) }} already assigned.
+                </flux:text>
             @endif
         </div>
 
@@ -113,79 +113,53 @@ $alreadyAssigned = $module->assignments->pluck('user_id')->toArray();
 
 {{-- Delete Modal --}}
 <flux:modal name="delete-module-{{ $module->id }}" class="max-w-md">
-    <form action="{{ route('hr.modules.archive', $module) }}" method="POST">
-        @csrf
-        @method('PATCH')
-
-<div class="p-6 space-y-4 bg-white dark:bg-neutral-800">
-        <flux:heading size="lg" class="text-center">Manage User</flux:heading>
+    <div class="p-6 space-y-4 bg-white dark:bg-neutral-800">
+        <flux:heading size="lg" class="text-center">Delete Module</flux:heading>
 
         <div class="rounded-lg p-4 shadow-sm text-center">
-            <flux:text size="sm">You are managing:</flux:text>
-            <flux:text size="lg" class="font-semibold mt-2"
-                x-text="selectedUser
-                    ? [selectedUser.first_name, selectedUser.middle_name, selectedUser.last_name].filter(Boolean).join(' ')
-                    : ''">
-            </flux:text>
-            <flux:text size="sm" variant="subtle" x-text="selectedUser?.email"></flux:text>
+            <flux:text size="sm">You are about to manage:</flux:text>
+            <flux:text size="lg" class="font-semibold mt-2">{{ $module->title }}</flux:text>
         </div>
 
-        <!-- Archive -->
-
-<div class="bg-red-50 dark:bg-red-950/30 rounded-lg p-4">
+        {{-- Archive Action --}}
+        <div class="bg-amber-50 dark:bg-amber-950/30 rounded-lg p-4">
             <div class="flex flex-col items-center gap-2">
-                <flux:icon.archive-box class="w-5 h-5 text-red-500 dark:text-red-400" />
+                <flux:icon.archive-box class="w-5 h-5 text-amber-500 dark:text-amber-400" />
                 <flux:text size="sm" class="text-center">
-                    <strong class="text-red-500">Archive:</strong>
-                    This user will no longer be able to log in. This action can be undone at the Archive Tab.
+                    <strong class="text-amber-500">Archive:</strong>
+                    This module will be hidden from active use. This action can be undone at the Archive Tab.
                 </flux:text>
-                <form
-                    :action="`{{ url('hr/module/index') }}/${selectedUser?.id}/archive`"
-                    method="POST"
-                    class="w-full"
-                >
+                <form action="{{ route('hr.modules.archive', $module) }}" method="POST" class="w-full">
                     @csrf
                     @method('PATCH')
-                    <flux:button type="submit" variant="filled" color="red" size="sm" class="w-full">
-                        Archive Training
+                    <flux:button type="submit" variant="filled" color="amber" size="sm" class="w-full">
+                        Archive Module
                     </flux:button>
                 </form>
             </div>
         </div>
 
- <!-- Delete -->
-    <form action="{{ route('hr.modules.destroy', $module) }}" method="POST">
-        @csrf
-        @method('DELETE')
-
-
-
-            <div class="bg-red-50 dark:bg-red-950/30 rounded-lg p-4">
-                <div class="flex flex-col items-center gap-2">
-                    <flux:icon.information-circle class="w-5 h-5 text-red-500 dark:text-red-400" />
-                    <flux:text size="sm" class="text-center">
-                        <strong class="text-red-500">Warning:</strong> This cannot be undone. All associated assignments will also be deleted.
-                    </flux:text>
-                     <form
-                    :action="`{{ url('hr/module/index') }}/${selectedUser?.id}/archive`"
-                    method="POST"
-                    class="w-full"
-                >
+        {{-- Delete Action --}}
+        <div class="bg-red-50 dark:bg-red-950/30 rounded-lg p-4">
+            <div class="flex flex-col items-center gap-2">
+                <flux:icon.information-circle class="w-5 h-5 text-red-500 dark:text-red-400" />
+                <flux:text size="sm" class="text-center">
+                    <strong class="text-red-500">Warning:</strong> This cannot be undone. All associated assignments will also be deleted.
+                </flux:text>
+                <form action="{{ route('hr.modules.destroy', $module) }}" method="POST" class="w-full">
                     @csrf
-                    @method('PATCH')
+                    @method('DELETE')
                     <flux:button type="submit" variant="filled" color="red" size="sm" class="w-full">
-                         Delete Permanently
+                        Delete Permanently
                     </flux:button>
                 </form>
-                </div>
             </div>
         </div>
+    </div>
 
-        <div class="bg-white dark:bg-neutral-800 px-6 py-3 flex gap-2 border-t border-neutral-200 dark:border-neutral-700">
-            <flux:modal.close>
-                <flux:button variant="ghost" size="sm" class="flex-1">Cancel</flux:button>
-            </flux:modal.close>
-        </div>
-    </form>
+    <div class="bg-white dark:bg-neutral-800 px-6 py-3 flex gap-2 border-t border-neutral-200 dark:border-neutral-700">
+        <flux:modal.close>
+            <flux:button variant="ghost" size="sm" class="flex-1">Cancel</flux:button>
+        </flux:modal.close>
+    </div>
 </flux:modal>
-

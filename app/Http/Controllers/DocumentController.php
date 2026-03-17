@@ -79,6 +79,11 @@ class DocumentController extends Controller
         $validated['assignment_id'] = $assignment->id;
         $validated['module_id'] = $assignment->module_id;
 
+        Document::where('user_id', Auth::id())
+        ->where('module_id', $assignment->module_id)
+        ->where('isArchived', true)
+        ->delete();
+
         Document::create($validated);
 
         return redirect()->route('user.documents.index')
