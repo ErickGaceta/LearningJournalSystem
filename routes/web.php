@@ -69,6 +69,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/divisions', [AdminController::class, 'storeDivision'])->name('divisions.store');
     Route::put('/divisions/{division}', [AdminController::class, 'updateDivision'])->name('divisions.update');
     Route::delete('/divisions/{division}', [AdminController::class, 'destroyDivision'])->name('divisions.destroy');
+
+
 });
 
 // ========== HR Routes ==========
@@ -77,7 +79,7 @@ Route::middleware(['auth'])->prefix('hr')->name('hr.')->group(function () {
 
    // Training Module Management
     Route::get('/modules', [HRController::class, 'modulesIndex'])->name('modules.index');
-    Route::get('/modules/archived', [HRController::class, 'modulesArchived'])->name('modules.archived'); 
+    Route::get('/modules/archived', [HRController::class, 'modulesArchived'])->name('modules.archived');
     Route::patch('/modules/{module}/archive', [HRController::class, 'archiveModule'])->name('modules.archive');
     Route::post('/modules', [HRController::class, 'storeModule'])->name('modules.store');
     Route::put('/modules/{module}', [HRController::class, 'updateModule'])->name('modules.update');
