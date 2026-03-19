@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ActivityLogger;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -43,12 +44,17 @@ class LoginController extends Controller
             $request->session()->regenerate();
 
             $user         = Auth::user();
+
+            ActivityLogger::log('login', "User logged in ({$user->user_type})");
+
             $isFirstLogin = is_null($user->last_login);
 
             $user->updateQuietly(['last_login' => now()]);
 
             if ($isFirstLogin) {
                 $request->session()->put('must_change_password', true);
+
+                ActivityLogger::log('first_login', 'User logged in for the first time');
 
                 return redirect()->route('password.change.show')
                     ->with('info', 'Welcome! Please change your password to continue.');
@@ -66,6 +72,8 @@ class LoginController extends Controller
 
     public function destroy(Request $request): RedirectResponse
     {
+        ActivityLogger::log('logout', 'User logged out');
+
         Auth::logout();
 
         $request->session()->invalidate();

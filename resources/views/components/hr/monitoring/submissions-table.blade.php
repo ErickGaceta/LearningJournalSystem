@@ -91,12 +91,6 @@
                         <flux:button size="sm" variant="ghost" icon:trailing="ellipsis-horizontal"></flux:button>
                         <flux:menu>
                             <flux:menu.item
-                                icon="bolt"
-                                x-data
-                                x-on:click="$dispatch('open-document-preview', { id: {{ $doc->id }} })">
-                                Generate Certificate
-                            </flux:menu.item>
-                            <flux:menu.item
                                 icon="eye"
                                 x-data
                                 x-on:click="$dispatch('open-document-preview', { id: {{ $doc->id }}, toolbar: '0' })">
