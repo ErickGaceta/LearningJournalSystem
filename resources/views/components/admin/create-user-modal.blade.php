@@ -19,10 +19,11 @@
                     <flux:input name="first_name" label="First Name" value="{{ old('first_name') }}" required />
                     <flux:input name="middle_name" label="Middle Name" value="{{ old('middle_name') }}" />
                     <flux:input name="last_name" label="Last Name" value="{{ old('last_name') }}" required />
-                    <flux:select name="gender" label="Gender" required>
-                        <flux:select.option value="">Select gender...</flux:select.option>
-                        <flux:select.option value="Male" :selected="old('gender') == 'Male'">Male</flux:select.option>
-                        <flux:select.option value="Female" :selected="old('gender') == 'Female'">Female</flux:select.option>
+                    <flux:select name="sex" label="Sex" required>
+                        <flux:select.option value="">Select Sex...</flux:select.option>
+                        <flux:select.option value="Male" :selected="old('sex') == 'Male'">Male</flux:select.option>
+                        <flux:select.option value="Female" :selected="old('sex') == 'Female'">Female</flux:select.option>
+                        <flux:select.option value="Other" :selected="old('sex') == 'Other'">Other</flux:select.option>
                     </flux:select>
                 </div>
 

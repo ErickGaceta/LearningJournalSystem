@@ -18,7 +18,7 @@ class User extends Authenticatable
         'first_name',
         'middle_name',
         'last_name',
-        'gender',
+        'sex',
         'id_positions',
         'id_division_units',
         'employee_type',
