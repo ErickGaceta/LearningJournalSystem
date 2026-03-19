@@ -16,8 +16,7 @@ class EnsurePasswordChanged
             !$request->routeIs('password.change.*') &&
             !$request->routeIs('logout')
         ) {
-            return redirect()->route('password.change.show')
-                ->with('info', 'You must change your password before continuing.');
+            return redirect()->route('password.change.show')->with('info', 'You must change your password before continuing.');
         }
 
         return $next($request);

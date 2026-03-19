@@ -65,8 +65,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::put('/divisions/{division}', [AdminController::class, 'updateDivision'])->name('divisions.update');
     Route::delete('/divisions/{division}', [AdminController::class, 'destroyDivision'])->name('divisions.destroy');
 
-    Route::get('activity-logs', \App\Livewire\Admin\ActivityLogIndex::class)
-        ->name('activity-logs.index');
+    Route::view('activity-logs', 'pages.admin.activity-logs.index')
+    ->name('activity-logs.index');
 });
 
 // ========== HR Routes ==========

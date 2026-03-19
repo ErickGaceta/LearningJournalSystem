@@ -1,4 +1,4 @@
-<div class="space-y-4">
+<div class="space-y-4" wire:poll.30s>
 
     {{-- Filters --}}
     <div class="flex gap-3">
@@ -65,5 +65,5 @@
         </flux:table.rows>
     </flux:table>
 
-    {{ $logs->links() }}
+    <x-pagination :paginator="$logs" />
 </div>
