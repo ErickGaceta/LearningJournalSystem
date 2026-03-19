@@ -93,14 +93,6 @@ Route::middleware(['auth'])->prefix('hr')->name('hr.')->group(function () {
     Route::get('/monitoring/documents/{document}/preview', [HRController::class, 'previewDocument'])->name('monitoring.document.preview');
     Route::post('/documents/{document}/archive', [HRController::class, 'archiveDocument'])->name('documents.archive');
     Route::get('/documents/{document}/preview', [HRController::class, 'previewDocument'])->name('documents.preview');
-    // Route::prefix('monitoring/certificates')->name('monitoring.certificates.')->group(function () {
-
-    //     // Preview (loaded in iframe)
-    //     Route::get('{training}/{employee}', [CertificateController::class, 'preview'])->name('preview');
-
-    //     // PDF download
-    //     Route::get('{training}/{employee}/download', [CertificateController::class, 'download'])->name('download');
-    // });
 
     Route::post('modules/{module}/notify', [HRController::class, 'notify'])->name('modules.notify');
 });

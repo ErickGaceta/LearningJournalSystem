@@ -8,7 +8,7 @@
             </div>
             <div>
                 <flux:modal.trigger name="signature-upload">
-                    <flux:button icon:trailing="arrow-up-tray">Upload Signature</flux:button>
+                    <flux:button icon:trailing="arrow-up-tray" size="xs">Upload Signature</flux:button>
                 </flux:modal.trigger>
             </div>
         </div>
