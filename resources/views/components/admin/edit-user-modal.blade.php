@@ -57,9 +57,10 @@ $selectClass = 'w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg
                             <select name="gender" x-bind:disabled="!editing"
                                 x-effect="if (selectedUser) $el.value = selectedUser.gender"
                                 class="{{ $selectClass }}">
-                                <option value="">Select gender...</option>
+                                <option value="">Select sex...</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
+                                <option value="Other">Other</option>
                             </select>
                         </x-admin.field>
                     </div>

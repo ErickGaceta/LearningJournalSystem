@@ -75,9 +75,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 Route::middleware(['auth'])->prefix('hr')->name('hr.')->group(function () {
     Route::get('/dashboard', [HRController::class, 'dashboard'])->name('dashboard');
 
-    // Training Module Management
+   // Training Module Management
     Route::get('/modules', [HRController::class, 'modulesIndex'])->name('modules.index');
-    Route::get('/modules/archived', [HRController::class, 'modulesArchived'])->name('modules.archived'); // ← renamed to avoid conflict
+    Route::get('/modules/archived', [HRController::class, 'modulesArchived'])->name('modules.archived'); 
     Route::patch('/modules/{module}/archive', [HRController::class, 'archiveModule'])->name('modules.archive');
     Route::post('/modules', [HRController::class, 'storeModule'])->name('modules.store');
     Route::put('/modules/{module}', [HRController::class, 'updateModule'])->name('modules.update');
@@ -100,12 +100,6 @@ Route::middleware(['auth'])->prefix('hr')->name('hr.')->group(function () {
 // ========== User Routes ==========
 Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
-
-    Route::post('/notifications/read', function () {
-        $user = Auth::user();
-        $user->unreadNotifications->markAsRead();
-        return back();
-    })->name('notifications.read');
 
     // Training Tracking
     Route::get('/trainings', [UserController::class, 'myTrainings'])->name('trainings.index');
