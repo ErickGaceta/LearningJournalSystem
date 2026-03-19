@@ -2,9 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HRController;
 use App\Http\Controllers\UserController;
@@ -12,8 +9,6 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentPrintController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ChangePasswordController;
-use App\Http\Controllers\MonitoringController;
-use App\Http\Controllers\CertificateController;
 
 // ========== Guest Routes (No Auth Required) ==========
 Route::get('/', fn() => redirect()->route('login'))->name('home');
@@ -69,6 +64,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/divisions', [AdminController::class, 'storeDivision'])->name('divisions.store');
     Route::put('/divisions/{division}', [AdminController::class, 'updateDivision'])->name('divisions.update');
     Route::delete('/divisions/{division}', [AdminController::class, 'destroyDivision'])->name('divisions.destroy');
+
+    Route::get('activity-logs', \App\Livewire\Admin\ActivityLogIndex::class)
+        ->name('activity-logs.index');
 });
 
 // ========== HR Routes ==========

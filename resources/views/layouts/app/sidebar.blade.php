@@ -63,11 +63,20 @@
                         class="font-semibold">
                         {{ __('Divisions/ Units') }}
                     </flux:sidebar.item>
+
+                    <flux:sidebar.item
+                        icon="clipboard-document-list"
+                        :href="route('admin.activity-logs.index')"
+                        :current="request()->routeIs('admin.activity-logs.*')"
+                        wire:navigate
+                        class="font-semibold">
+                        {{ __('Activity Logs') }}
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
                 @endif
 
                 {{-- ========== HR SIDEBAR ========== --}}
-                @if(auth()->user()->user_type === 'hr')
+                @if(in_array(auth()->user()->user_type, ['hr', 'secretary']))
                 <flux:sidebar.group>
                     <flux:sidebar.item
                         icon="home"
@@ -128,24 +137,24 @@
                         wire:navigate>
                         {{ __('Learning Journals') }}
                     </flux:sidebar.item>
+
+                    <flux:separator />
+
+                    <div x-data="{ open: false }" class="relative hidden lg:block px-4 py-3 border-t border-zinc-200 dark:border-zinc-700">
+                        <button @click="open = !open" class="relative flex items-center gap-2 w-full text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100">
+                            <flux:icon.bell class="w-5 h-5" />
+                            <span>Notifications</span>
+                            @if(auth()->user()->unreadNotifications->count() > 0)
+                            <span class="ml-auto w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                                {{ auth()->user()->unreadNotifications->count() }}
+                            </span>
+                            @endif
+                        </button>
+                        @include('partials.notification-dropdown')
+                    </div>
                 </flux:sidebar.group>
                 @endif
             </flux:sidebar.nav>
-
-            @if(auth()->user()->user_type === 'user')
-            <div x-data="{ open: false }" class="relative hidden lg:block px-4 py-3 border-t border-zinc-200 dark:border-zinc-700">
-                <button @click="open = !open" class="relative flex items-center gap-2 w-full text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100">
-                    <flux:icon.bell class="w-5 h-5" />
-                    <span>Notifications</span>
-                    @if(auth()->user()->unreadNotifications->count() > 0)
-                    <span class="ml-auto w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                        {{ auth()->user()->unreadNotifications->count() }}
-                    </span>
-                    @endif
-                </button>
-                @include('partials.notification-dropdown')
-            </div>
-            @endif
 
             <flux:spacer />
 

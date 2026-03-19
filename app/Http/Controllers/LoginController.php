@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ActivityLogger;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -43,6 +44,9 @@ class LoginController extends Controller
             $request->session()->regenerate();
 
             $user         = Auth::user();
+
+            ActivityLogger::log('login', "User logged in ({$user->user_type})");
+
             $isFirstLogin = is_null($user->last_login);
 
             $user->updateQuietly(['last_login' => now()]);
