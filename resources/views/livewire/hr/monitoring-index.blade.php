@@ -5,25 +5,23 @@
         <div class="flex gap-3 items-center justify-end">
             <flux:select wire:model.live="year" class="w-32">
                 @foreach($availableYears as $y)
-                    <option value="{{ $y }}">{{ $y }}</option>
+                <option value="{{ $y }}">{{ $y }}</option>
                 @endforeach
             </flux:select>
         </div>
     </div>
-
-    {{-- Quarter panels --}}
+    {{-- Quarter tabs --}}
     @php
-        $quarterColors = [1 => 'teal', 2 => 'lime', 3 => 'sky', 4 => 'violet'];
+    $quarterColors = [1 => 'teal', 2 => 'lime', 3 => 'sky', 4 => 'violet'];
     @endphp
 
-    <div class="flex flex-col gap-4" wire:loading.class="opacity-50 pointer-events-none">
-        @foreach($quarters as $num => $quarter)
-            <x-hr.monitoring.quarter-panel
-                :num="$num"
-                :quarter="$quarter"
-                :color="$quarterColors[$num]"
-                :year="$year" />
-        @endforeach
+    <div wire:loading.class="opacity-50 pointer-events-none">
+        <x-hr.monitoring.quarter-tabs
+            :quarters="$quarters"
+            :colors="$quarterColors"
+            :year="$year" />
     </div>
+
+</div>
 
 </div>
