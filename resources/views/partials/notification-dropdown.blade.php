@@ -5,7 +5,7 @@
     x-transition:leave="transition ease-in duration-100"
     x-transition:leave-start="opacity-100 translate-y-0"
     x-transition:leave-end="opacity-0 -translate-y-1"
-    class="absolute bottom-full left-0 mb-2 w-90 bg-white dark:bg-zinc-900 rounded-xl shadow-xl border border-zinc-200 dark:border-zinc-700/60 z-999 overflow-hidden">
+    class="absolute bottom-full left-0 mb-2 w-80 bg-white dark:bg-zinc-900 rounded-xl shadow-xl border border-zinc-200 dark:border-zinc-700/60 z-999 overflow-hidden">
 
     {{-- Header --}}
     <div class="px-4 py-3 border-b border-zinc-100 dark:border-zinc-700/60 flex items-center justify-between">

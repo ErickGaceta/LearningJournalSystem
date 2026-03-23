@@ -138,8 +138,6 @@
                         {{ __('Learning Journals') }}
                     </flux:sidebar.item>
 
-                    <flux:separator />
-
                     <div x-data="{ open: false }" class="relative hidden lg:block px-4 py-3 border-t border-zinc-200 dark:border-zinc-700">
                         <button @click="open = !open" class="relative flex items-center gap-2 w-full text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100">
                             <flux:icon.bell class="w-5 h-5" />
