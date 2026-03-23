@@ -1,4 +1,4 @@
-@props(['modules', 'quarterColor'])
+@props(['modules', 'quarterColor', 'paginator'])
 
 @php
 $statusConfig = [
@@ -9,7 +9,7 @@ $statusConfig = [
 @endphp
 
 <div class="overflow-x-auto">
-    <flux:table x-data="{ expanded: {} }">
+    <flux:table x-data="{ expanded: { {{ (int) request('expanded_module', 0) }}: {{ request('expanded_module') ? 'true' : 'false' }} } }">
         <flux:table.columns>
             <flux:table.column align="end">#</flux:table.column>
             <flux:table.column>Training Title</flux:table.column>
@@ -55,10 +55,12 @@ $statusConfig = [
             <flux:table.row
                 :key="'mod-'.$module->id"
                 class="{{ $isCompleted ? 'cursor-pointer' : '' }}"
-                x-on:click="{{ $isCompleted ? 'expanded['.$module->id.'] = !expanded['.$module->id.']' : '' }}">
+                x-on:click="{{ $isCompleted ? 'expanded['.$module->id.'] ? expanded = {} : expanded = { '.$module->id.': true }' : '' }}">
 
                 <flux:table.cell align="end">
-                    <span class="text-sm text-zinc-500">{{ $mi + 1 }}</span>
+                    <span class="text-sm text-zinc-500">
+                        {{ $paginator->firstItem() + $mi }}
+                    </span>
                 </flux:table.cell>
 
                 <flux:table.cell>
@@ -104,10 +106,7 @@ $statusConfig = [
                     @if($isCompleted)
                     <form action="{{ route('hr.modules.notify', $module) }}" method="POST"
                         x-data="{ sent: false }"
-                        @submit.prevent="
-                            sent = true;
-                            $el.submit();
-                        ">
+                        @submit.prevent="sent = true; $el.submit();">
                         @csrf
                         <flux:button
                             type="submit"
@@ -123,8 +122,8 @@ $statusConfig = [
 
                 <flux:table.cell align="start">
                     @if($isCompleted)
-                    <svg class="w-3 h-3 text-zinc-900 dark:text-zinc-300 mx-auto"
-                        style="transition: transform 200ms"
+                    <svg class="w-3 h-3 text-zinc-900 dark:text-zinc-300 mx-auto border border-zinc-300 dark:border-zinc-600 rounded-full transition-transform duration-300"
+                        style="transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1)"
                         :style="expanded[{{ $module->id }}] ? 'transform: rotate(90deg)' : 'transform: rotate(0deg)'"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -134,21 +133,26 @@ $statusConfig = [
 
             </flux:table.row>
 
-            {{-- Inner submissions row — completed modules only --}}
+            {{-- Inner submissions row --}}
             @if($isCompleted)
-            <flux:table.row :key="'docs-'.$module->id" x-show="expanded[{{ $module->id }}]" x-collapse>
-                <flux:table.cell class="p-0 border-t border-white/10" colspan="9">
-                    <x-hr.monitoring.submissions-table
-                        :module="$module"
-                        :assignment-count="$assignmentCount"
-                        :document-count="$documentCount"
-                        :bar-width="$barWidth"
-                        :pct="$pct" />
-                </flux:table.cell>
+            <flux:table.row :key="'docs-'.$module->id">
+                <td colspan="10">
+                    <div x-show="expanded[{{ $module->id }}]" x-collapse.duration.300ms>
+                        <x-hr.monitoring.submissions-table
+                            :module="$module"
+                            :assignment-count="$assignmentCount"
+                            :document-count="$documentCount"
+                            :bar-width="$barWidth"
+                            :pct="$pct" />
+                    </div>
+                </td>
             </flux:table.row>
             @endif
 
             @endforeach
         </flux:table.rows>
     </flux:table>
+
+    {{-- Pagination --}}
+    <x-pagination :paginator="$paginator" />
 </div>

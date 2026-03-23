@@ -42,9 +42,8 @@
 
         {{-- First page --}}
         @if($start > 1)
-        <a
-            href="{{ $paginator->url(1) }}"
-            class="inline-flex items-center justify-center h-8 w-8 rounded-lg border border-zinc-300 dark:border-zinc-600 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-500 dark:hover:bg-zinc-800 transition-colors">
+        <a href="{{ $paginator->url(1) }}"
+            class="inline-flex items-center justify-center h-6 w-6 border border-zinc-300 dark:border-zinc-600 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors">
             1
         </a>
         @if($start > 2)

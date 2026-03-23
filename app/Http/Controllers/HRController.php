@@ -238,9 +238,10 @@ class HRController extends Controller
 
     public function monitoringIndex(Request $request)
     {
-        $search = $request->get('search');
-        $year   = $request->get('year', now()->year);
-        $now    = now();
+        $search  = $request->get('search');
+        $year    = $request->get('year', now()->year);
+        $now     = now();
+        $perPage = 5;
 
         $allModules = TrainingModule::with([
             'assignments.user.position',
@@ -253,8 +254,7 @@ class HRController extends Controller
                     ->orWhere('conductedby', 'like', "%{$search}%")
                     ->orWhereHas(
                         'assignments',
-                        fn($q) =>
-                        $q->where('employee_name', 'like', "%{$search}%")
+                        fn($q) => $q->where('employee_name', 'like', "%{$search}%")
                     );
             }))
             ->orderBy('datestart')
@@ -279,6 +279,25 @@ class HRController extends Controller
             $q = (int) ceil($module->datestart->month / 3);
             $quarters[$q]['modules']->push($module);
         }
+
+        // Paginate each quarter's collection independently
+        foreach ($quarters as $num => &$quarter) {
+            $page = (int) $request->get("q{$num}_page", 1);
+            $all  = $quarter['modules'];
+
+            $quarter['paginator'] = new \Illuminate\Pagination\LengthAwarePaginator(
+                $all->forPage($page, $perPage),
+                $all->count(),
+                $perPage,
+                $page,
+                [
+                    'path'     => $request->url(),
+                    'pageName' => "q{$num}_page",
+                    'query'    => $request->except("q{$num}_page"),
+                ]
+            );
+        }
+        unset($quarter);
 
         $oldestYear     = TrainingModule::min(DB::raw('YEAR(datestart)')) ?? now()->year;
         $availableYears = range(now()->year, $oldestYear);

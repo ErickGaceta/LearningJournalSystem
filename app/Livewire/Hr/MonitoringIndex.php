@@ -3,6 +3,7 @@
 namespace App\Livewire\Hr;
 
 use App\Models\TrainingModule;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -17,7 +18,8 @@ class MonitoringIndex extends Component
 
     public function render()
     {
-        $now = now();
+        $now     = now();
+        $perPage = 5;
 
         $allModules = TrainingModule::with([
             'assignments.user.position',
@@ -46,6 +48,24 @@ class MonitoringIndex extends Component
             $q = (int) ceil($module->datestart->month / 3);
             $quarters[$q]['modules']->push($module);
         }
+
+        foreach ($quarters as $num => &$quarter) {
+            $page = (int) request()->get("q{$num}_page", 1);
+            $all  = $quarter['modules'];
+
+            $quarter['paginator'] = new LengthAwarePaginator(
+                $all->forPage($page, $perPage),
+                $all->count(),
+                $perPage,
+                $page,
+                [
+                    'path'     => request()->url(),
+                    'pageName' => "q{$num}_page",
+                    'query'    => request()->except("q{$num}_page"),
+                ]
+            );
+        }
+        unset($quarter);
 
         $oldestYear     = TrainingModule::min(DB::raw('YEAR(datestart)')) ?? now()->year;
         $availableYears = range(now()->year, $oldestYear);
