@@ -10,6 +10,7 @@ use App\Models\Assignment;
 use App\Models\Document;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use App\Services\ActivityLogger;
 
 class HRController extends Controller
 {
@@ -92,6 +93,8 @@ class HRController extends Controller
 
         TrainingModule::create($validated);
 
+        ActivityLogger::log('created', "Created training module: {$validated['title']}");
+
         return redirect()->route('hr.modules.index')
             ->with('success', 'Training module created successfully.');
     }
@@ -110,6 +113,8 @@ class HRController extends Controller
 
         $module->update($validated);
 
+        ActivityLogger::log('updated', "Updated training module: {$module->title}", $module);
+
         return redirect()->route('hr.modules.index')
             ->with('success', 'Training module updated successfully.');
     }
@@ -118,6 +123,8 @@ class HRController extends Controller
     {
         $module->update(['archived_at' => now()]);
 
+        ActivityLogger::log('deleted', "Archived training module: {$module->title}", $module);
+
         return redirect()->route('hr.modules.index')
             ->with('success', 'Training module archived successfully.');
     }
@@ -125,6 +132,8 @@ class HRController extends Controller
     public function destroyModule(TrainingModule $module): RedirectResponse
     {
         $module->delete();
+
+        ActivityLogger::log('deleted', "Deleted training module: {$module->title}", $module);
 
         return redirect()->route('hr.modules.index')
             ->with('success', 'Training module deleted successfully.');
@@ -140,7 +149,8 @@ class HRController extends Controller
 
     public function restoreModule(TrainingModule $module)
     {
-        $module->update(['archived_at' => null]); // or whatever your archive field is
+        $module->update(['archived_at' => null]);
+        ActivityLogger::log('updated', "Restored training module: {$module->title}", $module);
         return back()->with('success', 'Module restored successfully.');
     }
 
@@ -186,6 +196,8 @@ class HRController extends Controller
             Assignment::insert($inserts);
         }
 
+        ActivityLogger::log('created', "Assigned " . count($inserts) . " user(s) to: {$module->title}", $module);
+
         return redirect()->route('hr.modules.index')
             ->with('success', 'Training assigned successfully.');
     }
@@ -194,6 +206,8 @@ class HRController extends Controller
     public function archiveDocument(Document $document): RedirectResponse
     {
         $document->update(['isArchived' => true]);
+
+        ActivityLogger::log('deleted', "HR archived a learning journal (document #{$document->id})", $document);
 
         return redirect()
             ->route('hr.modules.index')
@@ -367,52 +381,54 @@ class HRController extends Controller
 
 
     public function notify(TrainingModule $module)
-{
-    $notified = 0;
-    $failed = [];
+    {
+        $notified = 0;
+        $failed = [];
 
-    $assignments = $module->assignments()->with('user')->get();
+        $assignments = $module->assignments()->with('user')->get();
 
-    foreach ($assignments as $assignment) {
-        $user = $assignment->user;
+        foreach ($assignments as $assignment) {
+            $user = $assignment->user;
 
-        if (!$user) {
-            continue;
-        }
+            if (!$user) {
+                continue;
+            }
 
-        $hasSubmitted = \App\Models\Document::where('user_id', $assignment->user_id)
-            ->where('module_id', $module->id)
-            ->where('isArchived', false)
-            ->exists();
+            $hasSubmitted = \App\Models\Document::where('user_id', $assignment->user_id)
+                ->where('module_id', $module->id)
+                ->where('isArchived', false)
+                ->exists();
 
-        if (!$hasSubmitted) {
-            try {
-                $user->notify(new \App\Notifications\ModuleSubmissionReminder($module));
-                $notified++;
-            } catch (\Exception $e) {
-                $failed[] = $user->name;
+            ActivityLogger::log('created', "Sent submission reminders for: {$module->title} — {$notified} notified");
 
-                \Illuminate\Support\Facades\Log::error('Notification failed.', [
-                    'user_id'   => $user->id,
-                    'user_name' => $user->name,
-                    'email'     => $user->email,
-                    'module_id' => $module->id,
-                    'error'     => $e->getMessage(),
-                ]);
+            if (!$hasSubmitted) {
+                try {
+                    $user->notify(new \App\Notifications\ModuleSubmissionReminder($module));
+                    $notified++;
+                } catch (\Exception $e) {
+                    $failed[] = $user->name;
+
+                    \Illuminate\Support\Facades\Log::error('Notification failed.', [
+                        'user_id'   => $user->id,
+                        'user_name' => $user->name,
+                        'email'     => $user->email,
+                        'module_id' => $module->id,
+                        'error'     => $e->getMessage(),
+                    ]);
+                }
             }
         }
+
+        // Build feedback message
+        $message = "Notified {$notified} user(s) who have not yet submitted.";
+
+        if (!empty($failed)) {
+            $failedNames = implode(', ', $failed);
+            return back()
+                ->with('success', $message)
+                ->with('warning', "Check the following user(s)' email — notification not sent: {$failedNames}.");
+        }
+
+        return back()->with('success', $message);
     }
-
-    // Build feedback message
-    $message = "Notified {$notified} user(s) who have not yet submitted.";
-
-    if (!empty($failed)) {
-        $failedNames = implode(', ', $failed);
-        return back()
-            ->with('success', $message)
-            ->with('warning', "Check the following user(s)' email — notification not sent: {$failedNames}.");
-    }
-
-    return back()->with('success', $message);
-}
 }

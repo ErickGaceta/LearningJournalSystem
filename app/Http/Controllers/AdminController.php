@@ -14,6 +14,7 @@ use App\Models\TrainingModule;
 use App\Models\Document;
 use App\Models\Assignment;
 use Carbon\Carbon;
+use App\Services\ActivityLogger;
 
 class AdminController extends Controller
 {
@@ -92,6 +93,7 @@ class AdminController extends Controller
         $validated['is_archived'] = 0;
 
         $user = User::create($validated);
+        ActivityLogger::log('created', "Created user: {$user->full_name} ({$user->user_type})", $user);
 
         return redirect()->route('admin.users.index')
             ->with('success', "User created! Temporary password: {$generatedPassword}");
@@ -105,6 +107,8 @@ class AdminController extends Controller
             'password'   => $temporaryPassword,
             'last_login' => null,
         ]);
+
+        ActivityLogger::log('updated', "Reset password for: {$user->full_name}", $user);
 
         return redirect()->route('admin.users.index')
             ->with('success', "Password reset for {$user->first_name} {$user->last_name}. Temporary password: {$temporaryPassword}");
@@ -135,6 +139,7 @@ class AdminController extends Controller
         $validated['is_active'] = $request->boolean('is_active');
 
         $user->update($validated);
+        ActivityLogger::log('updated', "Updated user: {$user->full_name}", $user);
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User updated successfully.');
@@ -149,6 +154,8 @@ class AdminController extends Controller
         $user->is_archived = 1;
         $user->save();
 
+        ActivityLogger::log('deleted', "Archived user: {$user->full_name}", $user);
+
         return redirect()->route('admin.users.index')
             ->with('success', 'User archived successfully.');
     }
@@ -162,6 +169,8 @@ class AdminController extends Controller
         $user->is_archived = 0;
         $user->save();
 
+        ActivityLogger::log('updated', "Restored user: {$user->full_name}", $user);
+
         return redirect()->route('admin.users.index')
             ->with('success', 'User restored from archive.');
     }
@@ -173,6 +182,7 @@ class AdminController extends Controller
             return back()->withErrors(['error' => 'You cannot delete your own account.']);
         }
 
+        ActivityLogger::log('deleted', "Deleted user: {$user->full_name}", $user);
         $user->delete();
 
         return redirect()->route('admin.users.index')
@@ -197,6 +207,8 @@ class AdminController extends Controller
 
         Position::create($validated);
 
+        ActivityLogger::log('created', "Created position: {$validated['positions']}");
+
         return redirect()->route('admin.positions.index')
             ->with('success', 'Position created successfully.');
     }
@@ -214,6 +226,8 @@ class AdminController extends Controller
 
         $position->update($validated);
 
+        ActivityLogger::log('updated', "Updated position: {$position->positions}", $position);  
+
         return redirect()->route('admin.positions.index')
             ->with('success', 'Position updated successfully.');
     }
@@ -225,6 +239,8 @@ class AdminController extends Controller
         }
 
         $position->delete();
+
+        ActivityLogger::log('deleted', "Deleted position: {$position->positions}", $position);
 
         return redirect()->route('admin.positions.index')
             ->with('success', 'Position deleted successfully.');
@@ -248,6 +264,8 @@ class AdminController extends Controller
 
         DivisionUnit::create($validated);
 
+        ActivityLogger::log('created', "Created division: {$validated['division_units']}");
+
         return redirect()->route('admin.divisions.index')
             ->with('success', 'Division created successfully.');
     }
@@ -260,6 +278,8 @@ class AdminController extends Controller
 
         $division->update($validated);
 
+        ActivityLogger::log('updated', "Updated division: {$division->division_units}", $division);
+
         return redirect()->route('admin.divisions.index')
             ->with('success', 'Division updated successfully.');
     }
@@ -271,6 +291,8 @@ class AdminController extends Controller
         }
 
         $division->delete();
+
+        ActivityLogger::log('deleted', "Deleted division: {$division->division_units}", $division);
 
         return redirect()->route('admin.divisions.index')
             ->with('success', 'Division deleted successfully.');

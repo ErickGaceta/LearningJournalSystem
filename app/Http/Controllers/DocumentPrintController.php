@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Document;
 use App\Pdf\LearningJournalPDF;
 use Illuminate\Support\Facades\Auth;
+use App\Services\ActivityLogger;
 
 class DocumentPrintController extends Controller
 {
@@ -63,11 +64,13 @@ class DocumentPrintController extends Controller
 
         $document->withoutEvents(function () use ($document) {
             $document->forceFill([
-                'isPrinted' => 1,
+                'isPrinted'  => 1,
                 'printCount' => $document->printCount + 1,
-                'printedAt' => now()->toDateString(),
+                'printedAt'  => now()->toDateString(),
             ])->save();
         });
+
+        ActivityLogger::log('printed', "Printed learning journal: {$document->module?->title}", $document);
 
         return response($pdf->Output($filename, 'I'))
             ->header('Content-Type', 'application/pdf');
