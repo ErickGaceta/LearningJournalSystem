@@ -3,19 +3,16 @@
 namespace App\Notifications;
 
 use App\Models\TrainingModule;
-use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 
 class ModuleSubmissionReminder extends Notification
-{
-    use Queueable;
-
+{   
     public function __construct(public TrainingModule $module) {}
 
     public function via(object $notifiable): array
     {
-        return ['database', 'mail']; // both channels
+        return ['database'];
     }
 
     public function toMail(object $notifiable): MailMessage

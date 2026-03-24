@@ -13,8 +13,14 @@ class ActivityLogIndex extends Component
     public string $search = '';
     public string $action = '';
 
-    public function updatingSearch(): void { $this->resetPage(); }
-    public function updatingAction(): void { $this->resetPage(); }
+    public function updatingSearch(): void
+    {
+        $this->resetPage();
+    }
+    public function updatingAction(): void
+    {
+        $this->resetPage();
+    }
 
     public function render()
     {
@@ -24,7 +30,8 @@ class ActivityLogIndex extends Component
                     ->orWhere('last_name', 'like', "%{$this->search}%")))
             ->when($this->action, fn($q) => $q->where('action', $this->action))
             ->latest()
-            ->paginate(20);
+            ->paginate(20)
+            ->withPath(route('admin.activity-logs.index'));
 
         return view('livewire.admin.activity-log-index', compact('logs'));
     }
