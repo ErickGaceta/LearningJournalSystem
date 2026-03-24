@@ -367,24 +367,52 @@ class HRController extends Controller
 
 
     public function notify(TrainingModule $module)
-    {
-        $notified = 0;
+{
+    $notified = 0;
+    $failed = [];
 
-        $assignments = $module->assignments()->with('user')->get();
+    $assignments = $module->assignments()->with('user')->get();
 
-        foreach ($assignments as $assignment) {
-            $hasSubmitted = \App\Models\Document::where('user_id', $assignment->user_id)
-                ->where('module_id', $module->id)
-                ->where('isArchived', false)
-                ->exists();
+    foreach ($assignments as $assignment) {
+        $user = $assignment->user;
 
-            if (!$hasSubmitted && $assignment->user) {
-                $assignment->user->notify(new \App\Notifications\ModuleSubmissionReminder($module));
-                $notified++;
-                sleep(1);
-            }
+        if (!$user) {
+            continue;
         }
 
-        return back()->with('success', "Notified {$notified} user(s) who have not yet submitted.");
+        $hasSubmitted = \App\Models\Document::where('user_id', $assignment->user_id)
+            ->where('module_id', $module->id)
+            ->where('isArchived', false)
+            ->exists();
+
+        if (!$hasSubmitted) {
+            try {
+                $user->notify(new \App\Notifications\ModuleSubmissionReminder($module));
+                $notified++;
+            } catch (\Exception $e) {
+                $failed[] = $user->name;
+
+                \Illuminate\Support\Facades\Log::error('Notification failed.', [
+                    'user_id'   => $user->id,
+                    'user_name' => $user->name,
+                    'email'     => $user->email,
+                    'module_id' => $module->id,
+                    'error'     => $e->getMessage(),
+                ]);
+            }
+        }
     }
+
+    // Build feedback message
+    $message = "Notified {$notified} user(s) who have not yet submitted.";
+
+    if (!empty($failed)) {
+        $failedNames = implode(', ', $failed);
+        return back()
+            ->with('success', $message)
+            ->with('warning', "Check the following user(s)' email — notification not sent: {$failedNames}.");
+    }
+
+    return back()->with('success', $message);
+}
 }
