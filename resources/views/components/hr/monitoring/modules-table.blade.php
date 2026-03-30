@@ -1,40 +1,7 @@
-@props(['modules', 'quarterColor', 'paginator', 'chartModules' => null])
+@props(['modules', 'quarterColor', 'paginator'])
 
-@php
-$statusConfig = [
-    'upcoming' => ['color' => 'zinc',   'label' => 'Upcoming'],
-    'ongoing'  => ['color' => 'yellow', 'label' => 'Ongoing'],
-    'completed'=> ['color' => 'green',  'label' => 'Completed'],
-];
-
-$chartData = $chartModules ?? $modules;
-
-$chartLabels  = [];
-$chartValues  = [];
-$chartAssigned= [];
-
-foreach ($chartData as $m) {
-    $docs  = $m->documents->count();
-    $asgnd = $m->assignments->count();
-    if ($m->status === 'completed' && $asgnd > 0) {
-        $chartLabels[]   = strlen($m->title) > 38 ? substr($m->title, 0, 35).'...' : $m->title;
-        $chartValues[]   = $docs;
-        $chartAssigned[] = $asgnd;
-    }
-}
-
-$totalSubmitted = array_sum($chartValues);
-$totalAssigned  = array_sum($chartAssigned);
-
-$chartId    = 'pie-' . uniqid();
-$barChartId = 'bar-' . uniqid();
-
-$activeYear    = request('year',    date('Y'));
-$activeQuarter = request('quarter', 'Q' . ceil(date('n') / 3));
-@endphp
-
-{{-- ── TABLE (original, unchanged) ─────────────────────────── --}}
 <div class="overflow-x-auto">
+    <x-hr.monitoring.stats />
     <flux:table x-data="{ expanded: { {{ (int) request('expanded_module', 0) }}: {{ request('expanded_module') ? 'true' : 'false' }} } }">
         <flux:table.columns>
             <flux:table.column align="end">#</flux:table.column>
@@ -53,27 +20,27 @@ $activeQuarter = request('quarter', 'Q' . ceil(date('n') / 3));
             @foreach($modules as $mi => $module)
             @php
             $assignmentCount = $module->assignments->count();
-            $documentCount   = $module->documents->count();
-            $isCompleted     = $module->status === 'completed';
-            $sc              = $statusConfig[$module->status];
+            $documentCount = $module->documents->count();
+            $isCompleted = $module->status === 'completed';
+            $sc = $statusConfig[$module->status];
 
             $pct = $assignmentCount > 0
-                ? round(($documentCount / $assignmentCount) * 100)
-                : 0;
+            ? round(($documentCount / $assignmentCount) * 100)
+            : 0;
             $barWidth = match(true) {
-                $pct >= 100 => 'w-full',
-                $pct >= 92  => 'w-11/12',
-                $pct >= 83  => 'w-5/6',
-                $pct >= 75  => 'w-3/4',
-                $pct >= 67  => 'w-2/3',
-                $pct >= 58  => 'w-7/12',
-                $pct >= 50  => 'w-1/2',
-                $pct >= 42  => 'w-5/12',
-                $pct >= 33  => 'w-1/3',
-                $pct >= 25  => 'w-1/4',
-                $pct >= 17  => 'w-1/6',
-                $pct >= 8   => 'w-1/12',
-                default     => 'w-0',
+            $pct >= 100 => 'w-full',
+            $pct >= 92  => 'w-11/12',
+            $pct >= 83  => 'w-5/6',
+            $pct >= 75  => 'w-3/4',
+            $pct >= 67  => 'w-2/3',
+            $pct >= 58  => 'w-7/12',
+            $pct >= 50  => 'w-1/2',
+            $pct >= 42  => 'w-5/12',
+            $pct >= 33  => 'w-1/3',
+            $pct >= 25  => 'w-1/4',
+            $pct >= 17  => 'w-1/6',
+            $pct >= 8   => 'w-1/12',
+            default     => 'w-0',
             };
             @endphp
 
