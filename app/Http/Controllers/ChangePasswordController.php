@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use App\Services\ActivityLogger;
 
 class ChangePasswordController extends Controller
 {
@@ -15,26 +16,27 @@ class ChangePasswordController extends Controller
     }
 
     public function update(Request $request)
-{
-    $request->validate([
-        'current_password' => ['required', 'current_password'],
-        'password'         => ['required', 'confirmed', Password::defaults()],
-    ]);
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password'         => ['required', 'confirmed', Password::defaults()],
+        ]);
 
-    $user = Auth::user();
+        $user = Auth::user();
 
-    $user->update([
-        'password' => Hash::make($request->password), // ← was missing Hash::make()
-    ]);
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
 
-    // Clear the force-change flag before session is wiped
-    $request->session()->forget('must_change_password');
+        ActivityLogger::log('updated', 'User changed their password');
 
-    Auth::guard('web')->logout();
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
+        $request->session()->forget('must_change_password');
 
-    return redirect()->route('login')
-        ->with('success', 'Password updated successfully! Please login with your new credentials.');
-}
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login')
+            ->with('success', 'Password updated successfully! Please login with your new credentials.');
+    }
 }

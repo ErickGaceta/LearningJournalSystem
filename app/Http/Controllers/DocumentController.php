@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Services\ActivityLogger;
 
 class DocumentController extends Controller
 {
@@ -80,11 +81,13 @@ class DocumentController extends Controller
         $validated['module_id'] = $assignment->module_id;
 
         Document::where('user_id', Auth::id())
-        ->where('module_id', $assignment->module_id)
-        ->where('isArchived', true)
-        ->delete();
+            ->where('module_id', $assignment->module_id)
+            ->where('isArchived', true)
+            ->delete();
 
         Document::create($validated);
+
+        ActivityLogger::log('created', "Submitted learning journal for: {$assignment->module->title}", $document ?? null);
 
         return redirect()->route('user.documents.index')
             ->with('success', 'Learning journal submitted successfully!');
@@ -108,6 +111,7 @@ class DocumentController extends Controller
         }
 
         $document->update(['isArchived' => false]);
+        ActivityLogger::log('updated', "Restored learning journal: {$document->module?->title}", $document);
 
         return redirect()
             ->route('user.documents.index', ['archived' => true])
@@ -130,6 +134,7 @@ class DocumentController extends Controller
         ]);
 
         $document->update($validated);
+        ActivityLogger::log('updated', "Updated learning journal for: {$document->module?->title}", $document);
 
         return redirect()->route('user.documents.show', $document)
             ->with('success', 'Document updated successfully!');
@@ -142,6 +147,7 @@ class DocumentController extends Controller
         }
 
         $document->update(['isArchived' => true]);
+        ActivityLogger::log('deleted', "Archived learning journal: {$document->module?->title}", $document);
 
         return redirect()
             ->route('user.documents.index')

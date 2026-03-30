@@ -44,16 +44,13 @@
             };
             @endphp
 
-            {{-- Module row --}}
             <flux:table.row
                 :key="'mod-'.$module->id"
                 class="{{ $isCompleted ? 'cursor-pointer' : '' }}"
                 x-on:click="{{ $isCompleted ? 'expanded['.$module->id.'] ? expanded = {} : expanded = { '.$module->id.': true }' : '' }}">
 
                 <flux:table.cell align="end">
-                    <span class="text-sm text-zinc-500">
-                        {{ $paginator->firstItem() + $mi }}
-                    </span>
+                    <span class="text-sm text-zinc-500">{{ $paginator->firstItem() + $mi }}</span>
                 </flux:table.cell>
 
                 <flux:table.cell>
@@ -84,15 +81,11 @@
                 </flux:table.cell>
 
                 <flux:table.cell align="center">
-                    <flux:badge color="{{ $quarterColor }}" size="sm">
-                        {{ $assignmentCount }}
-                    </flux:badge>
+                    <flux:badge color="{{ $quarterColor }}" size="sm">{{ $assignmentCount }}</flux:badge>
                 </flux:table.cell>
 
                 <flux:table.cell align="center">
-                    <flux:badge color="{{ $sc['color'] }}" size="sm">
-                        {{ $sc['label'] }}
-                    </flux:badge>
+                    <flux:badge color="{{ $sc['color'] }}" size="sm">{{ $sc['label'] }}</flux:badge>
                 </flux:table.cell>
 
                 <flux:table.cell align="center">
@@ -101,13 +94,8 @@
                         x-data="{ sent: false }"
                         @submit.prevent="sent = true; $el.submit();">
                         @csrf
-                        <flux:button
-                            type="submit"
-                            size="sm"
-                            icon="envelope"
-                            variant="ghost"
-                            x-bind:disabled="sent"
-                            x-tooltip="'Notify unsubmitted users'">
+                        <flux:button type="submit" size="sm" icon="envelope" variant="ghost"
+                            x-bind:disabled="sent" x-tooltip="'Notify unsubmitted users'">
                         </flux:button>
                     </form>
                     @endif
@@ -123,10 +111,8 @@
                     </svg>
                     @endif
                 </flux:table.cell>
-
             </flux:table.row>
 
-            {{-- Inner submissions row --}}
             @if($isCompleted)
             <flux:table.row :key="'docs-'.$module->id">
                 <td colspan="10">
@@ -146,6 +132,5 @@
         </flux:table.rows>
     </flux:table>
 
-    {{-- Pagination --}}
     <x-pagination :paginator="$paginator" />
 </div>
