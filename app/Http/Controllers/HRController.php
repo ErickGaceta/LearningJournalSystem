@@ -313,10 +313,21 @@ class HRController extends Controller
         }
         unset($quarter);
 
+        $modulesPerQuarter = array_map(fn($q) => $q['modules']->count(), $quarters);
+        $usersSubmittedPerQuarter = array_map(fn($q) => $q['modules']->flatMap(fn($m) => $m->documentsByUser->keys())->unique()->count(), $quarters);
+        $usersDidNotSubmitPerQuarter = array_map(
+            fn($q, $submitted) => $q['modules']
+                ->flatMap(fn($m) => $m->assignments->pluck('user_id'))
+                ->unique()
+                ->count() - $submitted,
+            $quarters,
+            $usersSubmittedPerQuarter 
+        );
+
         $oldestYear     = TrainingModule::min(DB::raw('YEAR(datestart)')) ?? now()->year;
         $availableYears = range(now()->year, $oldestYear);
 
-        return view('pages.hr.monitoring.index', compact('quarters', 'year', 'availableYears'));
+        return view('pages.hr.monitoring.index', compact('quarters', 'year', 'availableYears', 'modulesPerQuarter', 'usersSubmittedPerQuarter', 'usersDidNotSubmitPerQuarter'));
     }
 
     public function previewDocument(Document $document): \Illuminate\Http\Response
