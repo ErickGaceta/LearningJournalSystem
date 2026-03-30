@@ -12,7 +12,7 @@
     </div>
     {{-- Quarter tabs --}}
     @php
-    $quarterColors = [1 => 'teal', 2 => 'lime', 3 => 'sky', 4 => 'violet'];
+    $quarterColors = [1 => 'teal', 2 => 'lime', 3 => 'yellow', 4 => 'violet'];
     @endphp
 
     <div wire:loading.class="opacity-50 pointer-events-none">

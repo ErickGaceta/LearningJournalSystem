@@ -8,13 +8,28 @@
     $color = $colors[$num] ?? 'zinc';
     $submitted = $quarter['modules']->sum(fn($m) => $m->documentsByUser->count());
     $totalAssigned = $quarter['modules']->sum(fn($m) => $m->assignments->count());
+
+    $activeCount = $quarter['modules']->where('status', 'ongoing')->count();
+    $completedCount = $quarter['modules']->where('status', 'completed')->count();
+    $upcomingCount = $quarter['modules']->where('status', 'upcoming')->count();
     @endphp
-    <div x-show="activeQ === {{ $num }}" x-cloak>
+    <div x-show="activeQ === {{ $num }}" x-cloak class="flex gap-2">
         <x-hr.monitoring.pie-chart
             :chart-value="$submitted"
             :max-value="max($totalAssigned, 1)"
             :stroke-color="$color"
-            :text-label="'Users Submitted'" />
+            :text-label="$submitted . '/' . $totalAssigned . ' submitted'" />
+        <x-hr.monitoring.comparison-chart
+            :chart-value1="$activeCount"
+            :chart-value2="$completedCount"
+            :chart-value3="$upcomingCount"
+            stroke-color1="orange"
+            stroke-color2="green"
+            stroke-color3="violet"
+            label1="Active"
+            label2="Completed"
+            label3="Upcoming"
+            text-label="Module Status" />
     </div>
     @endforeach
 

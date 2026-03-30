@@ -11,7 +11,8 @@ $percentage = $maxValue > 0 ? $value / $maxValue : 0;
 $percentage = min($percentage, 1.0);
 $strokeColor = $strokeColor ?? 'lime';
 $displayPct = $value >= $maxValue ? 100 : round($percentage * 100);
-$dashOffset = $value >= $maxValue ? 0.01 : $visibleArc * (1 - $percentage);
+$dashArray = $value === 0 ? '0.01 ' . $circumference : $visibleArc . ' ' . $circumference;
+$dashOffset = $value === 0 ? 0 : ($value >= $maxValue ? 0.01 : $visibleArc * (1 - $percentage));
 
 
 // Text wrapping
@@ -33,7 +34,7 @@ if ($current) $lines[] = $current;
 
 $lineHeight = 16;
 $totalHeight = count($lines) * $lineHeight;
-$startY = 118 - ($totalHeight / 2);
+$startY = 125 - ($totalHeight / 2);
 @endphp
 
 <svg width="150" height="150" viewBox="0 0 150 150">
@@ -47,7 +48,7 @@ $startY = 118 - ($totalHeight / 2);
     <!-- Foreground value -->
     <circle cx="75" cy="75" r="{{ $radius }}"
         fill="none" stroke="{{ $strokeColor }}" stroke-width="12" stroke-linecap="round"
-        stroke-dasharray="{{ $visibleArc }} {{ $circumference }}"
+        stroke-dasharray="{{ $dashArray }}"
         stroke-dashoffset="{{ $dashOffset }}"
         transform="rotate(150 75 75)" />
 
