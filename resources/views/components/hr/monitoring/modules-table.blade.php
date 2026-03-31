@@ -1,5 +1,15 @@
 @props(['modules', 'quarterColor', 'paginator'])
 
+@php
+$statusConfig = [
+    'upcoming'   => ['color' => 'zinc',   'label' => 'Upcoming'],
+    'pending'    => ['color' => 'yellow', 'label' => 'Pending'],
+    'ongoing'    => ['color' => 'blue',   'label' => 'Ongoing'],
+    'completed'  => ['color' => 'green',  'label' => 'Completed'],
+    'cancelled'  => ['color' => 'red',    'label' => 'Cancelled'],
+];
+@endphp
+
 <div class="overflow-x-auto">
     <x-hr.monitoring.stats />
     <flux:table x-data="{ expanded: { {{ (int) request('expanded_module', 0) }}: {{ request('expanded_module') ? 'true' : 'false' }} } }">
@@ -133,4 +143,5 @@
     </flux:table>
 
     <x-pagination :paginator="$paginator" />
+    
 </div>
