@@ -16,6 +16,7 @@
     @endphp
 
     <div wire:loading.class="opacity-50 pointer-events-none">
+
         <x-hr.monitoring.quarter-tabs
             :quarters="$quarters"
             :colors="$quarterColors"

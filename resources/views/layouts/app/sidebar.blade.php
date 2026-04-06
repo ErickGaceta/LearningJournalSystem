@@ -97,15 +97,6 @@
                         class="font-semibold">
                         {{ __('Training & Assignments') }}
                     </flux:sidebar.item>
-
-                    <flux:sidebar.item
-                        icon="academic-cap"
-                        :href="route('hr.monitoring.index')"
-                        :current="request()->routeIs('hr.monitoring.*')"
-                        wire:navigate
-                        class="font-semibold">
-                        {{ __('Monitoring') }}
-                    </flux:sidebar.item>
                 </flux:sidebar.group>
                 @endif
 

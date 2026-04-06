@@ -54,9 +54,9 @@
     ];
 @endphp
 
-<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+<div class="grid grid-cols-3 wrap px-1 py-2 gap-3">
     @foreach ($stats as $stat)
-        <div class="flex flex-col gap-1.5 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+        <div class="flex flex-col w-full gap-1.5 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
             <flux:text size="xs" class="text-zinc-400 leading-none">{{ $stat['label'] }}</flux:text>
             <div class="flex items-center justify-between gap-2">
                 <span class="text-lg font-semibold text-white leading-none">{{ $stat['value'] }}</span>

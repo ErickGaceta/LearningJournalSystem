@@ -11,6 +11,16 @@ class MonitoringIndex extends Component
 {
     public int $year;
 
+    public function placeholder()
+    {
+        return <<<'HTML'
+        <div>
+            <!-- Loading spinner... -->
+            <svg>...</svg>
+        </div>
+        HTML;
+    }
+
     public function mount()
     {
         $this->year = request()->get('year', now()->year);

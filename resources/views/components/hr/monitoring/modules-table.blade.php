@@ -11,7 +11,6 @@ $statusConfig = [
 @endphp
 
 <div class="overflow-x-auto">
-    <x-hr.monitoring.stats />
     <flux:table x-data="{ expanded: { {{ (int) request('expanded_module', 0) }}: {{ request('expanded_module') ? 'true' : 'false' }} } }">
         <flux:table.columns>
             <flux:table.column align="end">#</flux:table.column>
