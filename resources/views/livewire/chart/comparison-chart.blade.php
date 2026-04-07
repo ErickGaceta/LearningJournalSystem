@@ -108,9 +108,17 @@
         },
 
         init() {
-            this.$nextTick(() => this.initChart(@js($chartConfig)));
+            const tryInit = () => {
+                if (this.$el.offsetParent !== null) {
+                    this.initChart(@js($chartConfig));
+                } else {
+                    requestAnimationFrame(tryInit);
+                }
+            };
+
+            this.$nextTick(tryInit);
             $wire.$watch('chartConfig', (config) => this.updateChart(config));
-        }
+        },
     }"
 >
     <div wire:ignore>

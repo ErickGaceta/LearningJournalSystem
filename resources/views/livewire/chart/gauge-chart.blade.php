@@ -95,11 +95,18 @@
         },
 
         init() {
-            this.$nextTick(() => this.initChart(@js($chartConfig)));
+            const tryInit = () => {
+                if (this.$el.offsetParent !== null) {
+                    this.initChart(@js($chartConfig));
+                } else {
+                    requestAnimationFrame(tryInit);
+                }
+            };
+
+            this.$nextTick(tryInit);
             $wire.$watch('chartConfig', (config) => this.updateChart(config));
-        }
-    }"
->
+        },
+    }">
     {{-- wire:ignore prevents Livewire from overwriting the canvas on re-render --}}
     <div wire:ignore>
         <canvas x-ref="canvas" width="150" height="150"></canvas>
