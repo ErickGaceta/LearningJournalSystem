@@ -8,32 +8,37 @@
     $color = $colors[$num] ?? 'zinc';
     $submitted = $quarter['modules']->sum(fn($m) => $m->documentsByUser->count());
     $totalAssigned = $quarter['modules']->sum(fn($m) => $m->assignments->count());
-
     $activeCount = $quarter['modules']->where('status', 'ongoing')->count();
     $completedCount = $quarter['modules']->where('status', 'completed')->count();
     $upcomingCount = $quarter['modules']->where('status', 'upcoming')->count();
     @endphp
+
     <div x-show="activeQ === {{ $num }}" x-cloak class="flex gap-2">
-        <x-hr.monitoring.pie-chart
-            :chart-value="$submitted"
-            :max-value="max($totalAssigned, 1)"
-            :stroke-color="$color"
-            :text-label="$submitted . '/' . $totalAssigned . ' submitted'" />
-        <x-hr.monitoring.comparison-chart
-            :chart-value1="$activeCount"
-            :chart-value2="$completedCount"
-            :chart-value3="$upcomingCount"
-            stroke-color1="orange"
-            stroke-color2="green"
-            stroke-color3="violet"
+
+        <livewire:chart.gauge-chart
+            :key="'gauge-'.$num"
+            :chartValue="$submitted"
+            :maxValue="max($totalAssigned, 1)"
+            :strokeColor="$color"
+            :textLabel="$submitted . '/' . $totalAssigned . ' submitted'" />
+
+        <livewire:chart.comparison-chart
+            :key="'comparison-'.$num"
+            :chartValue1="$activeCount"
+            :chartValue2="$completedCount"
+            :chartValue3="$upcomingCount"
+            strokeColor1="orange"
+            strokeColor2="green"
+            strokeColor3="violet"
             label1="Active"
             label2="Completed"
             label3="Upcoming"
-            text-label="Module Status" />
+            textLabel="Module Status" />
+
     </div>
     @endforeach
 
-    <div class="rounded-xl border border-white/10 overflow-hidden">
+    <div class="rounded-xl border border-white/10 overflow-hidden mt-3">
         <div class="flex border-b border-white/10 bg-white/5">
             @foreach ($quarters as $num => $quarter)
             @php
