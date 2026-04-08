@@ -13,6 +13,7 @@ $selectClass = 'w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg
 
         <form :action="'{{ route('admin.users.update', '_placeholder_') }}'.replace('_placeholder_', selectedUser?.id)" method="POST" class="flex flex-col gap-0 w-full">
             @csrf
+            @method('PUT')
 
             <div class="p-6 bg-white dark:bg-neutral-800 space-y-4 w-full">
 
@@ -53,9 +54,9 @@ $selectClass = 'w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg
                                 class="{{ $inputClass }}" required />
                         </x-admin.field>
 
-                        <x-admin.field label="Gender">
-                            <select name="gender" x-bind:disabled="!editing"
-                                x-effect="if (selectedUser) $el.value = selectedUser.gender"
+                        <x-admin.field label="Sex">
+                            <select name="sex" x-bind:disabled="!editing"
+                                x-effect="$nextTick(() => { if (selectedUser) $el.value = selectedUser.sex })"
                                 class="{{ $selectClass }}">
                                 <option value="">Select sex...</option>
                                 <option value="Male">Male</option>
