@@ -1,6 +1,6 @@
 @props(['quarters', 'colors', 'year'])
 
-<div x-data="{ activeQ: 1 }">
+<div x-data="{ get activeQ() { return $wire.activeQuarter }, set activeQ(v) { $wire.set('activeQuarter', v) } }">
 
     {{-- Gauges --}}
     @foreach ($quarters as $num => $quarter)
