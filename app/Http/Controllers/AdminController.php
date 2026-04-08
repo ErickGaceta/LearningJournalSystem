@@ -16,6 +16,7 @@ use App\Models\Assignment;
 use Carbon\Carbon;
 use App\Services\ActivityLogger;
 
+
 class AdminController extends Controller
 {
     // ========== Dashboard ==========
@@ -86,6 +87,8 @@ class AdminController extends Controller
             'user_type' => ['required', 'string', 'max:191'],
         ]);
 
+        unset($validated['sex']);
+
         $generatedPassword = Str::password(12); // More secure, mixed case + symbols
 
         $validated['password'] = $generatedPassword;
@@ -131,6 +134,8 @@ class AdminController extends Controller
             'is_active' => ['nullable', 'boolean'],
             'user_type' => ['required', 'string', 'max:191'],
         ]);
+
+        unset($validated['sex']);
 
         if (empty($validated['password'])) {
             unset($validated['password']);
@@ -189,6 +194,8 @@ class AdminController extends Controller
             ->with('success', 'User deleted successfully.');
     }
 
+
+
     // ========== Position Management ==========
     public function positionsIndex()
     {
@@ -226,7 +233,7 @@ class AdminController extends Controller
 
         $position->update($validated);
 
-        ActivityLogger::log('updated', "Updated position: {$position->positions}", $position);  
+        ActivityLogger::log('updated', "Updated position: {$position->positions}", $position);
 
         return redirect()->route('admin.positions.index')
             ->with('success', 'Position updated successfully.');
