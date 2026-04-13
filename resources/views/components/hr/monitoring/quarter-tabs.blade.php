@@ -14,26 +14,38 @@
     @endphp
 
     <div x-show="activeQ === {{ $num }}" x-cloak class="flex gap-2">
+        <div class="grid grid-row-2 grid-cols-1">
+            <livewire:chart.gauge-chart
+                :key="'gauge-'.$num"
+                :chartValue="$submitted"
+                :maxValue="max($totalAssigned, 1)"
+                :strokeColor="$color"
+                :textLabel="$submitted . '/' . $totalAssigned . ' submitted'" />
 
-        <livewire:chart.gauge-chart
-            :key="'gauge-'.$num"
-            :chartValue="$submitted"
-            :maxValue="max($totalAssigned, 1)"
-            :strokeColor="$color"
-            :textLabel="$submitted . '/' . $totalAssigned . ' submitted'" />
+            <livewire:chart.comparison-chart
+                :key="'comparison-'.$num"
+                :chartValue1="$activeCount"
+                :chartValue2="$completedCount"
+                :chartValue3="$upcomingCount"
+                strokeColor1="orange"
+                strokeColor2="green"
+                strokeColor3="violet"
+                label1="Active"
+                label2="Completed"
+                label3="Upcoming"
+                textLabel="Module Status" />
+        </div>
 
-        <livewire:chart.comparison-chart
-            :key="'comparison-'.$num"
-            :chartValue1="$activeCount"
-            :chartValue2="$completedCount"
-            :chartValue3="$upcomingCount"
-            strokeColor1="orange"
-            strokeColor2="green"
-            strokeColor3="violet"
-            label1="Active"
-            label2="Completed"
-            label3="Upcoming"
-            textLabel="Module Status" />
+        <div style="width: 90%;">
+            <livewire:chart.bar-chart
+                :key="'bar-weekly'"
+                :days="7"
+                title="7-Day Activity Overview"
+                moduleColor="rgba(99, 179, 237, 0.85)"
+                assignColor="rgba(154, 230, 180, 0.85)"
+                journalColor="rgba(246, 173, 85, 0.85)"
+                class="w-full"/>
+        </div>
 
     </div>
     @endforeach
