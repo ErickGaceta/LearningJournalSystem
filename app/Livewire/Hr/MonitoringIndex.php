@@ -7,10 +7,15 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\Attributes\Lazy;
+use Livewire\Attributes\Url;
 
 #[Lazy] class MonitoringIndex extends Component
 {
+    #[Url]
     public int $year;
+
+    #[Url]
+    public int $activeQuarter = 1;
 
     public function placeholder()
     {

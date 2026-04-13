@@ -10,7 +10,7 @@ $statusConfig = [
 ];
 @endphp
 
-
+<x-hr.monitoring.chart-summary :modules="$modules" :paginator="$paginator" />
 
 
 <div class="overflow-x-auto">

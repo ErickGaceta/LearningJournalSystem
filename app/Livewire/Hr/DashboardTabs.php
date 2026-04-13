@@ -4,10 +4,13 @@ namespace App\Livewire\Hr;
 
 use Livewire\Component;
 use App\Models\TrainingModule;
-use App\Models\Assignment;use Livewire\Attributes\Lazy;
+use App\Models\Assignment;
+use Livewire\Attributes\Lazy;
+use Livewire\Attributes\Url;
 
 #[Lazy] class DashboardTabs extends Component
 {
+    #[Url]
     public string $activeTab = 'dashboard';
 
     public function placeholder()
