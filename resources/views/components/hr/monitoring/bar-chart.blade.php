@@ -11,7 +11,10 @@ $statusConfig = [
 
 $statusCounts = ['upcoming' => 0, 'pending' => 0, 'ongoing' => 0, 'completed' => 0, 'cancelled' => 0];
 foreach ($modules as $m) {
-    if (isset($statusCounts[$m->status])) $statusCounts[$m->status]++;
+    $status = $m->status ?? null;
+    if ($status && isset($statusCounts[$status])) {
+        $statusCounts[$status]++;
+    }
 }
 
 $completedModules = $modules->filter(fn($m) => $m->status === 'completed')->values();
@@ -167,7 +170,7 @@ $submissionChartHeight = max(160, $completedModules->count() * 44 + 40);
         const subEl = document.getElementById('submissionChart');
         if (subEl) {
             if (Chart.getChart(subEl)) Chart.getChart(subEl).destroy();
-            const subData = @json($submissionData);
+            const subData = {!! json_encode($submissionData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!};
             new Chart(subEl, {
                 type: 'bar',
                 data: {
