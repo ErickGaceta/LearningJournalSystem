@@ -10,8 +10,6 @@ $statusConfig = [
 ];
 @endphp
 
-<x-hr.monitoring.chart-summary :modules="$modules" :paginator="$paginator" />
-
 
 <div class="overflow-x-auto">
     <flux:table x-data="{ expanded: { {{ (int) request('expanded_module', 0) }}: {{ request('expanded_module') ? 'true' : 'false' }} } }">
@@ -143,5 +141,4 @@ $statusConfig = [
             @endforeach
         </flux:table.rows>
     </flux:table>
-
 </div>

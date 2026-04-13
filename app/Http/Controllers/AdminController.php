@@ -87,8 +87,6 @@ class AdminController extends Controller
             'user_type' => ['required', 'string', 'max:191'],
         ]);
 
-        unset($validated['sex']);
-
         $generatedPassword = Str::password(12); // More secure, mixed case + symbols
 
         $validated['password'] = $generatedPassword;
@@ -134,8 +132,6 @@ class AdminController extends Controller
             'is_active' => ['nullable', 'boolean'],
             'user_type' => ['required', 'string', 'max:191'],
         ]);
-
-        unset($validated['sex']);
 
         if (empty($validated['password'])) {
             unset($validated['password']);

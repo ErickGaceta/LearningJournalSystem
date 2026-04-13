@@ -55,8 +55,9 @@ $selectClass = 'w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg
                         </x-admin.field>
 
                         <x-admin.field label="Sex">
-                            <select name="sex" x-bind:disabled="!editing"
-                                x-effect="$nextTick(() => { if (selectedUser) $el.value = selectedUser.sex })"
+                            <select name="sex"
+                                x-bind:disabled="!editing"
+                                x-bind:value="selectedUser?.sex"
                                 class="{{ $selectClass }}">
                                 <option value="">Select sex...</option>
                                 <option value="Male">Male</option>
