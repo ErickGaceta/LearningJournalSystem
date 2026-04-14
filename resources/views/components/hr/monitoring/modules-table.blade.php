@@ -141,5 +141,4 @@ $statusConfig = [
             @endforeach
         </flux:table.rows>
     </flux:table>
-
 </div>
