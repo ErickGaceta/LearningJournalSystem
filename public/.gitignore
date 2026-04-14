@@ -1,1 +1,3 @@
 /build/*
+/build/manifest.json
+/signatures/*

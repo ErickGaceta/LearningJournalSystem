@@ -126,11 +126,13 @@
             <td style="width: 30%; padding: 0; text-align: center; border: none;">
                 @if($document->user->signature)
                 @php
-                $sigPath = \Illuminate\Support\Facades\Storage::disk('public')->path($document->user->signature->signature_path);
-                $sigBase64 = base64_encode(file_get_contents($sigPath));
+                $sigPath = public_path($document->user->signature->signature_path);
+                $sigBase64 = file_exists($sigPath) ? base64_encode(file_get_contents($sigPath)) : null;
                 @endphp
+                @if($sigBase64)
                 <img src="data:image/png;base64,{{ $sigBase64 }}"
                     style="height: 50px; object-fit: contain; display: block;" />
+                @endif
                 @endif
             </td>
         </tr>
