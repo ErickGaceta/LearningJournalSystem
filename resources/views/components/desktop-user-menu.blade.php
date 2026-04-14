@@ -5,21 +5,31 @@
         name="{{ $name }}"
         :initials="auth()->user()->initials()"
         icon:trailing="chevrons-up-down"
-        data-test="sidebar-menu-button"
-    />
+        data-test="sidebar-menu-button" />
 
     <flux:menu>
         <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
             <flux:avatar
                 :name="auth()->user()->full_name"
-                :initials="auth()->user()->initials()"
-            />
+                :initials="auth()->user()->initials()" />
             <div class="grid flex-1 text-start text-sm leading-tight">
                 <flux:heading class="truncate">{{ auth()->user()->full_name }}</flux:heading>
                 <flux:text class="truncate">{{ auth()->user()->email }}</flux:text>
             </div>
         </div>
-        <flux:menu.separator />
+
+        @if(auth()->user()->user_type === 'admin')
+        <flux:tooltip position="right">
+            <flux:menu.item icon="code-bracket">
+                Developer Info
+            </flux:menu.item>
+
+            <x-slot:content>
+                <x-devs />
+            </x-slot:content>
+        </flux:tooltip>
+        @endif
+
         <flux:menu.radio.group>
             <form method="POST" action="{{ route('logout') }}" class="w-full">
                 @csrf
@@ -28,13 +38,10 @@
                     type="submit"
                     icon="arrow-right-start-on-rectangle"
                     class="w-full cursor-pointer"
-                    data-test="logout-button"
-                >
+                    data-test="logout-button">
                     {{ __('Log Out') }}
                 </flux:menu.item>
             </form>
         </flux:menu.radio.group>
     </flux:menu>
-
-
 </flux:dropdown>
