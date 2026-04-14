@@ -182,4 +182,5 @@ class BarChart extends Component
             'isCurrentWeek' => $this->weekOffset === 0,
         ]);
     }
+
 }
