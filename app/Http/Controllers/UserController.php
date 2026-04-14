@@ -99,7 +99,7 @@ class UserController extends Controller
         $user = Auth::user();
 
         $trainings = Assignment::where('user_id', $user->id)
-            ->with(['module.documents' => fn($q) => $q->where('user_id', $user->id) ->where('isArchived', 0)])
+            ->with(['module.documents' => fn($q) => $q->where('user_id', $user->id)->where('isArchived', 0)])
             ->latest()
             ->get();
 
@@ -146,5 +146,12 @@ class UserController extends Controller
         ]);
 
         return back()->with('success', 'Profile updated successfully!');
+    }
+
+    public function markAllNotificationsRead(): RedirectResponse
+    {
+        Auth::user()->unreadNotifications->markAsRead();
+
+        return back();
     }
 }

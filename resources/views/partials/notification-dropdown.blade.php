@@ -1,11 +1,11 @@
 <div x-show="open" @click.outside="open = false" x-cloak
     x-transition:enter="transition ease-out duration-150"
-    x-transition:enter-start="opacity-0 -translate-y-1"
+    x-transition:enter-start="opacity-0 translate-y-2"
     x-transition:enter-end="opacity-100 translate-y-0"
     x-transition:leave="transition ease-in duration-100"
     x-transition:leave-start="opacity-100 translate-y-0"
-    x-transition:leave-end="opacity-0 -translate-y-1"
-    class="absolute bottom-full left-0 mb-2 w-80 bg-white dark:bg-zinc-900 rounded-xl shadow-xl border border-zinc-200 dark:border-zinc-700/60 z-999 overflow-hidden">
+    x-transition:leave-end="opacity-0 translate-y-2"
+    class="absolute bottom-full left-0 mb-2 w-80 bg-white dark:bg-zinc-900 rounded-xl shadow-xl border border-zinc-200 dark:border-zinc-700/60 z-50 overflow-hidden">
 
     {{-- Header --}}
     <div class="px-4 py-3 border-b border-zinc-100 dark:border-zinc-700/60 flex items-center justify-between">
@@ -31,7 +31,6 @@
                 ? 'bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'
                 : 'bg-blue-50/50 dark:bg-blue-500/5 hover:bg-blue-50 dark:hover:bg-blue-500/10' }}">
 
-            {{-- Unread dot --}}
             @unless($notification->read_at)
             <span class="absolute right-4 top-4 w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>
             @endunless

@@ -119,6 +119,8 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     // Document Print
     Route::get('/documents/{document}/preview', [DocumentPrintController::class, 'previewPdf'])->name('documents.preview');
     Route::patch('/documents/{document}/restore', [DocumentController::class, 'restore'])->name('documents.restore');
+
+    Route::post('/notifications/read-all', [UserController::class, 'markAllNotificationsRead'])->name('notifications.read');
 });
 
 require __DIR__ . '/settings.php';
