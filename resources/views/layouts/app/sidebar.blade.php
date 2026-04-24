@@ -200,6 +200,4 @@
     @livewireScripts
 </body>
 
-
-
 </html>
